@@ -23,11 +23,30 @@ const Mente = () => {
     { id: '6', title: 'Inteligencia Emocional' },
   ];
 
+  // Sub Component
+  const SubComponent = ({ title, onPress }) => {
+    return (
+      <View style={styles.subComponent}>
+        <Text style={styles.subComponentTitle}>{title}</Text>
+        {/* Button to open form */}
+        <TouchableOpacity onPress={onPress}>
+          <View style={styles.iconContainer}>
+            <Ionicons name="arrow-forward" size={24} color="white" />
+          </View>
+        </TouchableOpacity>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.container}>
+      <Menu/>
       <View style={styles.header}>
         <Ionicons name="bulb-outline" size={28} color="orange" />
-        <Text style={styles.title}>Mente</Text>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Mente</Text>
+          <Text style={styles.percentage}>{percentage}%</Text>
+        </View>
       </View>
       <Image
         source={localImage} // Placeholder image URL, replace it later
@@ -40,46 +59,40 @@ const Mente = () => {
           <SubComponent title={item.title} onPress={() => handleFormOpen(item.title)} />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
+        ListFooterComponent={() => (
+          <View style={styles.footer}>
+            {/* Empty View to keep the footer at the bottom */}
+          </View>
+        )}
       />
-      <View style={styles.footer}>
-        <Text style={{ fontSize: 20 }}>{percentage}%</Text>
-      </View>
-    </View>
-  );
-};
-
-// Sub Component
-const SubComponent = ({ title, onPress }) => {
-  return (
-    <View style={styles.subComponent}>
-      <Text style={styles.subComponentTitle}>{title}</Text>
-      {/* Button to open form */}
-      <TouchableOpacity onPress={onPress}>
-        <View style={styles.iconContainer}>
-          <Ionicons name="arrow-forward" size={24} color="white" />
-        </View>
-      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     backgroundColor: 'white',
-    borderRadius: 15,
     padding: 20,
-    margin: 15,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 15,
   },
+  titleContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   title: {
     fontWeight: 'bold',
     fontSize: 24,
-    marginLeft: 15,
     color: 'orange',
+  },
+  percentage: {
+    fontSize: 20,
   },
   image: {
     width: '100%',
@@ -102,8 +115,7 @@ const styles = StyleSheet.create({
     marginVertical: 8,
   },
   footer: {
-    alignItems: 'flex-end',
-    marginRight: 20,
+    flex: 1,
   },
   iconContainer: {
     backgroundColor: 'orange',
