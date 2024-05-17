@@ -38,32 +38,34 @@ const Menu = () => {
       <TouchableOpacity style={styles.navButton} onPress={toggleNav}>
         <Ionicons name={isNavOpen ? 'menu' : 'menu-outline'} size={32} color="#ffffff" />
       </TouchableOpacity>
-      <Animated.View style={[styles.navContainer, { opacity: navOpacity }]}>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('A')}>
-          <Text style={styles.navText}>Home</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('B')}>
-          <Text style={styles.navText}>Mente</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Estilo de Vida</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Corpo</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Diários</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Perfil de Saúde</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Recomendações</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navText}>Ajuda</Text>
-        </TouchableOpacity>
-      </Animated.View>
+      {isNavOpen && 
+        <Animated.View style={[styles.navContainer, { opacity: navOpacity }]}>
+          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('A')}>
+            <Text style={styles.navText}>Home</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('B')}>
+            <Text style={styles.navText}>Mente</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Estilo de Vida</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Corpo</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Diários</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Perfil de Saúde</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Recomendações</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.navItem}>
+            <Text style={styles.navText}>Ajuda</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      }
     </View>
   );
 };
