@@ -10,15 +10,17 @@ const Menu = () => {
   const [navOpacity] = useState(new Animated.Value(0));
 
   const handleButtons = async (letter) => {
-    if (letter === 'A') {
-      // Do something if 'A' is passed
-      navigation.navigate('Home');
-    } else if (letter === 'B') {
-      // Do something if 'B' is passed
-      navigation.navigate('Mente');
-    } else {
-      // Handle other cases
-      console.log("Unknown letter was passed.");
+    if(isNavOpen) {
+      if (letter === 'A') {
+        // Do something if 'A' is passed
+        navigation.navigate('Home');
+      } else if (letter === 'B') {
+        // Do something if 'B' is passed
+        navigation.navigate('Mente');
+      } else {
+        // Handle other cases
+        console.log("Unknown letter was passed.");
+      }
     }
   };
 
