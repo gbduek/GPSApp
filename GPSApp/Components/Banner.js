@@ -23,7 +23,7 @@ const Banner = ({ images }) => {
         data={images}
         keyExtractor={(item, index) => index.toString()}
         renderItem={({ item }) => (
-          <Image source={item} style={styles.bannerImage} resizeMode="cover" />
+          <Image source={item} style={styles.bannerImage} resizeMode="stretch" />
         )}
         onScrollToIndexFailed={() => {}}
         initialScrollIndex={0}

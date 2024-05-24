@@ -1,24 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
 const Menu = () => {
-    
   const navigation = useNavigation();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [navOpacity] = useState(new Animated.Value(0));
 
-  const handleButtons = async (letter) => {
-    if(isNavOpen) {
+  const handleButtons = (letter) => {
+    if (isNavOpen) {
       if (letter === 'A') {
-        // Do something if 'A' is passed
         navigation.navigate('Home');
       } else if (letter === 'B') {
-        // Do something if 'B' is passed
         navigation.navigate('Mente');
+      } else if (letter === 'C') {
+        navigation.navigate('LifeStyle');
       } else {
-        // Handle other cases
         console.log("Unknown letter was passed.");
       }
     }
@@ -26,19 +24,22 @@ const Menu = () => {
 
   const toggleNav = () => {
     setIsNavOpen(!isNavOpen);
+  };
+
+  useEffect(() => {
     Animated.timing(navOpacity, {
-      toValue: isNavOpen ? 0 : 1,
+      toValue: isNavOpen ? 1 : 0,
       duration: 300,
       useNativeDriver: true,
     }).start();
-  };
+  }, [isNavOpen, navOpacity]);
 
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.navButton} onPress={toggleNav}>
         <Ionicons name={isNavOpen ? 'menu' : 'menu-outline'} size={32} color="#ffffff" />
       </TouchableOpacity>
-      {isNavOpen && 
+      {isNavOpen && (
         <Animated.View style={[styles.navContainer, { opacity: navOpacity }]}>
           <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('A')}>
             <Text style={styles.navText}>Home</Text>
@@ -46,7 +47,7 @@ const Menu = () => {
           <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('B')}>
             <Text style={styles.navText}>Mente</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('C')}>
             <Text style={styles.navText}>Estilo de Vida</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
@@ -65,7 +66,7 @@ const Menu = () => {
             <Text style={styles.navText}>Ajuda</Text>
           </TouchableOpacity>
         </Animated.View>
-      }
+      )}
     </View>
   );
 };
@@ -92,7 +93,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: 270,
     height: 420,
-    bottom: 90, // Adjusted the position to match the navButton
+    bottom: 90,
     padding: 10,
     borderRadius: 10,
     backgroundColor: 'orange',

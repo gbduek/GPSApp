@@ -1,71 +1,27 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import localImage from './assets/mente.png';
+import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import localImage from './assets/lifestyle.png';
 import Menu from './Components/Menu';
 
-const Mente = ({ navigation }) => {
+const LifeStyle = () => {
   const [percentage, setPercentage] = useState(50); // Random initial percentage
+
+  // Function to handle form opening, you can customize this as per your form requirements
+  const handleFormOpen = (category) => {
+    // Logic to open form for the selected category
+    console.log(`Opening form for ${category}`);
+  };
 
   // Data for sub-components
   const data = [
-    {
-      id: '1',
-      title: 'Estresse',
-      description: [
-        "Estresse é uma reação de defesa e adaptação para dar mais energia em momentos de ameaça.",
-        "Esta avaliação mede o nível de estresse e a fonte dos fatores estressores."
-      ].join(' ')
-    },
-    {
-      id: '2',
-      title: 'Ansiedade e Humor',
-      description: [
-        "Ansiedade manifesta-se por inquietação, dificuldade de concentração e somatização.",
-        "Depressão com tristeza, diminuição do prazer pela vida e falta de energia."
-      ].join(' ')
-    },
-    {
-      id: '3',
-      title: 'Estresse Ocupacional',
-      description: [
-        "O trabalho pode ser uma fonte de estresse e de realização. Uma das fontes mais comuns",
-        "de fatores estressores é o ambiente de trabalho. Através de questionário, você saberá seu nível de estresse ocupacional."
-      ].join(' ')
-    },
-    {
-      id: '4',
-      title: 'Resiliencia',
-      description: [
-        "A resiliência é a capacidade de suportar as adversidades, mantendo o máximo de equilíbrio,",
-        "sendo um importante fator protetor contra o estresse e as doenças. Ela é composta pela ",
-        "flexibilidade, otimismo, necessidade atendidas, suporte social e sensação de sentido ou propósito."
-      ].join(' ')
-    },
-    {
-      id: '5',
-      title: 'Espiritualidade',
-      description: [
-        "Description for Espiritualidade.",
-        "Explore the role of spirituality in mental well-being.",
-        "Include diverse perspectives and practices."
-      ].join(' ')
-    },
-    {
-      id: '6',
-      title: 'Inteligencia Emocional',
-      description: [
-        "Description for Inteligencia Emocional.",
-        "Define emotional intelligence and its components.",
-        "Highlight its significance in personal and professional growth."
-      ].join(' ')
-    },
+    { id: '1', title: 'Tabagismo' },
+    { id: '2', title: 'Qualidade de Vida' },
+    { id: '3', title: 'Mudança de Comportamento' },
+    { id: '4', title: 'Prevenção de Acidentes' },
+    { id: '5', title: 'Doenças Crônicas' },
+    { id: '6', title: 'Exames Preventivos' },
   ];
-
-  // Function to handle form opening
-  const handleFormOpen = (item) => {
-    navigation.navigate('RegistryMind', { title: item.title, description: item.description });
-  };
 
   // Sub Component
   const SubComponent = ({ title, onPress }) => {
@@ -84,11 +40,11 @@ const Mente = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Menu />
+      <Menu/>
       <View style={styles.header}>
-        <MaterialCommunityIcons style={{ paddingRight: 5 }} name="head-lightbulb-outline" size={28} color="orange" />
+        <FontAwesome5 style={{paddingRight: 10}} name="running" size={28} color="orange" />
         <View style={styles.titleContainer}>
-          <Text style={styles.title}>Mente</Text>
+          <Text style={styles.title}>Estilo de Vida</Text>
           <Text style={styles.percentage}>{percentage}%</Text>
         </View>
       </View>
@@ -100,7 +56,7 @@ const Mente = ({ navigation }) => {
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SubComponent title={item.title} onPress={() => handleFormOpen(item)} />
+          <SubComponent title={item.title} onPress={() => handleFormOpen(item.title)} />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListFooterComponent={() => (
@@ -171,4 +127,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Mente;
+export default LifeStyle;
