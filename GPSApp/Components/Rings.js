@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     alignItems: 'center',
     marginBottom: 20,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
   },
   iconContainer: {
     position: 'absolute',

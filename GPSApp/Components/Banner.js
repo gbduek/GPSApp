@@ -53,13 +53,14 @@ const Banner = ({ images }) => {
 
 const styles = StyleSheet.create({
   bannerContainer: {
-    marginTop: 40,
+    marginTop: 50,
     height: 400,
     marginBottom: 15,
   },
   bannerImage: {
-    width: 300,
+    width: 345,
     height: 400,
+    borderRadius: 30,
   },
   indicatorContainer: {
     flexDirection: 'row',

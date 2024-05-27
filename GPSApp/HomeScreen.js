@@ -1,46 +1,48 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Animated, ScrollView } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import Banner from './Components/Banner';
 import Rings from './Components/Rings';
 import Menu from './Components/Menu';
+import SliderGeo from './Components/SliderGeo';
 
 const HomeScreen = () => {
-  const navigation = useNavigation();
-
   const bannerImages = [
     require('./assets/banner.png'),
     require('./assets/banner2.png'),
     require('./assets/banner3.png'),
   ];
 
-
   return (
     <View style={styles.container}>
       <View style={styles.content}>
         {/* Scrollable Area */}
-        <ScrollView>
-          <View style={styles.content}>
-            <Text style={styles.greetingText}>Olá, AMANDA</Text>
-            <Banner images={bannerImages}/>
+        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+          <Text style={styles.greetingText}>Olá, GABRIEL</Text>
+          <Banner images={bannerImages} />
 
-            <Text style={styles.heading}>
-              Veja os percentuais de preenchimento do seu GPS MED!
-            </Text>
-            <Text style={styles.paragraph}>
-              Que tal clicar em uma das dimensoes para ver em detalhes?
-            </Text>
+          <Text style={styles.heading}>
+            Veja os percentuais de preenchimento do seu GPS MED!
+          </Text>
+          <Text style={styles.paragraph}>
+            Que tal clicar em uma das dimensões para ver em detalhes?
+          </Text>
 
-            {/* Rings */}
-            <View style={styles.ringsContainer}>
-              {/* Other content */}
-              <Rings iconName="walk"/>
-              <Rings iconName="walk"/>
-              <Rings iconName="accessibility"/>
-              {/* Other content */}
-            </View>
+          {/* Slider Buttons w/percentage */}
+          <TouchableOpacity>
+            <SliderGeo iconName="flame-outline" percentage={20} title={"Mente"}/>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <SliderGeo iconName="flame-outline" percentage={100} title={"Estilo de Vida"}/>
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <SliderGeo iconName="flame-outline" percentage={75} title={"Corpo"}/>
+          </TouchableOpacity>
 
-            {/* Add more content here */}
+          {/* Rings */}
+          <View style={styles.ringsContainer}>
+            <Rings iconName="walk" />
+            <Rings iconName="walk" />
+            <Rings iconName="accessibility" />
           </View>
         </ScrollView>
         {/* End of Scrollable Area */}
@@ -53,13 +55,16 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'white',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 15,
+    paddingHorizontal: 15, // Adjusted padding
+  },
+  scrollViewContent: {
+    alignItems: 'center', // Center items horizontally
   },
   heading: {
     fontSize: 18,

@@ -1,8 +1,5 @@
-// LoginScreen.js
-
 import React, { useState } from 'react';
 import { View, TextInput, Text, StyleSheet, Image, Pressable } from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 
 const textEntrar = 'Entrar';
@@ -10,45 +7,37 @@ const textEntrar = 'Entrar';
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailFocused, setEmailFocused] = useState(false);
+  const [passwordFocused, setPasswordFocused] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    // try {
-    //   const response = await axios.post('your-backend-authentication-endpoint', {
-    //     email,
-    //     password,
-    //   });
-    //   // Handle successful login response
-    //   console.log('Login successful:', response.data);
-    //   // Redirect to the home page
     navigation.navigate('Home');
-    // } catch (error) {
-    //   // Handle error response from your backend
-    //   console.error('Login error:', error);
-    // }
   };
 
   return (
     <View style={styles.container}>
       <Image
-          source={
-            require('./assets/gps_logo.png')
-          }
+          source={require('./assets/gps_logo.png')}
           style={{width: 300, height: 120, resizeMode: 'stretch', marginBottom: 40}}
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, emailFocused && styles.inputFocused]}
         placeholder="Email"
         onChangeText={setEmail}
         value={email}
         autoCapitalize="none"
+        onFocus={() => setEmailFocused(true)}
+        onBlur={() => setEmailFocused(false)}
       />
       <TextInput
-        style={styles.input}
+        style={[styles.input, passwordFocused && styles.inputFocused]}
         placeholder="Senha"
         onChangeText={setPassword}
         value={password}
         secureTextEntry
+        onFocus={() => setPasswordFocused(true)}
+        onBlur={() => setPasswordFocused(false)}
       />
       <Pressable
         onPress={handleLogin} 
@@ -87,6 +76,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     backgroundColor: '#ffa500',
   },
+  inputFocused: {
+    backgroundColor: 'white',
+  },
   pressable: {
     alignItems: 'center',
     justifyContent: 'center',
@@ -95,16 +87,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 3,
     backgroundColor: 'white',
-    width: 300
-  },
-  pressed: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 15,
-    paddingHorizontal: 32,
-    borderRadius: 20,
-    elevation: 3,
-    backgroundColor: 'gray',
     width: 300
   },
   text: {

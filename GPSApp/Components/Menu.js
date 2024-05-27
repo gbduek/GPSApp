@@ -16,6 +16,8 @@ const Menu = () => {
         navigation.navigate('Mente');
       } else if (letter === 'C') {
         navigation.navigate('LifeStyle');
+      } else if (letter === 'E'){
+        navigation.navigate('Diary');
       } else {
         console.log("Unknown letter was passed.");
       }
@@ -53,7 +55,7 @@ const Menu = () => {
           <TouchableOpacity style={styles.navItem}>
             <Text style={styles.navText}>Corpo</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
+          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('E')}>
             <Text style={styles.navText}>Diários</Text>
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
@@ -61,9 +63,6 @@ const Menu = () => {
           </TouchableOpacity>
           <TouchableOpacity style={styles.navItem}>
             <Text style={styles.navText}>Recomendações</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navText}>Ajuda</Text>
           </TouchableOpacity>
         </Animated.View>
       )}

@@ -1,25 +1,26 @@
 import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Menu from '../Components/Menu';
+import GraphicR from '../Components/GraphicR';
 
 // Define the questionnaires for each sub-component
 const questionnaires = {
   Estresse: [
     {
       id: '1',
-      question: 'How often do you feel stressed?',
-      options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'],
+      question: 'Você tem ficado triste por causa de algo que aconteceu inesperadamente?',
+      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
     },
     {
       id: '2',
-      question: 'How would you rate your stress level?',
-      options: ['Very Low', 'Low', 'Moderate', 'High', 'Very High'],
+      question: 'Você tem se sentido incapaz de controlar as coisas importantes em sua vida?',
+      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
     },
     {
       id: '3',
-      question: 'What causes you the most stress?',
-      options: ['Work', 'Family', 'Health', 'Finances', 'Other'],
+      question: 'Você tem se sentido nervoso e “estressado”?',
+      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
     },
   ],
   'Ansiedade e Humor': [
@@ -62,24 +63,51 @@ const RegistryMind = ({ route, navigation }) => {
     navigation.navigate('Questionary', { title, questions: questionnaire });
   };
 
+  const renderItem = ({ item }) => {
+    switch (item.type) {
+      case 'header':
+        return <Text style={styles.pageTitle}>Mente &gt; {title}</Text>;
+      case 'image':
+        return (
+          <Image
+            source={{ uri: 'https://via.placeholder.com/300' }} // Placeholder image URL
+            style={styles.image}
+          />
+        );
+      case 'geometricShape':
+        return (
+          <View style={styles.geometricShape}>
+            <View style={styles.shapeHeader}>
+              <Text style={styles.shapeTitle}>{title}</Text>
+              <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
+                <Ionicons name="add" size={24} color="white" />
+              </TouchableOpacity>
+            </View>
+            <Text style={styles.description}>{description}</Text>
+            <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>
+            <GraphicR />
+          </View>
+        );
+      default:
+        return null;
+    }
+  };
+
+  const data = [
+    { id: 'header', type: 'header' },
+    { id: 'image', type: 'image' },
+    { id: 'geometricShape', type: 'geometricShape' },
+  ];
+
   return (
     <View style={styles.container}>
       <Menu />
-      <Text style={styles.pageTitle}>Mente &gt; {title}</Text>
-      <Image
-        source={{ uri: 'https://via.placeholder.com/300' }} // Placeholder image URL
-        style={styles.image}
+      <FlatList
+        data={data}
+        keyExtractor={(item) => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.flatListContent}
       />
-      <View style={styles.geometricShape}>
-        <View style={styles.shapeHeader}>
-          <Text style={styles.shapeTitle}>{title}</Text>
-          <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
-            <Ionicons name="add" size={24} color="white" />
-          </TouchableOpacity>
-        </View>
-        <Text style={styles.description}>{description}</Text>
-        <Text style={styles.noRecordsText}>Você não possui registros</Text>
-      </View>
     </View>
   );
 };
@@ -87,8 +115,10 @@ const RegistryMind = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
     backgroundColor: 'white',
+  },
+  flatListContent: {
+    padding: 20,
   },
   pageTitle: {
     fontSize: 26,
@@ -127,7 +157,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'orange',
     width: 50,
     height: 50,
-    borderRadius: 30,
+    borderRadius: 25,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -139,6 +169,12 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
     color: 'gray',
+  },
+  message: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    textAlign: 'center',
   },
 });
 
