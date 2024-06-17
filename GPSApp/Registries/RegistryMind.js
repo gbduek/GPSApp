@@ -80,7 +80,7 @@ const RegistryMind = ({ route, navigation }) => {
             <View style={styles.shapeHeader}>
               <Text style={styles.shapeTitle}>{title}</Text>
               <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
-                <Ionicons name="add" size={24} color="white" />
+                <Ionicons name="add" size={30} color="white" />
               </TouchableOpacity>
             </View>
             <Text style={styles.description}>{description}</Text>
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   shapeTitle: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
     color: 'orange',
   },

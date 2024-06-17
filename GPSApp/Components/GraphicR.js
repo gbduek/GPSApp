@@ -2,12 +2,10 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const exampleData = [
-  { date: '01/01', value: 20 },
-  { date: '02/01', value: 35 },
-  { date: '03/01', value: 45 },
-  { date: '04/01', value: 55 },
-  { date: '05/01', value: 65 },
-  { date: '06/01', value: 75 },
+  { date: '28/05', value: 20 },
+  { date: '28/05', value: 45 },
+  { date: '28/05', value: 70 },
+  { date: '28/05', value: 55 },
 ];
 
 const GraphicR = () => {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Animated } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 
@@ -8,20 +8,23 @@ const Menu = () => {
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [navOpacity] = useState(new Animated.Value(0));
 
-  const handleButtons = (letter) => {
-    if (isNavOpen) {
-      if (letter === 'A') {
-        navigation.navigate('Home');
-      } else if (letter === 'B') {
-        navigation.navigate('Mente');
-      } else if (letter === 'C') {
-        navigation.navigate('LifeStyle');
-      } else if (letter === 'E'){
-        navigation.navigate('Diary');
-      } else {
-        console.log("Unknown letter was passed.");
-      }
+  const randomImageURL = `https://api3.gps.med.br/API/upload/image?vinculo=e91f978d-da58-e792-92cb-c0b993b24afd&tipo=pessoa`;
+
+  const navigationItems = [
+    { label: 'Home', screen: 'Home', icon: 'home-outline' },
+    { label: 'Mente', screen: 'Mente', icon: 'happy-outline' },
+    { label: 'Estilo de Vida', screen: 'LifeStyle', icon: 'walk-outline' },
+    { label: 'Corpo', screen: 'Corpo', icon: 'body-outline' },
+    { label: 'Diários', screen: 'Diary', icon: 'book-outline' },
+    { label: 'Perfil de Saúde', screen: null, icon: 'person-outline' },
+    { label: 'Recomendações', screen: null, icon: 'star-outline' },
+  ];
+
+  const handleNavigation = (screen) => () => {
+    if (screen) {
+      navigation.navigate(screen);
     }
+    setIsNavOpen(false);
   };
 
   const toggleNav = () => {
@@ -39,30 +42,25 @@ const Menu = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.navButton} onPress={toggleNav}>
-        <Ionicons name={isNavOpen ? 'menu' : 'menu-outline'} size={32} color="#ffffff" />
+        <Ionicons name={isNavOpen ? 'menu-outline' : 'menu'} size={32} color="#ffffff" />
       </TouchableOpacity>
       {isNavOpen && (
         <Animated.View style={[styles.navContainer, { opacity: navOpacity }]}>
-          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('A')}>
-            <Text style={styles.navText}>Home</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('B')}>
-            <Text style={styles.navText}>Mente</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('C')}>
-            <Text style={styles.navText}>Estilo de Vida</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navText}>Corpo</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem} onPress={() => handleButtons('E')}>
-            <Text style={styles.navText}>Diários</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navText}>Perfil de Saúde</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.navItem}>
-            <Text style={styles.navText}>Recomendações</Text>
+          {navigationItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.navItem}
+              onPress={handleNavigation(item.screen)}
+            >
+              <Ionicons name={item.icon} size={24} color="#ffffff" style={styles.icon} />
+              <Text style={styles.navText}>{item.label}</Text>
+            </TouchableOpacity>
+          ))}
+          {/* Profile Image */}
+          <TouchableOpacity style={styles.profileImageContainer} onPress={handleNavigation('Profile')}>
+            <View style={styles.profileImageWrapper}>
+              <Image source={{ uri: randomImageURL }} style={styles.profileImage} />
+            </View>
           </TouchableOpacity>
         </Animated.View>
       )}
@@ -99,12 +97,39 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   navItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 10,
+  },
+  icon: {
+    marginRight: 10,
   },
   navText: {
     fontSize: 28,
     color: '#ffffff',
     fontWeight: 'bold',
+  },
+  profileImageContainer: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    borderRadius: 40,
+    overflow: 'hidden',
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  profileImageWrapper: {
+    width: 60,
+    height: 60,
+    borderRadius: 40,
+    backgroundColor: 'orange', // Orange circle background
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  profileImage: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
   },
 });
 

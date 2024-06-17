@@ -5,7 +5,7 @@ import localImage from './assets/lifestyle.png';
 import Menu from './Components/Menu';
 
 const LifeStyle = () => {
-  const [percentage, setPercentage] = useState(50); // Random initial percentage
+  const [percentage, setPercentage] = useState(100); // Random initial percentage
 
   // Function to handle form opening, you can customize this as per your form requirements
   const handleFormOpen = (category) => {

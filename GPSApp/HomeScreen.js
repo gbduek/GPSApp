@@ -1,9 +1,12 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { Ionicons } from '@expo/vector-icons';
 import Banner from './Components/Banner';
 import Rings from './Components/Rings';
 import Menu from './Components/Menu';
 import SliderGeo from './Components/SliderGeo';
+import Header from './Components/Header';
 
 const HomeScreen = () => {
   const bannerImages = [
@@ -12,11 +15,18 @@ const HomeScreen = () => {
     require('./assets/banner3.png'),
   ];
 
+  const navigation = useNavigation();
+
+  const handleNavigation = (screen) => () => {
+    navigation.navigate(screen);
+  };
+
   return (
     <View style={styles.container}>
+      <Header />
       <View style={styles.content}>
         {/* Scrollable Area */}
-        <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
           <Text style={styles.greetingText}>Olá, GABRIEL</Text>
           <Banner images={bannerImages} />
 
@@ -28,15 +38,44 @@ const HomeScreen = () => {
           </Text>
 
           {/* Slider Buttons w/percentage */}
-          <TouchableOpacity>
-            <SliderGeo iconName="flame-outline" percentage={20} title={"Mente"}/>
+          <TouchableOpacity onPress={handleNavigation('Mente')}>
+            <SliderGeo iconName="flame-outline" percentage={50} title={"Mente"} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <SliderGeo iconName="flame-outline" percentage={100} title={"Estilo de Vida"}/>
+          <TouchableOpacity onPress={handleNavigation('LifeStyle')}>
+            <SliderGeo iconName="flame-outline" percentage={100} title={"Estilo de Vida"} />
           </TouchableOpacity>
-          <TouchableOpacity>
-            <SliderGeo iconName="flame-outline" percentage={75} title={"Corpo"}/>
+          <TouchableOpacity onPress={handleNavigation('Corpo')}>
+            <SliderGeo iconName="body-outline" percentage={20} title={"Corpo"} />
           </TouchableOpacity>
+
+          {/* New Paragraph and Ribbon */}
+          <View style={styles.paragraphContainer}>
+            <View style={styles.iconBackground}>
+              <Ionicons name="book-outline" size={24} color="white" />
+            </View>
+            <View style={styles.paragraphTextContainer}>
+              <Text style={styles.paragraphTitle}>Como você está hoje?</Text>
+              <Text style={styles.paragraphDescription}>
+                Registrando no diário, você poderá aumentar seu autoconhecimento e ter acesso ao seu histórico ao longo do tempo.
+              </Text>
+            </View>
+          </View>
+          <View style={styles.ribbonContainer}>
+            <Text style={styles.ribbonText}>Você ainda não registrou nenhum diário</Text>
+          </View>
+
+          {/* New Paragraph and Ribbon */}
+          <View style={styles.paragraphContainer}>
+            <View style={styles.iconBackground}>
+              <Ionicons name="book-outline" size={24} color="white" />
+            </View>
+            <View style={styles.paragraphTextContainer}>
+              <Text style={styles.paragraphTitle}>Quer saber o que pode melhorar em sua saúde?</Text>
+              <Text style={styles.paragraphDescription}>
+                Acompanhe seu perfil de saúde e veja o que deve priorizar!
+              </Text>
+            </View>
+          </View>
 
           {/* Rings */}
           <View style={styles.ringsContainer}>
@@ -62,9 +101,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 15, // Adjusted padding
+    marginTop: 10,
   },
   scrollViewContent: {
     alignItems: 'center', // Center items horizontally
+    width: '100%', // Ensure the content does not overflow horizontally
   },
   heading: {
     fontSize: 18,
@@ -98,6 +139,47 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     top: 50,
+  },
+  paragraphContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 70, // Added margin for spacing
+    paddingHorizontal: 15,
+    width: '100%',
+  },
+  iconBackground: {
+    backgroundColor: 'orange',
+    borderRadius: 24,
+    padding: 12,
+  },
+  paragraphTextContainer: {
+    marginLeft: 10,
+    flex: 1,
+  },
+  paragraphTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#000',
+    fontFamily: 'Gontserrat-700',
+  },
+  paragraphDescription: {
+    fontSize: 16,
+    color: '#333',
+    fontFamily: 'Gontserrat-500',
+  },
+  ribbonContainer: {
+    marginTop: 10,
+    backgroundColor: '#ffcccc',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center', // Center the text horizontally
+    width: '100%',
+  },
+  ribbonText: {
+    color: 'red',
+    fontSize: 16,
+    fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
 
