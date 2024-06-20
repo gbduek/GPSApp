@@ -8,9 +8,11 @@ import Menu from './Components/Menu';
 import SliderGeo from './Components/SliderGeo';
 import Header from './Components/Header';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 const HomeScreen = () => {
   const [firstName, setFirstName] = useState('');
+  const [percentages, setPercentages] = useState({ mente: 0, lifestyle: 0, corpo: 0 });
   const bannerImages = [
     require('./assets/banner.png'),
     require('./assets/banner2.png'),
@@ -19,12 +21,10 @@ const HomeScreen = () => {
 
   const navigation = useNavigation();
 
-  const handleNavigation = (screen) => () => {
-    navigation.navigate(screen);
+  const handleNavigation = (screen, data) => () => {
+    navigation.navigate(screen, data);
   };
 
-
-  {/* Try/catch for getting the name of the user to display on the greeting text*/}
   useEffect(() => {
     const fetchUserName = async () => {
       try {
@@ -41,11 +41,59 @@ const HomeScreen = () => {
     fetchUserName();
   }, []);
 
+  useEffect(() => {
+    const fetchPercentages = async () => {
+      try {
+        const storedToken = await AsyncStorage.getItem('token');
+        const storedUserLogged = await AsyncStorage.getItem('userLogged');
+        if (!storedToken || !storedUserLogged) {
+          throw new Error('Token or userLogged not found');
+        }
+
+        const config = {
+          headers: {
+            Authorization: `Bearer ${storedToken}`
+          }
+        };
+
+        const indicatorIds = {
+          mente: '40c6eaad-8815-4cbc-9caf-78f081f03674',
+          lifestyle: '7ed63315-ff7b-4658-b488-7655487e2845',
+          corpo: '20118275-8791-469e-b9f5-3210f990dd01'
+        };
+
+        const responses = await Promise.all(Object.values(indicatorIds).map(indicatorId =>
+          axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`, config)
+        ));
+
+        const preenchidos = responses.map(response => response.data.preenchidos);
+
+        // Adjust maximum values for each category
+        const maxValues = {
+          mente: 6,
+          lifestyle: 10,
+          corpo: 12,
+        };
+
+        const calculatedPercentages = {
+          mente: Math.round((preenchidos[0] / maxValues.mente) * 100),
+          lifestyle: Math.round((preenchidos[1] / maxValues.lifestyle) * 100),
+          corpo: Math.round((preenchidos[2] / maxValues.corpo) * 100),
+        };
+
+        setPercentages(calculatedPercentages);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchPercentages();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
-        {/* Scrollable Area */}
         <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
           <Text style={styles.greetingText}>Olá, {firstName}</Text>
           <Banner images={bannerImages} />
@@ -57,18 +105,16 @@ const HomeScreen = () => {
             Que tal clicar em uma das dimensões para ver em detalhes?
           </Text>
 
-          {/* Slider Buttons w/percentage */}
-          <TouchableOpacity onPress={handleNavigation('Mente')}>
-            <SliderGeo iconName="flame-outline" percentage={50} title={"Mente"} />
+          <TouchableOpacity onPress={handleNavigation('Mente', { percentage: percentages.mente })}>
+            <SliderGeo iconName="flame-outline" percentage={percentages.mente} title={"Mente"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigation('LifeStyle')}>
-            <SliderGeo iconName="flame-outline" percentage={100} title={"Estilo de Vida"} />
+          <TouchableOpacity onPress={handleNavigation('LifeStyle', { percentage: percentages.lifestyle })}>
+            <SliderGeo iconName="flame-outline" percentage={percentages.lifestyle} title={"Estilo de Vida"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigation('Corpo')}>
-            <SliderGeo iconName="body-outline" percentage={20} title={"Corpo"} />
+          <TouchableOpacity onPress={handleNavigation('Corpo', { percentage: percentages.corpo })}>
+            <SliderGeo iconName="body-outline" percentage={percentages.corpo} title={"Corpo"} />
           </TouchableOpacity>
 
-          {/* New Paragraph and Ribbon */}
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
               <Ionicons name="book-outline" size={24} color="white" />
@@ -84,7 +130,6 @@ const HomeScreen = () => {
             <Text style={styles.ribbonText}>Você ainda não registrou nenhum diário</Text>
           </View>
 
-          {/* New Paragraph and Ribbon */}
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
               <Ionicons name="book-outline" size={24} color="white" />
@@ -97,14 +142,12 @@ const HomeScreen = () => {
             </View>
           </View>
 
-          {/* Rings */}
           <View style={styles.ringsContainer}>
             <Rings iconName="walk" />
             <Rings iconName="walk" />
             <Rings iconName="accessibility" />
           </View>
         </ScrollView>
-        {/* End of Scrollable Area */}
       </View>
       <Menu />
     </View>
@@ -120,12 +163,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 15, // Adjusted padding
+    paddingHorizontal: 15,
     marginTop: 0,
   },
   scrollViewContent: {
-    alignItems: 'center', // Center items horizontally
-    width: '100%', // Ensure the content does not overflow horizontally
+    alignItems: 'center',
+    width: '100%',
   },
   heading: {
     fontSize: 18,
@@ -149,8 +192,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 5,
     left: 0,
-    fontWeight: 'bold', // Set text to bold
-    color: 'orange', // Set text color to orange
+    fontWeight: 'bold',
+    color: 'orange',
     fontSize: 22,
     fontFamily: 'Gontserrat-700',
   },
@@ -163,7 +206,7 @@ const styles = StyleSheet.create({
   paragraphContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 70, // Added margin for spacing
+    marginTop: 70,
     paddingHorizontal: 15,
     width: '100%',
   },
@@ -192,7 +235,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffcccc',
     padding: 10,
     borderRadius: 5,
-    alignItems: 'center', // Center the text horizontally
+    alignItems: 'center',
     width: '100%',
   },
   ribbonText: {

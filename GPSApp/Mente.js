@@ -1,10 +1,60 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Mente = ({ navigation }) => {
-  const [percentage, setPercentage] = useState(50); // Random initial percentage
+  const [percentage, setPercentage] = useState(0); // Initial percentage as 0
+  const [apiData, setApiData] = useState(null); // State to store API data
+  const [userLogged, setUserLogged] = useState(null); // State to store userLogged
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Retrieve token and userLogged from AsyncStorage
+        const storedToken = await AsyncStorage.getItem('token');
+        const storedUserLogged = await AsyncStorage.getItem('userLogged');
+
+        if (!storedToken || !storedUserLogged) {
+          throw new Error('Token or userLogged not found');
+        }
+
+        setUserLogged(storedUserLogged); // Store the userLogged in state
+
+        // Specific indicator ID
+        const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
+
+        // Set up axios request with Authorization header
+        const config = {
+          headers: {
+            Authorization: `Bearer ${storedToken}`
+          }
+        };
+
+        // Make GET request to API endpoint with specific indicator ID
+        const apiUrl = `https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`;
+
+        const response = await axios.get(apiUrl, config);
+
+        console.log('API Data:', response.data);
+        setApiData(response.data); // Store the data in state if needed
+
+        // Extract "preenchidos" field and calculate percentage
+        const preenchidos = response.data.preenchidos;
+        const total = 6; // Total number representing 100%
+        const calculatedPercentage = Math.round((preenchidos / total) * 100);
+        setPercentage(calculatedPercentage); // Set calculated percentage in state
+
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        // Handle error as needed
+      }
+    };
+
+    fetchData();
+  }, []);
 
   // Data for sub-components
   const data = [
@@ -92,8 +142,7 @@ const Mente = ({ navigation }) => {
         </View>
       </View>
       <Image
-        source={{uri:'https://api3.gps.med.br/api/upload/image?vinculo=40c6eaad-8815-4cbc-9caf-78f081f03674'}}
-        // Placeholder image URL, replace it later
+        source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=40c6eaad-8815-4cbc-9caf-78f081f03674' }}
         style={styles.image}
       />
       <FlatList

@@ -5,18 +5,18 @@ import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const apiUrl = 'https://api3.gps.med.br/API/Acesso/login';
-const userDataUrl = 'https://api3.gps.med.br/API/Acesso/obter-dados-usuario'; // API endpoint to fetch user data
+const userDataUrl = 'https://api3.gps.med.br/API/Acesso/obter-dados-usuario';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // State to manage loading indicator
+  const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    setIsLoading(true); // Start loading indicator
+    setIsLoading(true);
     try {
       const response = await axios.post(apiUrl, {
         Usuario: email,
@@ -25,52 +25,43 @@ const LoginScreen = () => {
 
       const { token } = response.data;
 
-      // Log the response data
       console.log('Login Response Data:', response.data);
 
-      // Make request to get user data using the token
       const userDataResponse = await axios.get(userDataUrl, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
 
-      // Log the user data response
       console.log('User Data Response:', userDataResponse.data);
 
-      // Extract necessary data from the user data response
-      const { userCompany, userLogged, userLoggedName } = userDataResponse.data;
+      const { userCompany, userLogged, userLoggedName, profilePhoto } = userDataResponse.data;
 
-      // Store user data in AsyncStorage
       await AsyncStorage.setItem('userCompany', userCompany);
       await AsyncStorage.setItem('userLogged', userLogged);
       await AsyncStorage.setItem('userLoggedName', userLoggedName);
+      await AsyncStorage.setItem('profilePhoto', profilePhoto);
       await AsyncStorage.setItem('token', token);
 
-      // Navigate to Home screen or do other necessary actions
       navigation.navigate('Home');
     } catch (error) {
       if (error.response) {
-        // The request was made and the server responded with a status code
-        console.log('Response Error:', error.response.data); // Detailed error message from the server
-        console.log('Response Status:', error.response.status); // HTTP status code
+        console.log('Response Error:', error.response.data);
+        console.log('Response Status:', error.response.status);
         Alert.alert('O Login falhou', 'Senha ou usuário inválido(s)');
       } else if (error.request) {
-        // The request was made but no response was received
         console.log('Request Error:', error.request);
         Alert.alert('O Login falhou', 'Sem resposta do servidor');
       } else {
-        // Something happened in setting up the request that triggered an Error
         console.log('Error:', error.message);
         Alert.alert('O Login falhou', 'Um erro inesperado aconteceu');
       }
     } finally {
-      setIsLoading(false); // Stop loading indicator
+      setIsLoading(false);
     }
   };
 
   const handleForgotPassword = () => {
-    // Implement your forgot password logic here
     Alert.alert('Esqueci minha senha', 'Implementar a lógica de recuperação de senha');
   };
 
@@ -101,7 +92,7 @@ const LoginScreen = () => {
       <TouchableOpacity
         onPress={handleLogin}
         style={styles.touchableOpacity}
-        disabled={isLoading} // Disable button when loading
+        disabled={isLoading}
       >
         <Text style={styles.text}>Entrar</Text>
         {isLoading && (
@@ -151,14 +142,14 @@ const styles = StyleSheet.create({
   touchableOpacity: {
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'row', // Align text and indicator horizontally
+    flexDirection: 'row',
     paddingVertical: 15,
     paddingHorizontal: 32,
     borderRadius: 20,
     elevation: 3,
     backgroundColor: 'white',
     width: 300,
-    marginTop: 5, // Adjusted margin
+    marginTop: 5,
   },
   text: {
     fontSize: 18,

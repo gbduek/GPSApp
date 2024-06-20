@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Menu = () => {
   const navigation = useNavigation();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [navOpacity] = useState(new Animated.Value(0));
-
-  const randomImageURL = `https://api3.gps.med.br/API/upload/image?vinculo=e91f978d-da58-e792-92cb-c0b993b24afd&tipo=pessoa`;
+  const [profilePhoto, setProfilePhoto] = useState(null); // State to store profile photo URL
 
   const navigationItems = [
     { label: 'Home', screen: 'Home', icon: 'home-outline' },
@@ -32,6 +32,22 @@ const Menu = () => {
   };
 
   useEffect(() => {
+    // Fetch the profile photo URL from AsyncStorage
+    const fetchProfilePhoto = async () => {
+      try {
+        const profilePhotoUrl = await AsyncStorage.getItem('profilePhoto');
+        if (profilePhotoUrl) {
+          setProfilePhoto(profilePhotoUrl);
+        }
+      } catch (error) {
+        console.log('Error fetching profile photo:', error);
+      }
+    };
+
+    fetchProfilePhoto();
+  }, []);
+
+  useEffect(() => {
     Animated.timing(navOpacity, {
       toValue: isNavOpen ? 1 : 0,
       duration: 300,
@@ -42,7 +58,7 @@ const Menu = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.navButton} onPress={toggleNav}>
-        <Ionicons name={isNavOpen ? 'menu-outline' : 'menu'} size={32} color="#ffffff" />
+        <Ionicons name={isNavOpen ? 'menu' : 'menu-outline'} size={32} color="#ffffff" />
       </TouchableOpacity>
       {isNavOpen && (
         <Animated.View style={[styles.navContainer, { opacity: navOpacity }]}>
@@ -59,7 +75,7 @@ const Menu = () => {
           {/* Profile Image */}
           <TouchableOpacity style={styles.profileImageContainer} onPress={handleNavigation('Profile')}>
             <View style={styles.profileImageWrapper}>
-              <Image source={{ uri: randomImageURL }} style={styles.profileImage} />
+              <Image source={{ uri: profilePhoto }} style={styles.profileImage} />
             </View>
           </TouchableOpacity>
         </Animated.View>
@@ -88,7 +104,7 @@ const styles = StyleSheet.create({
   },
   navContainer: {
     position: 'absolute',
-    width: 270,
+    width: 280,
     height: 420,
     bottom: 90,
     padding: 10,
