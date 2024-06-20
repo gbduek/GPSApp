@@ -1,18 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, FlatList, Dimensions } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Image, FlatList, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
 const Banner = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, []);
 
   return (
     <View style={styles.bannerContainer}>
@@ -28,12 +20,17 @@ const Banner = ({ images }) => {
         onScrollToIndexFailed={() => {}}
         initialScrollIndex={0}
         getItemLayout={(data, index) => ({
-          length: screenWidth,
-          offset: screenWidth * index,
+          length: screenWidth - 30, // Adjusted for padding/margin if needed
+          offset: (screenWidth - 30) * index,
           index,
         })}
         onViewableItemsChanged={({ viewableItems }) => {
-          setCurrentIndex(viewableItems[0].index || 0);
+          if (viewableItems.length > 0) {
+            setCurrentIndex(viewableItems[0].index || 0);
+          }
+        }}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 50,
         }}
       />
       <View style={styles.indicatorContainer}>
@@ -56,9 +53,10 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 400,
     marginBottom: 15,
+    alignItems: 'center', // Center the container
   },
   bannerImage: {
-    width: 345,
+    width: screenWidth - 30, // Adjust width based on screen size
     height: 400,
     borderRadius: 30,
   },

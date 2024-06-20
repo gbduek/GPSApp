@@ -11,46 +11,45 @@ const Diary = () => {
   const [isEmotionPopupOpen, setIsEmotionPopupOpen] = useState(false);
   const [isMovementPopupOpen, setIsMovementPopupOpen] = useState(false);
   const [imageUri, setImageUri] = useState('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
+  const [description, setDescription] = useState('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
 
   const options = ['de Emoções', 'de Movimento', 'de Sintomas'];
 
-  const handleSelectorPress = () => {
-    setIsSelectorOpen(!isSelectorOpen);
-  };
+  const handleSelectorPress = () => setIsSelectorOpen(!isSelectorOpen);
 
   const handleOptionPress = (option) => {
     setSelectedOption(option);
     setIsSelectorOpen(false);
-    closeAllPopups(); // Close all popups when switching options
-    updateImageUri(option); // Update image URL based on selected option
+    closeAllPopups();
+    updateImageUriAndDescription(option);
   };
 
-  const toggleEmotionPopup = () => {
-    setIsEmotionPopupOpen(!isEmotionPopupOpen);
-  };
+  const toggleEmotionPopup = () => setIsEmotionPopupOpen(!isEmotionPopupOpen);
 
-  const toggleMovementPopup = () => {
-    setIsMovementPopupOpen(!isMovementPopupOpen);
-  };
+  const toggleMovementPopup = () => setIsMovementPopupOpen(!isMovementPopupOpen);
 
   const closeAllPopups = () => {
     setIsEmotionPopupOpen(false);
     setIsMovementPopupOpen(false);
   };
 
-  const updateImageUri = (option) => {
+  const updateImageUriAndDescription = (option) => {
     switch (option) {
       case 'de Emoções':
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
+        setDescription('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
         break;
       case 'de Movimento':
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=ee8cf8bb-36ff-4838-883b-75179867d095');
+        setDescription('Registre aqui suas atividades, sejam de lazer, esporte ou malhação.');
         break;
       case 'de Sintomas':
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a0a1d9b5-2268-4aed-9040-44fb3d88975e');
+        setDescription('Registre aqui seus sintomas, sejam de problemas agudos ou crônicos.');
         break;
       default:
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
+        setDescription('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
         break;
     }
   };
@@ -58,13 +57,9 @@ const Diary = () => {
   const renderPopup = () => {
     switch (selectedOption) {
       case 'de Emoções':
-        return (
-          <EmotionPopup onClose={() => setIsEmotionPopupOpen(false)} />
-        );
+        return <EmotionPopup onClose={() => setIsEmotionPopupOpen(false)} />;
       case 'de Movimento':
-        return (
-          <MovementPopup onClose={() => setIsMovementPopupOpen(false)} />
-        );
+        return <MovementPopup onClose={() => setIsMovementPopupOpen(false)} />;
       default:
         return null;
     }
@@ -79,19 +74,14 @@ const Diary = () => {
               <FontAwesome name={'book'} size={32} color="orange" />
               <Text style={styles.pageTitle}>Diários</Text>
             </View>
-            <Image
-              source={{ uri: imageUri }} // Dynamic image source based on selected option
-              style={styles.image}
-            />
+            <Image source={{ uri: imageUri }} style={styles.image} />
+            <Text style={styles.descriptionText}>{description}</Text>
           </View>
         );
       case 'selector':
         return (
           <View>
-            <TouchableOpacity
-              style={[styles.selector, isSelectorOpen && styles.selectorOpen]}
-              onPress={handleSelectorPress}
-            >
+            <TouchableOpacity style={[styles.selector, isSelectorOpen && styles.selectorOpen]} onPress={handleSelectorPress}>
               <Text style={styles.selectorText}>{selectedOption}</Text>
               <FontAwesome name={isSelectorOpen ? 'angle-up' : 'angle-down'} size={20} color="orange" />
             </TouchableOpacity>
@@ -138,13 +128,9 @@ const Diary = () => {
         contentContainerStyle={styles.flatListContent}
       />
 
-      {/* Emotion Popup */}
       {isEmotionPopupOpen && renderPopup()}
-
-      {/* Movement Popup */}
       {isMovementPopupOpen && renderPopup()}
 
-      {/* + Icon Button */}
       <TouchableOpacity style={styles.addButton} onPress={() => selectedOption === 'de Emoções' ? toggleEmotionPopup() : toggleMovementPopup()}>
         <FontAwesome name="plus" size={20} color="white" />
       </TouchableOpacity>
@@ -176,7 +162,14 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     height: 200,
+    marginBottom: 10,
+  },
+  descriptionText: {
+    fontSize: 16,
+    color: 'black',
     marginBottom: 20,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
   geometricShape: {
     backgroundColor: 'white',
@@ -243,16 +236,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'orange',
   },
-  popupContainer: {
-    ...StyleSheet.absoluteFillObject,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 100,
-  },
   addButton: {
     position: 'absolute',
-    top: 20, // Ensure the + button is at the top right corner
+    top: 20,
     right: 20,
     backgroundColor: 'orange',
     borderRadius: 25,

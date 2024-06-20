@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
-import localImage from './assets/mente.png';
 import Menu from './Components/Menu';
 
 const Mente = ({ navigation }) => {
@@ -93,7 +92,8 @@ const Mente = ({ navigation }) => {
         </View>
       </View>
       <Image
-        source={localImage} // Placeholder image URL, replace it later
+        source={{uri:'https://api3.gps.med.br/api/upload/image?vinculo=40c6eaad-8815-4cbc-9caf-78f081f03674'}}
+        // Placeholder image URL, replace it later
         style={styles.image}
       />
       <FlatList
@@ -137,6 +137,8 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 20,
+    color: 'orange',
+    fontWeight: 'bold',
   },
   image: {
     width: '100%',

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import localImage from './assets/mente.png';
 import Menu from './Components/Menu';
 
 const Corpo = ({ navigation }) => {
@@ -93,7 +92,8 @@ const Corpo = ({ navigation }) => {
         </View>
       </View>
       <Image
-        source={localImage} // Placeholder image URL, replace it later
+        source={{uri:'https://api3.gps.med.br/api/upload/image?vinculo=20118275-8791-469e-b9f5-3210f990dd01'}}
+        // Placeholder image URL, replace it later
         style={styles.image}
       />
       <FlatList

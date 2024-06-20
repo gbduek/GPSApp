@@ -35,11 +35,11 @@ const styles = StyleSheet.create({
     elevation: 3, // For Android shadow
   },
   logoLeft: {
-    width: 100,
+    width: 150,
     height: 50,
   },
   logoRight: {
-    width: 60, // Scaled up the width
+    width: 100, // Scaled up the width
     height: 60, // Scaled up the height
   },
 });

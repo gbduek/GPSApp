@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,8 +7,10 @@ import Rings from './Components/Rings';
 import Menu from './Components/Menu';
 import SliderGeo from './Components/SliderGeo';
 import Header from './Components/Header';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const HomeScreen = () => {
+  const [firstName, setFirstName] = useState('');
   const bannerImages = [
     require('./assets/banner.png'),
     require('./assets/banner2.png'),
@@ -21,13 +23,31 @@ const HomeScreen = () => {
     navigation.navigate(screen);
   };
 
+
+  {/* Try/catch for getting the name of the user to display on the greeting text*/}
+  useEffect(() => {
+    const fetchUserName = async () => {
+      try {
+        const name = await AsyncStorage.getItem('userLoggedName');
+        if (name) {
+          const firstName = name.split(' ')[0].toUpperCase();
+          setFirstName(firstName);
+        }
+      } catch (error) {
+        console.log('Failed to fetch user name from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserName();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Header />
       <View style={styles.content}>
         {/* Scrollable Area */}
         <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
-          <Text style={styles.greetingText}>Olá, GABRIEL</Text>
+          <Text style={styles.greetingText}>Olá, {firstName}</Text>
           <Banner images={bannerImages} />
 
           <Text style={styles.heading}>
@@ -101,7 +121,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 15, // Adjusted padding
-    marginTop: 10,
+    marginTop: 0,
   },
   scrollViewContent: {
     alignItems: 'center', // Center items horizontally
