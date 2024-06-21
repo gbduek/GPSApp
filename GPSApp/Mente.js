@@ -1,12 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DataContext from './Context/DataContext.js'
 
 const Mente = ({ navigation }) => {
-  const [percentage, setPercentage] = useState(0); // Initial percentage as 0
+  const { percentages, loading } = useContext(DataContext); // Access percentages and loading from DataContext
   const [apiData, setApiData] = useState(null); // State to store API data
   const [userLogged, setUserLogged] = useState(null); // State to store userLogged
 
@@ -41,12 +42,6 @@ const Mente = ({ navigation }) => {
         console.log('API Data:', response.data);
         setApiData(response.data); // Store the data in state if needed
 
-        // Extract "preenchidos" field and calculate percentage
-        const preenchidos = response.data.preenchidos;
-        const total = 6; // Total number representing 100%
-        const calculatedPercentage = Math.round((preenchidos / total) * 100);
-        setPercentage(calculatedPercentage); // Set calculated percentage in state
-
       } catch (error) {
         console.error('Error fetching data:', error);
         // Handle error as needed
@@ -56,7 +51,7 @@ const Mente = ({ navigation }) => {
     fetchData();
   }, []);
 
-  // Data for sub-components
+  // Data for sub-components (keep this as it is)
   const data = [
     {
       id: '1',
@@ -111,12 +106,12 @@ const Mente = ({ navigation }) => {
     },
   ];
 
-  // Function to handle form opening
+  // Function to handle form opening (keep this as it is)
   const handleFormOpen = (item) => {
     navigation.navigate('RegistryMind', { title: item.title, description: item.description });
   };
 
-  // Sub Component
+  // Sub Component (keep this as it is)
   const SubComponent = ({ title, onPress }) => {
     return (
       <View style={styles.subComponent}>
@@ -138,7 +133,11 @@ const Mente = ({ navigation }) => {
         <MaterialCommunityIcons style={{ paddingRight: 5 }} name="head-lightbulb-outline" size={28} color="orange" />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Mente</Text>
-          <Text style={styles.percentage}>{percentage}%</Text>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Text style={styles.percentage}>{percentages.mente}%</Text>
+          )}
         </View>
       </View>
       <Image
