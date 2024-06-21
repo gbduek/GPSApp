@@ -40,7 +40,6 @@ export const DataProvider = ({ children }) => {
       const firstName = userLoggedName.split(' ')[0].toUpperCase();
       setFirstName(firstName);
     } catch (error) {
-      console.error('Login error:', error);
       throw error; // Propagate error to handle in LoginScreen
     } finally {
       setLoading(false);
@@ -51,7 +50,7 @@ export const DataProvider = ({ children }) => {
   // Function to fetch percentages
   const fetchPercentages = async () => {
     if (!token || !userLogged) {
-      console.error('Token or userLogged not found');
+      console.log('Token or userLogged not found');
       return; // Exit early if token or userLogged not available
     }
 

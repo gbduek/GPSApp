@@ -4,13 +4,13 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DataContext from './Context/DataContext'
+import DataContext from './Context/DataContext'; // Import without curly braces
 
 const Mente = ({ navigation }) => {
-  const { percentages, loading } = useContext(DataContext); // Access percentages and loading from DataContext
+  const { percentages, loading, fetchPercentages } = useContext(DataContext); // Use fetchPercentages from context
+
   const [apiData, setApiData] = useState(null); // State to store API data
   const [userLogged, setUserLogged] = useState(null); // State to store userLogged
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -25,23 +25,20 @@ const Mente = ({ navigation }) => {
 
         setUserLogged(storedUserLogged); // Store the userLogged in state
 
-        // Specific indicator ID
-        const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
+        // Fetch percentages using the context function
+        fetchPercentages();
 
-        // Set up axios request with Authorization header
-        const config = {
+        // Specific indicator ID (if needed, fetch specific data separately)
+        const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
+        
+        // Example: fetch specific data
+        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`, {
           headers: {
             Authorization: `Bearer ${storedToken}`
           }
-        };
-
-        // Make GET request to API endpoint with specific indicator ID
-        const apiUrl = `https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`;
-
-        const response = await axios.get(apiUrl, config);
-
-        //console.log('API Data:', response.data);
-        setApiData(response.data); // Store the data in state if needed
+        });
+        
+        setApiData(response.data); // Set specific data to state if needed
 
       } catch (error) {
         console.error('Error fetching data:', error);

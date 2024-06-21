@@ -18,7 +18,6 @@ const LoginScreen = () => {
       await handleLogin(email, password);
       navigation.navigate('Home');
     } catch (error) {
-      console.error('Login failed:', error);
       Alert.alert('O Login falhou', 'Senha ou usuário inválido(s)');
     } finally {
       setIsLoading(false);
