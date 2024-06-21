@@ -4,7 +4,7 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DataContext from './Context/DataContext'; // Import without curly braces
+import DataContext from './Context/DataContext';
 
 const Mente = () => {
   const { percentages, loading, fetchPercentages } = useContext(DataContext); // Use fetchPercentages from context
