@@ -4,14 +4,13 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DataContext from './Context/DataContext.js'
+import DataContext from './Context/DataContext'
 
 const Mente = ({ navigation }) => {
   const { percentages, loading } = useContext(DataContext); // Access percentages and loading from DataContext
   const [apiData, setApiData] = useState(null); // State to store API data
   const [userLogged, setUserLogged] = useState(null); // State to store userLogged
 
-  console.log(percentages)
 
   useEffect(() => {
     const fetchData = async () => {
