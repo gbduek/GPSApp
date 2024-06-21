@@ -30,7 +30,9 @@ export const DataProvider = ({ children }) => {
         }
       });
 
+
       const { userLogged, userLoggedName } = userDataResponse.data;
+
       setUserLogged(userLogged); // Set userLogged to state
       await AsyncStorage.setItem('userLogged', userLogged);
       await AsyncStorage.setItem('userLoggedName', userLoggedName);
@@ -44,6 +46,7 @@ export const DataProvider = ({ children }) => {
       setLoading(false);
     }
   };
+
 
   // Function to fetch percentages
   const fetchPercentages = async () => {

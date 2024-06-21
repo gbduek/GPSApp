@@ -11,6 +11,8 @@ const Mente = ({ navigation }) => {
   const [apiData, setApiData] = useState(null); // State to store API data
   const [userLogged, setUserLogged] = useState(null); // State to store userLogged
 
+  console.log(percentages)
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -39,7 +41,7 @@ const Mente = ({ navigation }) => {
 
         const response = await axios.get(apiUrl, config);
 
-        console.log('API Data:', response.data);
+        //console.log('API Data:', response.data);
         setApiData(response.data); // Store the data in state if needed
 
       } catch (error) {
