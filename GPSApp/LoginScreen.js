@@ -1,11 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-
-const apiUrl = 'https://api3.gps.med.br/API/Acesso/login';
-const userDataUrl = 'https://api3.gps.med.br/API/Acesso/obter-dados-usuario';
+import DataContext from './Context/DataContext';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState('');
@@ -14,48 +10,16 @@ const LoginScreen = () => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const navigation = useNavigation();
+  const { handleLogin } = useContext(DataContext);
 
-  const handleLogin = async () => {
+  const onLoginPress = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(apiUrl, {
-        Usuario: email,
-        Senha: password
-      });
-
-      const { token } = response.data;
-
-      console.log('Login Response Data:', response.data);
-
-      const userDataResponse = await axios.get(userDataUrl, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      console.log('User Data Response:', userDataResponse.data);
-
-      const { userCompany, userLogged, userLoggedName, profilePhoto } = userDataResponse.data;
-
-      await AsyncStorage.setItem('userCompany', userCompany);
-      await AsyncStorage.setItem('userLogged', userLogged);
-      await AsyncStorage.setItem('userLoggedName', userLoggedName);
-      await AsyncStorage.setItem('profilePhoto', profilePhoto);
-      await AsyncStorage.setItem('token', token);
-
+      await handleLogin(email, password);
       navigation.navigate('Home');
     } catch (error) {
-      if (error.response) {
-        console.log('Response Error:', error.response.data);
-        console.log('Response Status:', error.response.status);
-        Alert.alert('O Login falhou', 'Senha ou usuário inválido(s)');
-      } else if (error.request) {
-        console.log('Request Error:', error.request);
-        Alert.alert('O Login falhou', 'Sem resposta do servidor');
-      } else {
-        console.log('Error:', error.message);
-        Alert.alert('O Login falhou', 'Um erro inesperado aconteceu');
-      }
+      console.error('Login failed:', error);
+      Alert.alert('O Login falhou', 'Senha ou usuário inválido(s)');
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +54,7 @@ const LoginScreen = () => {
         onBlur={() => setPasswordFocused(false)}
       />
       <TouchableOpacity
-        onPress={handleLogin}
+        onPress={onLoginPress}
         style={styles.touchableOpacity}
         disabled={isLoading}
       >
