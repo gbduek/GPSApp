@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
@@ -7,12 +7,11 @@ import Rings from './Components/Rings';
 import Menu from './Components/Menu';
 import SliderGeo from './Components/SliderGeo';
 import Header from './Components/Header';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
+import DataContext from './Context/DataContext';
 
 const HomeScreen = () => {
-  const [firstName, setFirstName] = useState('');
-  const [percentages, setPercentages] = useState({ mente: 0, lifestyle: 0, corpo: 0 });
+  const { firstName, percentages, fetchPercentages } = useContext(DataContext); // Accessing firstName and percentages from DataContext
+
   const bannerImages = [
     require('./assets/banner.png'),
     require('./assets/banner2.png'),
@@ -26,69 +25,9 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    const fetchUserName = async () => {
-      try {
-        const name = await AsyncStorage.getItem('userLoggedName');
-        if (name) {
-          const firstName = name.split(' ')[0].toUpperCase();
-          setFirstName(firstName);
-        }
-      } catch (error) {
-        console.log('Failed to fetch user name from AsyncStorage:', error);
-      }
-    };
-
-    fetchUserName();
-  }, []);
-
-  useEffect(() => {
-    const fetchPercentages = async () => {
-      try {
-        const storedToken = await AsyncStorage.getItem('token');
-        const storedUserLogged = await AsyncStorage.getItem('userLogged');
-        if (!storedToken || !storedUserLogged) {
-          throw new Error('Token or userLogged not found');
-        }
-
-        const config = {
-          headers: {
-            Authorization: `Bearer ${storedToken}`
-          }
-        };
-
-        const indicatorIds = {
-          mente: '40c6eaad-8815-4cbc-9caf-78f081f03674',
-          lifestyle: '7ed63315-ff7b-4658-b488-7655487e2845',
-          corpo: '20118275-8791-469e-b9f5-3210f990dd01'
-        };
-
-        const responses = await Promise.all(Object.values(indicatorIds).map(indicatorId =>
-          axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`, config)
-        ));
-
-        const preenchidos = responses.map(response => response.data.preenchidos);
-
-        // Adjust maximum values for each category
-        const maxValues = {
-          mente: 6,
-          lifestyle: 10,
-          corpo: 12,
-        };
-
-        const calculatedPercentages = {
-          mente: Math.round((preenchidos[0] / maxValues.mente) * 100),
-          lifestyle: Math.round((preenchidos[1] / maxValues.lifestyle) * 100),
-          corpo: Math.round((preenchidos[2] / maxValues.corpo) * 100),
-        };
-
-        setPercentages(calculatedPercentages);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
-
+    // Fetch percentages on component mount or whenever necessary
     fetchPercentages();
-  }, []);
+  }, [fetchPercentages]); // Dependency array ensures it runs only when fetchPercentages changes
 
   return (
     <View style={styles.container}>
@@ -105,13 +44,13 @@ const HomeScreen = () => {
             Que tal clicar em uma das dimensões para ver em detalhes?
           </Text>
 
-          <TouchableOpacity onPress={handleNavigation('Mente', { percentage: percentages.mente })}>
+          <TouchableOpacity onPress={handleNavigation('Mente')}>
             <SliderGeo iconName="flame-outline" percentage={percentages.mente} title={"Mente"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigation('LifeStyle', { percentage: percentages.lifestyle })}>
+          <TouchableOpacity onPress={handleNavigation('LifeStyle')}>
             <SliderGeo iconName="flame-outline" percentage={percentages.lifestyle} title={"Estilo de Vida"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigation('Corpo', { percentage: percentages.corpo })}>
+          <TouchableOpacity onPress={handleNavigation('Corpo')}>
             <SliderGeo iconName="body-outline" percentage={percentages.corpo} title={"Corpo"} />
           </TouchableOpacity>
 

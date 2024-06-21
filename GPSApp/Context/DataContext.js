@@ -72,11 +72,15 @@ export const DataProvider = ({ children }) => {
       ));
 
       const preenchidos = responses.map(response => response.data.preenchidos);
-      const total = 6;
+      const maxValues = {
+        mente: 6,
+        lifestyle: 10,
+        corpo: 12,
+      };
       const calculatedPercentages = {
-        mente: Math.round((preenchidos[0] / total) * 100),
-        lifestyle: Math.round((preenchidos[1] / total) * 100),
-        corpo: Math.round((preenchidos[2] / total) * 100),
+        mente: Math.round((preenchidos[0] / maxValues.mente) * 100),
+        lifestyle: Math.round((preenchidos[1] / maxValues.lifestyle) * 100),
+        corpo: Math.round((preenchidos[2] / maxValues.corpo) * 100),
       };
 
       setPercentages(calculatedPercentages);

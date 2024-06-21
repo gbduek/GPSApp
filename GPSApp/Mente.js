@@ -6,9 +6,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import DataContext from './Context/DataContext'; // Import without curly braces
 
-const Mente = ({ navigation }) => {
+const Mente = () => {
   const { percentages, loading, fetchPercentages } = useContext(DataContext); // Use fetchPercentages from context
-
   const [apiData, setApiData] = useState(null); // State to store API data
   const [userLogged, setUserLogged] = useState(null); // State to store userLogged
 
