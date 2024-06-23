@@ -6,6 +6,7 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [firstName, setFirstName] = useState('');
+  const [profilePhoto, setProfilePhoto] = useState(''); // New state for profile photo
   const [percentages, setPercentages] = useState({ mente: 0, lifestyle: 0, corpo: 0 });
   const [loading, setLoading] = useState(true);
   const [userLogged, setUserLogged] = useState(null); // Track userLogged
@@ -30,22 +31,24 @@ export const DataProvider = ({ children }) => {
         }
       });
 
-
-      const { userLogged, userLoggedName } = userDataResponse.data;
+      const { userLogged, userLoggedName, profilePhoto } = userDataResponse.data;
 
       setUserLogged(userLogged); // Set userLogged to state
       await AsyncStorage.setItem('userLogged', userLogged);
       await AsyncStorage.setItem('userLoggedName', userLoggedName);
+      console.log(userLogged)
 
       const firstName = userLoggedName.split(' ')[0].toUpperCase();
       setFirstName(firstName);
+
+      setProfilePhoto(profilePhoto); // Set profile photo to state
+      await AsyncStorage.setItem('profilePhoto', profilePhoto);
     } catch (error) {
       throw error; // Propagate error to handle in LoginScreen
     } finally {
       setLoading(false);
     }
   };
-
 
   // Function to fetch percentages
   const fetchPercentages = async () => {
@@ -92,7 +95,7 @@ export const DataProvider = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ firstName, percentages, loading, handleLogin, fetchPercentages }}>
+    <DataContext.Provider value={{ firstName, profilePhoto, percentages, loading, handleLogin, fetchPercentages }}>
       {children}
     </DataContext.Provider>
   );
