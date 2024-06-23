@@ -4,7 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const SliderGeo = ({ iconName, percentage, title }) => {
   // Percentage value for the slider bar (for testing, use a random value)
-  const barPercentage = percentage || Math.random() * 100;
+  const barPercentage = percentage;
 
   return (
     <View style={styles.container}>

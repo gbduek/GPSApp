@@ -71,7 +71,7 @@ const HomeScreen = () => {
 
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
-              <Ionicons name="book-outline" size={24} color="white" />
+              <Ionicons name="bar-chart-outline" size={24} color="white" />
             </View>
             <View style={styles.paragraphTextContainer}>
               <Text style={styles.paragraphTitle}>Quer saber o que pode melhorar em sua saúde?</Text>
@@ -85,6 +85,18 @@ const HomeScreen = () => {
             <Rings iconName="walk" />
             <Rings iconName="walk" />
             <Rings iconName="accessibility" />
+          </View>
+
+          <View style={styles.paragraphContainer}>
+            <View style={styles.iconBackground}>
+              <Ionicons name="book-outline" size={24} color="white" />
+            </View>
+            <View style={styles.paragraphTextContainer}>
+              <Text style={styles.paragraphTitle}>O que você precisa fazer?</Text>
+              <Text style={styles.paragraphDescription}>
+                Veja as recomendações!
+              </Text>
+            </View>
           </View>
         </ScrollView>
       </View>

@@ -69,7 +69,7 @@ const Recom = () => {
     <View>
         <Menu/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Recommendations</Text>
+        <Text style={styles.title}>Recomendações</Text>
         {data && data.map((item, index) => (
             <View key={index} style={[styles.itemContainer, { borderColor: item.cor }]}>
             <View style={[styles.indicator, { backgroundColor: item.cor }]} />

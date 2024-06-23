@@ -95,7 +95,16 @@ export const DataProvider = ({ children }) => {
   };
 
   return (
-    <DataContext.Provider value={{ firstName, profilePhoto, percentages, loading, token, userLogged, handleLogin, fetchPercentages }}>
+    <DataContext.Provider value={{ 
+      firstName, 
+      profilePhoto, 
+      percentages, 
+      loading, 
+      token, 
+      userLogged, 
+      handleLogin, 
+      fetchPercentages
+    }}>
       {children}
     </DataContext.Provider>
   );
