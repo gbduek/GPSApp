@@ -17,7 +17,7 @@ const Menu = () => {
     { label: 'Corpo', screen: 'Corpo', icon: 'body-outline' },
     { label: 'Diários', screen: 'Diary', icon: 'book-outline' },
     { label: 'Perfil de Saúde', screen: null, icon: 'person-outline' },
-    { label: 'Recomendações', screen: null, icon: 'star-outline' },
+    { label: 'Recomendações', screen: 'Recom', icon: 'star-outline' },
   ];
 
   const handleNavigation = (screen) => () => {

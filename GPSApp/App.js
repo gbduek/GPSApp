@@ -11,6 +11,7 @@ import Questionary from './Components/Questionary.js';
 import Diary from './Diary.js';
 import Profile from './Profile.js';
 import Corpo from './Corpo.js';
+import Recom from './Recom.js';
 
 const Stack = createStackNavigator();
 
@@ -28,6 +29,7 @@ const App = () => {
           <Stack.Screen name="Questionary" component={Questionary} />
           <Stack.Screen name="Diary" component={Diary} />
           <Stack.Screen name="Profile" component={Profile} />
+          <Stack.Screen name="Recom" component={Recom}/>
         </Stack.Navigator>
       </DataProvider>
     </NavigationContainer>
