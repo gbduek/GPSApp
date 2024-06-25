@@ -1,66 +1,45 @@
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import React, { useEffect, useState, useContext } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Menu from '../Components/Menu';
 import GraphicR from '../Components/GraphicR';
-
-// Define the questionnaires for each sub-component
-const questionnaires = {
-  Estresse: [
-    {
-      id: '1',
-      question: 'Você tem ficado triste por causa de algo que aconteceu inesperadamente?',
-      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
-    },
-    {
-      id: '2',
-      question: 'Você tem se sentido incapaz de controlar as coisas importantes em sua vida?',
-      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
-    },
-    {
-      id: '3',
-      question: 'Você tem se sentido nervoso e “estressado”?',
-      options: ['Nunca', 'Quase nunca', 'Às vezes', 'Com frequência', 'Muito frequentemente'],
-    },
-  ],
-  'Ansiedade e Humor': [
-    {
-      id: '1',
-      question: 'How often do you feel anxious?',
-      options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'],
-    },
-    {
-      id: '2',
-      question: 'How would you rate your anxiety level?',
-      options: ['Very Low', 'Low', 'Moderate', 'High', 'Very High'],
-    },
-    {
-      id: '3',
-      question: 'What helps you calm down?',
-      options: ['Exercise', 'Reading', 'Talking to someone', 'Meditation', 'Other'],
-    },
-  ],
-  'Estresse Ocupacional': [
-    {
-      id: '1',
-      question: 'How often do you feel stressed at work?',
-      options: ['Never', 'Rarely', 'Sometimes', 'Often', 'Always'],
-    },
-    {
-      id: '2',
-      question: 'How do you manage work-related stress?',
-      options: ['Breaks', 'Talking to colleagues', 'Time management', 'Other'],
-    },
-  ],
-  // Add more sub-component questionnaires as needed
-};
+import axios from 'axios';
+import DataContext from '../Context/DataContext';
 
 const RegistryMind = ({ route, navigation }) => {
-  const { title, description } = route.params;
+  const { title, id } = route.params;
+  const [description, setDescription] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
+  const [loading, setLoading] = useState(true);
+  const { token, userLogged } = useContext(DataContext);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!token || !userLogged) {
+        console.log('Token or userLogged not found');
+        return;
+      }
+      try {
+        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/${userLogged}/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setDescription(response.data.Descricao);
+        setImageUrl(response.data.Imagem);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [id, token, userLogged]);
 
   const handleNewRecord = () => {
-    const questionnaire = questionnaires[title];
-    navigation.navigate('Questionary', { title, questions: questionnaire });
+    // Navigate to the Questionary screen with dynamic questions and options
+    navigation.navigate('Questionary', { title, id });
   };
 
   const renderItem = ({ item }) => {
@@ -70,7 +49,7 @@ const RegistryMind = ({ route, navigation }) => {
       case 'image':
         return (
           <Image
-            source={{ uri: 'https://via.placeholder.com/300' }} // Placeholder image URL
+            source={{ uri: imageUrl || 'https://via.placeholder.com/300' }}
             style={styles.image}
           />
         );
@@ -99,6 +78,14 @@ const RegistryMind = ({ route, navigation }) => {
     { id: 'geometricShape', type: 'geometricShape' },
   ];
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="orange" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Menu />
@@ -115,6 +102,12 @@ const RegistryMind = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: 'white',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
     backgroundColor: 'white',
   },
   flatListContent: {

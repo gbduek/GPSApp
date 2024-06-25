@@ -4,17 +4,16 @@ import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import DataContext from './Context/DataContext'; // Import without curly braces
+import DataContext from './Context/DataContext';
 
 const Mente = ({ navigation }) => {
-  const { percentages, loading, fetchPercentages } = useContext(DataContext); // Use fetchPercentages from context
-  const [apiData, setApiData] = useState(null); // State to store API data
-  const [userLogged, setUserLogged] = useState(null); // State to store userLogged
+  const { percentages, loading, fetchPercentages } = useContext(DataContext);
+  const [apiData, setApiData] = useState(null);
+  const [userLogged, setUserLogged] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Retrieve token and userLogged from AsyncStorage
         const storedToken = await AsyncStorage.getItem('token');
         const storedUserLogged = await AsyncStorage.getItem('userLogged');
 
@@ -22,106 +21,49 @@ const Mente = ({ navigation }) => {
           throw new Error('Token or userLogged not found');
         }
 
-        setUserLogged(storedUserLogged); // Store the userLogged in state
+        setUserLogged(storedUserLogged);
 
-        // Fetch percentages using the context function
         fetchPercentages();
 
-        // Specific indicator ID (if needed, fetch specific data separately)
         const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
-        
-        // Example: fetch specific data
         const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`, {
           headers: {
             Authorization: `Bearer ${storedToken}`
           }
         });
-        
-        setApiData(response.data); // Set specific data to state if needed
 
+        setApiData(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
-        // Handle error as needed
       }
     };
 
     fetchData();
   }, []);
 
-  // Data for sub-components (keep this as it is)
   const data = [
-    {
-      id: '1',
-      title: 'Estresse',
-      description: [
-        "Estresse é uma reação de defesa e adaptação para dar mais energia em momentos de ameaça.",
-        "Esta avaliação mede o nível de estresse e a fonte dos fatores estressores."
-      ].join(' ')
-    },
-    {
-      id: '2',
-      title: 'Ansiedade e Humor',
-      description: [
-        "Ansiedade manifesta-se por inquietação, dificuldade de concentração e somatização.",
-        "Depressão com tristeza, diminuição do prazer pela vida e falta de energia."
-      ].join(' ')
-    },
-    {
-      id: '3',
-      title: 'Estresse Ocupacional',
-      description: [
-        "O trabalho pode ser uma fonte de estresse e de realização. Uma das fontes mais comuns",
-        "de fatores estressores é o ambiente de trabalho. Através de questionário, você saberá seu nível de estresse ocupacional."
-      ].join(' ')
-    },
-    {
-      id: '4',
-      title: 'Resiliencia',
-      description: [
-        "A resiliência é a capacidade de suportar as adversidades, mantendo o máximo de equilíbrio,",
-        "sendo um importante fator protetor contra o estresse e as doenças. Ela é composta pela ",
-        "flexibilidade, otimismo, necessidade atendidas, suporte social e sensação de sentido ou propósito."
-      ].join(' ')
-    },
-    {
-      id: '5',
-      title: 'Espiritualidade',
-      description: [
-        "Description for Espiritualidade.",
-        "Explore the role of spirituality in mental well-being.",
-        "Include diverse perspectives and practices."
-      ].join(' ')
-    },
-    {
-      id: '6',
-      title: 'Inteligencia Emocional',
-      description: [
-        "Description for Inteligencia Emocional.",
-        "Define emotional intelligence and its components.",
-        "Highlight its significance in personal and professional growth."
-      ].join(' ')
-    },
+    { id: '8a47e739-e198-44e4-9445-594a847b4fdb', nome: 'Estresse' },
+    { id: 'b2374168-b92a-4ef9-a7ef-0cfdea386d95', nome: 'Ansiedade e Humor' },
+    { id: '060a70ed-1d00-4005-b9ad-1e20686416eb', nome: 'Estresse Ocupacional' },
+    { id: '8dc55e39-59ed-48de-9f43-084425355452', nome: 'Resiliencia' },
+    { id: '3433fe55-0abd-4373-b9f8-f7144aca3257', nome: 'Espiritualidade' },
+    { id: '5c4120a7-6f48-47fd-8a54-aac1018d474f', nome: 'Inteligencia Emocional' },
   ];
 
-  // Function to handle form opening (keep this as it is)
   const handleFormOpen = (item) => {
-    navigation.navigate('RegistryMind', { title: item.title, description: item.description });
+    navigation.navigate('RegistryMind', { title: item.nome, id: item.id });
   };
 
-  // Sub Component (keep this as it is)
-  const SubComponent = ({ title, onPress }) => {
-    return (
-      <View style={styles.subComponent}>
-        <Text style={styles.subComponentTitle}>{title}</Text>
-        {/* Button to open form */}
-        <TouchableOpacity onPress={onPress}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="arrow-forward" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const SubComponent = ({ title, onPress }) => (
+    <View style={styles.subComponent}>
+      <Text style={styles.subComponentTitle}>{title}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.iconContainer}>
+          <Ionicons name="arrow-forward" size={24} color="white" />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
@@ -145,14 +87,10 @@ const Mente = ({ navigation }) => {
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SubComponent title={item.title} onPress={() => handleFormOpen(item)} />
+          <SubComponent title={item.nome} onPress={() => handleFormOpen(item)} />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListFooterComponent={() => (
-          <View style={styles.footer}>
-            {/* Empty View to keep the footer at the bottom */}
-          </View>
-        )}
+        ListFooterComponent={() => <View style={styles.footer} />}
       />
     </View>
   );
