@@ -6,7 +6,7 @@ import GraphicR from '../Components/GraphicR';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
 
-const RegistryMind = ({ route, navigation }) => {
+const Registry = ({ route, navigation }) => {
   const { title, id } = route.params;
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -51,6 +51,7 @@ const RegistryMind = ({ route, navigation }) => {
           <Image
             source={{ uri: imageUrl || 'https://via.placeholder.com/300' }}
             style={styles.image}
+            resizeMode='stretch'
           />
         );
       case 'geometricShape':
@@ -171,4 +172,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistryMind;
+export default Registry;

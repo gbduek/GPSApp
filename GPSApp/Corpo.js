@@ -1,99 +1,79 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
+import axios from 'axios';
+import DataContext from './Context/DataContext';
 
 const Corpo = ({ navigation }) => {
-  const [percentage, setPercentage] = useState(50); // Random initial percentage
+  const { percentages, loading, fetchPercentages, token, userLogged } = useContext(DataContext);
+  const [apiData, setApiData] = useState(null);
 
-  // Data for sub-components
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!token || !userLogged) {
+          throw new Error('Token or userLogged not found');
+        }
+
+        fetchPercentages(); // Fetch percentages from context
+
+        const indicatorId = '20118275-8791-469e-b9f5-3210f990dd01';
+        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${userLogged}/${indicatorId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setApiData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const data = [
-    {
-      id: '1',
-      title: 'Pressão Arterial',
-      description: [
-        "Estresse é uma reação de defesa e adaptação para dar mais energia em momentos de ameaça.",
-        "Esta avaliação mede o nível de estresse e a fonte dos fatores estressores."
-      ].join(' ')
-    },
-    {
-      id: '2',
-      title: 'Peso e Altura',
-      description: [
-        "Ansiedade manifesta-se por inquietação, dificuldade de concentração e somatização.",
-        "Depressão com tristeza, diminuição do prazer pela vida e falta de energia."
-      ].join(' ')
-    },
-    {
-      id: '3',
-      title: 'Circunferência Abdominal',
-      description: [
-        "O trabalho pode ser uma fonte de estresse e de realização. Uma das fontes mais comuns",
-        "de fatores estressores é o ambiente de trabalho. Através de questionário, você saberá seu nível de estresse ocupacional."
-      ].join(' ')
-    },
-    {
-      id: '4',
-      title: 'Hemoglobina',
-      description: [
-        "A resiliência é a capacidade de suportar as adversidades, mantendo o máximo de equilíbrio,",
-        "sendo um importante fator protetor contra o estresse e as doenças. Ela é composta pela ",
-        "flexibilidade, otimismo, necessidade atendidas, suporte social e sensação de sentido ou propósito."
-      ].join(' ')
-    },
-    {
-      id: '5',
-      title: 'Plaquetas',
-      description: [
-        "Description for Espiritualidade.",
-        "Explore the role of spirituality in mental well-being.",
-        "Include diverse perspectives and practices."
-      ].join(' ')
-    },
-    {
-      id: '6',
-      title: 'Glicose',
-      description: [
-        "Description for Inteligencia Emocional.",
-        "Define emotional intelligence and its components.",
-        "Highlight its significance in personal and professional growth."
-      ].join(' ')
-    },
+    { id: 'bd7e7f0d-280d-49dd-b840-16162c74160e', title: 'Pressão Arterial' },
+    { id: '04870942-8621-45e4-a781-d1f58f99ecd1', title: 'Peso e Altura' },
+    { id: '4e23b8dc-fbab-4e3c-a849-e2e6601e332c', title: 'Circunferência Abdominal' },
+    { id: 'f60c4af7-21eb-4eeb-b5d2-cd37817d2c6c', title: 'Hemoglobina' },
+    { id: 'c879f3dc-3aee-492b-8254-8239be0399c0', title: 'Plaquetas' },
+    { id: 'd7d7260d-d248-4a85-abab-375895d336e0', title: 'Glicose' },
   ];
 
-  // Function to handle form opening
   const handleFormOpen = (item) => {
-    navigation.navigate('RegistryMind', { title: item.title, description: item.description });
+    navigation.navigate('Registry', { title: item.title, id: item.id });
   };
 
-  // Sub Component
-  const SubComponent = ({ title, onPress }) => {
-    return (
-      <View style={styles.subComponent}>
-        <Text style={styles.subComponentTitle}>{title}</Text>
-        {/* Button to open form */}
-        <TouchableOpacity onPress={onPress}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="arrow-forward" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
-  };
+  const SubComponent = ({ title, onPress }) => (
+    <View style={styles.subComponent}>
+      <Text style={styles.subComponentTitle}>{title}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.iconContainer}>
+          <Ionicons name="arrow-forward" size={24} color="white" />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
       <Menu />
       <View style={styles.header}>
-        <Ionicons style={{ paddingRight: 5 }} name="body-outline" size={28} color="orange" />
+        <Ionicons style={{ paddingRight: 5 }} name="body" size={28} color="orange" />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Corpo</Text>
-          <Text style={styles.percentage}>{percentage}%</Text>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Text style={styles.percentage}>{percentages.corpo}%</Text>
+          )}
         </View>
       </View>
       <Image
-        source={{uri:'https://api3.gps.med.br/api/upload/image?vinculo=20118275-8791-469e-b9f5-3210f990dd01'}}
-        // Placeholder image URL, replace it later
+        source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=20118275-8791-469e-b9f5-3210f990dd01' }}
         style={styles.image}
       />
       <FlatList
@@ -103,11 +83,7 @@ const Corpo = ({ navigation }) => {
           <SubComponent title={item.title} onPress={() => handleFormOpen(item)} />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListFooterComponent={() => (
-          <View style={styles.footer}>
-            {/* Empty View to keep the footer at the bottom */}
-          </View>
-        )}
+        ListFooterComponent={() => <View style={styles.footer} />}
       />
     </View>
   );
@@ -137,6 +113,8 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 20,
+    color: 'orange',
+    fontWeight: 'bold',
   },
   image: {
     width: '100%',

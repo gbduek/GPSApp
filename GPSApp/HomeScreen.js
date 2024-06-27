@@ -89,7 +89,7 @@ const HomeScreen = () => {
 
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
-              <Ionicons name="book-outline" size={24} color="white" />
+              <Ionicons name="bulb-outline" size={24} color="white" />
             </View>
             <View style={styles.paragraphTextContainer}>
               <Text style={styles.paragraphTitle}>O que você precisa fazer?</Text>
@@ -98,6 +98,10 @@ const HomeScreen = () => {
               </Text>
             </View>
           </View>
+
+          {/*This is a small blank paragraph to make the scroll view go all the way down*/}
+          <View style={{height: 150}}/>
+          {/*This is a small blank paragraph to make the scroll view go all the way down*/}
         </ScrollView>
       </View>
       <Menu />

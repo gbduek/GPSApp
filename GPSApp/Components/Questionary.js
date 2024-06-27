@@ -2,13 +2,16 @@ import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import Menu from './Menu';
 import axios from 'axios';
-import DataContext from '../Context/DataContext'; // Assuming DataContext is correctly exported
+import DataContext from '../Context/DataContext';
 
-const Questionary = ({ route }) => {
+const Questionary = ({ route, navigation }) => {
   const { title, id } = route.params;
   const [questions, setQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
-  const { token } = useContext(DataContext); // Use the context to get token for authorization
+  const [loading, setLoading] = useState(true);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const [validationError, setValidationError] = useState('');
+  const { token, userLogged } = useContext(DataContext);
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -18,10 +21,11 @@ const Questionary = ({ route }) => {
             Authorization: `Bearer ${token}`
           }
         });
-        // Assuming response.data is an array and not an object with a data property
         setQuestions(response.data);
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching questions:', error);
+        setLoading(false);
       }
     };
 
@@ -30,11 +34,52 @@ const Questionary = ({ route }) => {
     }
   }, [id, token]);
 
-  const handleOptionSelect = (questionId, option) => {
+  const handleOptionSelect = (questionId, optionId) => {
     setSelectedOptions(prev => ({
       ...prev,
-      [questionId]: option,
+      [questionId]: optionId,
     }));
+  };
+
+  const handleSave = async () => {
+    const unansweredQuestions = questions.flatMap(questionary => questionary.questoes).filter(q => !selectedOptions[q.id]);
+    if (unansweredQuestions.length > 0) {
+      setValidationError('Por favor, responda todas as perguntas antes de salvar.');
+      return;
+    }
+
+    setSaveLoading(true);
+
+    const Medidores = Object.keys(selectedOptions).map(questionId => ({
+      Medidor: questionId,
+      Opcao: selectedOptions[questionId],
+    }));
+
+    const body = {
+      DataFinal: new Date().toISOString(),
+      DataInicial: new Date().toISOString(),
+      Indicador: id,
+      jejum: false,
+      Medidores,
+      PessoaFisica: userLogged,
+    };
+
+
+    try {
+      const response = await axios.post('https://api3.gps.med.br/API/Medicao/SaveMedicao/', body, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      console.log('Save successful:', response.data);
+      navigation.goBack(); // Navigate back to the previous screen
+    } catch (error) {
+      console.error('Error saving data:', error);
+      // Handle error (e.g., show an error message, etc.)
+    } finally {
+      setSaveLoading(false);
+    }
   };
 
   const renderItem = ({ item }) => (
@@ -45,12 +90,12 @@ const Questionary = ({ route }) => {
           key={option.id}
           style={[
             styles.option,
-            selectedOptions[item.id] === option.opcao && styles.selectedOption,
+            selectedOptions[item.id] === option.id && styles.selectedOption,
           ]}
-          onPress={() => handleOptionSelect(item.id, option.opcao)}
+          onPress={() => handleOptionSelect(item.id, option.id)}
         >
           <View style={styles.optionCircle}>
-            {selectedOptions[item.id] === option.opcao && <View style={styles.filledCircle} />}
+            {selectedOptions[item.id] === option.id && <View style={styles.filledCircle} />}
           </View>
           <Text style={styles.optionText}>{option.opcao}</Text>
         </TouchableOpacity>
@@ -58,22 +103,35 @@ const Questionary = ({ route }) => {
     </View>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="orange" />
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <Menu />
       <Text style={styles.pageTitle}>Mente &gt; {title}</Text>
-      {questions.length === 0 ? (
-        <ActivityIndicator size="large" color="orange" style={styles.loadingIndicator} />
-      ) : (
-        <FlatList
-          data={questions.flatMap(questionary => questionary.questoes)} // Flatten questoes array from each questionary
-          keyExtractor={item => item.id}
-          renderItem={renderItem}
-          contentContainerStyle={styles.flatListContent}
-          showsVerticalScrollIndicator={false}
-          style={styles.flatList}
-        />
-      )}
+      {validationError ? (
+        <Text style={styles.validationError}>{validationError}</Text>
+      ) : null}
+      <FlatList
+        data={questions.flatMap(questionary => questionary.questoes)}
+        keyExtractor={item => item.id}
+        renderItem={renderItem}
+        contentContainerStyle={styles.flatListContent}
+        showsVerticalScrollIndicator={false}
+        ListFooterComponent={
+          <TouchableOpacity style={styles.saveButton} onPress={handleSave} disabled={saveLoading}>
+            <Text style={styles.saveButtonText}>Salvar</Text>
+            {saveLoading && <ActivityIndicator size="small" color="white" style={styles.saveButtonLoader} />}
+          </TouchableOpacity>
+        }
+        style={styles.flatList}
+      />
     </View>
   );
 };
@@ -98,8 +156,11 @@ const styles = StyleSheet.create({
   flatList: {
     flex: 1,
   },
-  loadingIndicator: {
-    marginTop: 50,
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
   },
   geometricShape: {
     backgroundColor: 'white',
@@ -143,6 +204,29 @@ const styles = StyleSheet.create({
   },
   selectedOption: {
     fontWeight: 'bold',
+  },
+  saveButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'orange',
+    padding: 15,
+    borderRadius: 10,
+    justifyContent: 'center',
+    marginTop: 20,
+  },
+  saveButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  saveButtonLoader: {
+    marginLeft: 10,
+  },
+  validationError: {
+    color: 'red',
+    fontSize: 16,
+    textAlign: 'center',
+    marginBottom: 10,
   },
 });
 

@@ -1,69 +1,89 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
 import Menu from './Components/Menu';
+import axios from 'axios';
+import DataContext from './Context/DataContext';
 
-const LifeStyle = () => {
-  const [percentage, setPercentage] = useState(100); // Random initial percentage
+const LifeStyle = ({ navigation }) => {
+  const { percentages, loading, fetchPercentages, token, userLogged } = useContext(DataContext);
+  const [apiData, setApiData] = useState(null);
 
-  // Function to handle form opening, you can customize this as per your form requirements
-  const handleFormOpen = (category) => {
-    // Logic to open form for the selected category
-    console.log(`Opening form for ${category}`);
-  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        if (!token || !userLogged) {
+          throw new Error('Token or userLogged not found');
+        }
 
-  // Data for sub-components
+        fetchPercentages(); // Fetch percentages from context
+
+        const indicatorId = '7ed63315-ff7b-4658-b488-7655487e2845';
+        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${userLogged}/${indicatorId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+
+        setApiData(response.data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const data = [
-    { id: '1', title: 'Tabagismo' },
-    { id: '2', title: 'Qualidade de Vida' },
-    { id: '3', title: 'Mudança de Comportamento' },
-    { id: '4', title: 'Prevenção de Acidentes' },
-    { id: '5', title: 'Doenças Crônicas' },
-    { id: '6', title: 'Exames Preventivos' },
+    { id: 'e32afaa7-f67c-435b-b54b-30ec4a1bb238', title: 'Tabagismo' },
+    { id: '6cebc1b7-8629-4b3f-9e34-262eb0a0559a', title: 'Qualidade de Vida' },
+    { id: '9c82c3c0-e801-49ef-8659-524596dbef5f', title: 'Mudança de Comportamento' },
+    { id: '22fc17f4-9e04-4b16-abbd-7e3a0fc980bb', title: 'Prevenção de Acidentes' },
+    { id: 'cfba6c35-391d-4c4e-ba1b-8d3bda151fba', title: 'Doenças Crônicas' },
+    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', title: 'Exames Preventivos' },
   ];
 
-  // Sub Component
-  const SubComponent = ({ title, onPress }) => {
-    return (
-      <View style={styles.subComponent}>
-        <Text style={styles.subComponentTitle}>{title}</Text>
-        {/* Button to open form */}
-        <TouchableOpacity onPress={onPress}>
-          <View style={styles.iconContainer}>
-            <Ionicons name="arrow-forward" size={24} color="white" />
-          </View>
-        </TouchableOpacity>
-      </View>
-    );
+  const handleFormOpen = (item) => {
+    navigation.navigate('Registry', { title: item.title, id: item.id });
   };
+
+  const SubComponent = ({ title, onPress }) => (
+    <View style={styles.subComponent}>
+      <Text style={styles.subComponentTitle}>{title}</Text>
+      <TouchableOpacity onPress={onPress}>
+        <View style={styles.iconContainer}>
+          <Ionicons name="arrow-forward" size={24} color="white" />
+        </View>
+      </TouchableOpacity>
+    </View>
+  );
 
   return (
     <View style={styles.container}>
-      <Menu/>
+      <Menu />
       <View style={styles.header}>
-        <FontAwesome5 style={{paddingRight: 10}} name="running" size={28} color="orange" />
+        <FontAwesome5 style={{ paddingRight: 10 }} name="running" size={28} color="orange" />
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Estilo de Vida</Text>
-          <Text style={styles.percentage}>{percentage}%</Text>
+          {loading ? (
+            <Text>Loading...</Text>
+          ) : (
+            <Text style={styles.percentage}>{percentages.lifestyle}%</Text>
+          )}
         </View>
       </View>
       <Image
-        source={{uri:'https://api3.gps.med.br/api/upload/image?vinculo=7ed63315-ff7b-4658-b488-7655487e2845'}}
-        // Placeholder image URL, replace it later
+        source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=7ed63315-ff7b-4658-b488-7655487e2845' }}
         style={styles.image}
       />
       <FlatList
         data={data}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SubComponent title={item.title} onPress={() => handleFormOpen(item.title)} />
+          <SubComponent title={item.title} onPress={() => handleFormOpen(item)} />
         )}
         ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListFooterComponent={() => (
-          <View style={styles.footer}>
-            {/* Empty View to keep the footer at the bottom */}
-          </View>
-        )}
+        ListFooterComponent={() => <View style={styles.footer} />}
       />
     </View>
   );
@@ -93,6 +113,8 @@ const styles = StyleSheet.create({
   },
   percentage: {
     fontSize: 20,
+    color: 'orange',
+    fontWeight: 'bold',
   },
   image: {
     width: '100%',

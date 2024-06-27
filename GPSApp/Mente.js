@@ -3,32 +3,25 @@ import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react
 import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import DataContext from './Context/DataContext';
 
 const Mente = ({ navigation }) => {
-  const { percentages, loading, fetchPercentages } = useContext(DataContext);
+  const { percentages, loading, fetchPercentages, token, userLogged } = useContext(DataContext);
   const [apiData, setApiData] = useState(null);
-  const [userLogged, setUserLogged] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const storedToken = await AsyncStorage.getItem('token');
-        const storedUserLogged = await AsyncStorage.getItem('userLogged');
-
-        if (!storedToken || !storedUserLogged) {
+        if (!token || !userLogged) {
           throw new Error('Token or userLogged not found');
         }
-
-        setUserLogged(storedUserLogged);
 
         fetchPercentages();
 
         const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
-        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${storedUserLogged}/${indicatorId}`, {
+        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${userLogged}/${indicatorId}`, {
           headers: {
-            Authorization: `Bearer ${storedToken}`
+            Authorization: `Bearer ${token}`
           }
         });
 
@@ -51,7 +44,7 @@ const Mente = ({ navigation }) => {
   ];
 
   const handleFormOpen = (item) => {
-    navigation.navigate('RegistryMind', { title: item.nome, id: item.id });
+    navigation.navigate('Registry', { title: item.nome, id: item.id });
   };
 
   const SubComponent = ({ title, onPress }) => (
@@ -125,7 +118,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 250,
+    height: 240,
     marginBottom: 15,
   },
   subComponent: {

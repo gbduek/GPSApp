@@ -1,14 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Animated, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import DataContext from '../Context/DataContext';
 
 const Menu = () => {
   const navigation = useNavigation();
   const [isNavOpen, setIsNavOpen] = useState(false);
   const [navOpacity] = useState(new Animated.Value(0));
-  const [profilePhoto, setProfilePhoto] = useState(null); // State to store profile photo URL
+  const {profilePhoto} = useContext(DataContext); // State to store profile photo URL
 
   const navigationItems = [
     { label: 'Home', screen: 'Home', icon: 'home-outline' },
@@ -16,7 +16,7 @@ const Menu = () => {
     { label: 'Estilo de Vida', screen: 'LifeStyle', icon: 'walk-outline' },
     { label: 'Corpo', screen: 'Corpo', icon: 'body-outline' },
     { label: 'Diários', screen: 'Diary', icon: 'book-outline' },
-    { label: 'Perfil de Saúde', screen: null, icon: 'person-outline' },
+    { label: 'Perfil de Saúde', screen: 'PdS', icon: 'person-outline' },
     { label: 'Recomendações', screen: 'Recom', icon: 'star-outline' },
   ];
 
@@ -31,21 +31,6 @@ const Menu = () => {
     setIsNavOpen(!isNavOpen);
   };
 
-  useEffect(() => {
-    // Fetch the profile photo URL from AsyncStorage
-    const fetchProfilePhoto = async () => {
-      try {
-        const profilePhotoUrl = await AsyncStorage.getItem('profilePhoto');
-        if (profilePhotoUrl) {
-          setProfilePhoto(profilePhotoUrl);
-        }
-      } catch (error) {
-        console.log('Error fetching profile photo:', error);
-      }
-    };
-
-    fetchProfilePhoto();
-  }, []);
 
   useEffect(() => {
     Animated.timing(navOpacity, {
