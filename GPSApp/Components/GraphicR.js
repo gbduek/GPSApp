@@ -27,7 +27,7 @@ const GraphicR = ({ id }) => {
           nome: item.Nome,
         }));
         setData(apiData);
-        console.log(apiData);
+        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -94,7 +94,6 @@ const styles = StyleSheet.create({
   yAxisText: {
     fontSize: 14,
     textAlign: 'right',
-    paddingRight: 5,
   },
   graph: {
     flexDirection: 'row',

@@ -21,7 +21,7 @@ const Recom = () => {
         const response = await axios.post(
           'https://api3.gps.med.br/API/Recomendacoes',
           {
-            user: userLogged, // Using userLogged from context
+            user: userLogged,
             indicador: '',
             risco: 3,
             tipo: '',
