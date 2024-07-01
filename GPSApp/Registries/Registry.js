@@ -65,7 +65,7 @@ const Registry = ({ route, navigation }) => {
             </View>
             <Text style={styles.description}>{description}</Text>
             <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>
-            <GraphicR />
+            <GraphicR id={id}/>
           </View>
         );
       default:
@@ -95,6 +95,7 @@ const Registry = ({ route, navigation }) => {
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         contentContainerStyle={styles.flatListContent}
+        ListFooterComponent={<View style={{height:50}}/>}
       />
     </View>
   );
