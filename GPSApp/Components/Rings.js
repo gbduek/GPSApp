@@ -4,7 +4,7 @@ import Svg, { Circle } from 'react-native-svg';
 import { Ionicons } from '@expo/vector-icons';
 
 const Rings = ({ iconName }) => {
-  // Define the percentage of each color (for testing, you can use random values)
+  // Define the percentage of each color
   const redPercentage = 30;
   const yellowPercentage = 30;
   const greenPercentage = 40;
@@ -21,9 +21,9 @@ const Rings = ({ iconName }) => {
         <Circle
           cx="50"
           cy="50"
-          r="45"
-          stroke="green"
-          strokeWidth="10"
+          r="35"
+          stroke="#4CAF50"
+          strokeWidth="15"
           fill="transparent"
           strokeDasharray={`${greenAngle}, 360`}
           transform="rotate(-90, 50, 50)"
@@ -33,8 +33,8 @@ const Rings = ({ iconName }) => {
           cx="50"
           cy="50"
           r="35"
-          stroke="yellow"
-          strokeWidth="10"
+          stroke="#FFEB3B"
+          strokeWidth="15"
           fill="transparent"
           strokeDasharray={`${yellowAngle}, 360`}
           transform={`rotate(${greenAngle - 90}, 50, 50)`}
@@ -43,16 +43,16 @@ const Rings = ({ iconName }) => {
         <Circle
           cx="50"
           cy="50"
-          r="25"
-          stroke="red"
-          strokeWidth="10"
+          r="35"
+          stroke="#EF4040"
+          strokeWidth="15"
           fill="transparent"
           strokeDasharray={`${redAngle}, 360`}
           transform={`rotate(${greenAngle + yellowAngle - 90}, 50, 50)`}
         />
       </Svg>
       <View style={styles.iconContainer}>
-        <Ionicons name={iconName} size={32} color="#ffa500" />
+        <Ionicons name={iconName} size={35} color="#ffa500" />
       </View>
     </View>
   );
