@@ -1,18 +1,26 @@
 import React, { useContext, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Alert, ActivityIndicator, Image } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
 import { FontAwesome } from '@expo/vector-icons';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
 
+// Import images from assets folder
+import alegriaImage from '../../assets/emotions/happy.png';
+import ansiedadeImage from '../../assets/emotions/anxious.png';
+import medoImage from '../../assets/emotions/scared.png';
+import nojoImage from '../../assets/emotions/disgust.png';
+import raivaImage from '../../assets/emotions/angry.png';
+import tristezaImage from '../../assets/emotions/sad.png';
+
 const emotions = [
-  { name: 'Alegria', color: 'yellow', id: '268036ce-4eef-4a33-ad06-502c777b6cca' },
-  { name: 'Ansiedade', color: 'purple', id: '1bba6166-3184-4ed7-9de9-e6861106967e' },
-  { name: 'Medo', color: 'blue', id: '8a975e43-0de2-4b66-95b1-48a5738af2b0' },
-  { name: 'Nojo', color: 'green', id: '47dc3640-3b9a-4d09-86d9-2bdfb220fcd1' },
-  { name: 'Raiva', color: 'red', id: '6e4ee370-6ce2-4745-bc9f-d5fb88547309' },
-  { name: 'Tristeza', color: 'gray', id: '65af4d97-2942-4676-82fa-f15362b56ae7' },
+  { name: 'Alegria', color: 'yellow', id: '268036ce-4eef-4a33-ad06-502c777b6cca', image: alegriaImage },
+  { name: 'Ansiedade', color: 'purple', id: '1bba6166-3184-4ed7-9de9-e6861106967e', image: ansiedadeImage },
+  { name: 'Medo', color: 'blue', id: '8a975e43-0de2-4b66-95b1-48a5738af2b0', image: medoImage },
+  { name: 'Nojo', color: 'green', id: '47dc3640-3b9a-4d09-86d9-2bdfb220fcd1', image: nojoImage },
+  { name: 'Raiva', color: 'red', id: '6e4ee370-6ce2-4745-bc9f-d5fb88547309', image: raivaImage },
+  { name: 'Tristeza', color: 'gray', id: '65af4d97-2942-4676-82fa-f15362b56ae7', image: tristezaImage },
 ];
 
 const EmotionPopup = ({ onClose }) => {
@@ -98,15 +106,17 @@ const EmotionPopup = ({ onClose }) => {
           {emotions.map((emotion) => (
             <TouchableOpacity
               key={emotion.name}
-              style={[
-                styles.emotionButton,
-                {
-                  backgroundColor: selectedEmotion === emotion.name ? emotion.color : '#ccc',
-                },
-              ]}
+              style={styles.emotionButton}
               onPress={() => setSelectedEmotion(emotion.name)}
             >
-              <Text style={styles.emotionText}>{emotion.name}</Text>
+              <Image
+                source={emotion.image}
+                style={[
+                  styles.emotionImage,
+                  { opacity: selectedEmotion === emotion.name ? 1 : 0.5 },
+                ]}
+              />
+              <Text style={styles.emotionName}>{emotion.name}</Text>
             </TouchableOpacity>
           ))}
         </View>
@@ -196,12 +206,19 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   emotionButton: {
-    padding: 10,
-    borderRadius: 5,
+    alignItems: 'center',
   },
-  emotionText: {
-    color: 'white',
-    fontWeight: 'bold',
+  emotionImage: {
+    width: 30,
+    height: 30,
+    resizeMode: 'stretch',
+  },
+  emotionName: {
+    fontSize: 12,
+    color: 'black',
+    marginTop: 5,
+    textAlign: 'center',
+    fontWeight: '500',
   },
   slider: {
     width: '100%',

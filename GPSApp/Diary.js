@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import EmotionPopup from './Components/Popups/EmotionPopup';
 import MovementPopup from './Components/Popups/MovementPopup';
+import EmotionsDiary from './Components/DiHistory/EmotionsDiary';
 
 const Diary = () => {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
@@ -99,11 +100,9 @@ const Diary = () => {
       case 'geometricShape':
         return (
           <View style={styles.geometricShape}>
-            <View style={styles.shapeHeader}>
-              <Text style={styles.shapeTitle}>Shape</Text>
-            </View>
-            <Text style={styles.description}>Hello World</Text>
-            <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>
+            <ScrollView style={{height: 300}}>
+              <EmotionsDiary/>
+            </ScrollView>
           </View>
         );
       default:
@@ -115,7 +114,6 @@ const Diary = () => {
     { id: 'header', type: 'header' },
     { id: 'selector', type: 'selector' },
     { id: 'geometricShape1', type: 'geometricShape' },
-    { id: 'geometricShape2', type: 'geometricShape' },
   ];
 
   return (

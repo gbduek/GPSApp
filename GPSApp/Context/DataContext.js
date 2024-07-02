@@ -6,11 +6,11 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [firstName, setFirstName] = useState('');
-  const [profilePhoto, setProfilePhoto] = useState(''); // New state for profile photo
+  const [profilePhoto, setProfilePhoto] = useState(''); // Foto de Perfil
   const [percentages, setPercentages] = useState({ mente: 0, lifestyle: 0, corpo: 0 });
   const [loading, setLoading] = useState(true);
-  const [userLogged, setUserLogged] = useState(null); // Track userLogged
-  const [token, setToken] = useState(null); // Track token
+  const [userLogged, setUserLogged] = useState(null); //Id do Usuário
+  const [token, setToken] = useState(null); // Token do Usuário
 
   // Function to handle login
   const handleLogin = async (email, password) => {
