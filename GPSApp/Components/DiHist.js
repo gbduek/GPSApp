@@ -1,21 +1,22 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, FlatList, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import axios from 'axios';
-import DataContext from '../../Context/DataContext';
+import DataContext from '../Context/DataContext';
 
-const EmotionsDiary = () => {
+const DiHist = ({DiaryId}) => {
   const { token, userLogged } = useContext(DataContext);
   const [diaryEntries, setDiaryEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDiaryEntries = async () => {
+      setLoading(true);
       try {
         const response = await axios.post(
           'https://api3.gps.med.br/API/diario/diarios',
           {
             pessoa: userLogged,
-            tipoDiario: 'a8772285-cc12-47c0-b947-eeac0a790b7a',
+            tipoDiario: DiaryId,
             dadoTipoDiario: null,
             dataInicio: null,
             dataFinal: null,
@@ -36,24 +37,35 @@ const EmotionsDiary = () => {
     };
 
     fetchDiaryEntries();
-  }, [token, userLogged]);
+  }, [token, userLogged, DiaryId]);
 
   const renderDiaryEntry = ({ item }) => {
     const emotionImages = {
-      Medo: require('../../assets/emotions/scared.png'),
-      Ansiedade: require('../../assets/emotions/anxious.png'),
-      Alegria: require('../../assets/emotions/happy.png'),
-      Tristeza: require('../../assets/emotions/sad.png'),
-      Nojo: require('../../assets/emotions/disgust.png'),
-      Raiva: require('../../assets/emotions/angry.png'),
+      Medo: require('../assets/emotions/scared.png'),
+      Ansiedade: require('../assets/emotions/anxious.png'),
+      Alegria: require('../assets/emotions/happy.png'),
+      Tristeza: require('../assets/emotions/sad.png'),
+      Nojo: require('../assets/emotions/disgust.png'),
+      Raiva: require('../assets/emotions/angry.png'),
     };
 
     return (
       <View style={styles.entryContainer}>
+        {DiaryId == 'a8772285-cc12-47c0-b947-eeac0a790b7a' &&
         <Image source={emotionImages[item.emocao.nome]} style={styles.emotionImage} />
+        }
         <View style={styles.entryDetails}>
           <Text style={styles.entryDate}>{new Date(item.inicio).toLocaleString()}</Text>
-          <Text style={styles.entryTitle}>{item.emocao.nome}</Text>
+          {DiaryId == 'a8772285-cc12-47c0-b947-eeac0a790b7a' ? (
+            <Text style={styles.entryTitle}>{item.emocao.nome}</Text>
+          ) : DiaryId == 'ee8cf8bb-36ff-4838-883b-75179867d095' ? (
+            <Text style={styles.entryTitle}>{item.atividades.length > 0 ? item.atividades[0].nome : 'No Activity'}</Text>
+          ) : 
+            <Text style={styles.entryTitle}>Default Title</Text>
+          }
+          {item.observacao &&
+          <Text>{item.observacao}</Text>
+          }
           <Text style={styles.entryParagraph}>Intensidade: {item.intensidade}</Text>
         </View>
       </View>
@@ -110,16 +122,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 5,
+    color: '#a9a9a9',
   },
   entryTitle: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: 'orange',
+    color: 'black',
     marginBottom: 5,
   },
   entryParagraph: {
     fontSize: 16,
+    color:'orange',
+    fontWeight:'bold',
   },
 });
 
-export default EmotionsDiary;
+export default DiHist;

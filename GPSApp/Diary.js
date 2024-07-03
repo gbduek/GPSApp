@@ -4,10 +4,11 @@ import { FontAwesome } from '@expo/vector-icons';
 import Menu from './Components/Menu';
 import EmotionPopup from './Components/Popups/EmotionPopup';
 import MovementPopup from './Components/Popups/MovementPopup';
-import EmotionsDiary from './Components/DiHistory/EmotionsDiary';
+import DiHist from './Components/DiHist';
 
 const Diary = () => {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const [diaryId, setDiaryId] = useState('a8772285-cc12-47c0-b947-eeac0a790b7a');
   const [selectedOption, setSelectedOption] = useState('de Emoções');
   const [isEmotionPopupOpen, setIsEmotionPopupOpen] = useState(false);
   const [isMovementPopupOpen, setIsMovementPopupOpen] = useState(false);
@@ -37,18 +38,22 @@ const Diary = () => {
   const updateImageUriAndDescription = (option) => {
     switch (option) {
       case 'de Emoções':
+        setDiaryId('a8772285-cc12-47c0-b947-eeac0a790b7a');
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
         setDescription('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
         break;
       case 'de Movimento':
+        setDiaryId('ee8cf8bb-36ff-4838-883b-75179867d095')
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=ee8cf8bb-36ff-4838-883b-75179867d095');
         setDescription('Registre aqui suas atividades, sejam de lazer, esporte ou malhação.');
         break;
       case 'de Sintomas':
+        setDiaryId('a0a1d9b5-2268-4aed-9040-44fb3d88975e')
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a0a1d9b5-2268-4aed-9040-44fb3d88975e');
         setDescription('Registre aqui seus sintomas, sejam de problemas agudos ou crônicos.');
         break;
       default:
+        setDiaryId('a8772285-cc12-47c0-b947-eeac0a790b7a')
         setImageUri('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
         setDescription('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
         break;
@@ -101,7 +106,7 @@ const Diary = () => {
         return (
           <View style={styles.geometricShape}>
             <ScrollView style={{height: 300}}>
-              <EmotionsDiary/>
+              <DiHist DiaryId={diaryId}/>
             </ScrollView>
           </View>
         );

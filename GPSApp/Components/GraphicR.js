@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
+import Tooltip from './UIComp/Tooltip';
 
 const GraphicR = ({ id }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [tooltipIndex, setTooltipIndex] = useState(null); // State to manage which tooltip is visible
   const { token, userLogged } = useContext(DataContext);
 
   useEffect(() => {
@@ -55,18 +57,24 @@ const GraphicR = ({ id }) => {
         ))}
       </View>
       <View style={styles.graph}>
-        {data.map((data, index) => (
+        {data.map((dataItem, index) => (
           <View key={index} style={styles.barContainer}>
-            <View
+            <TouchableOpacity
+              onPress={() => setTooltipIndex(index)}
               style={[
                 styles.bar,
                 {
-                  height: `${Math.min(data.value, 100)}%`,
-                  backgroundColor: data.color,
+                  height: `${Math.min(dataItem.value, 100)}%`,
+                  backgroundColor: dataItem.color,
                 },
               ]}
             />
-            <Text style={styles.dateText}>{data.date}</Text>
+            <Text style={styles.dateText}>{dataItem.date}</Text>
+            <Tooltip
+              isVisible={tooltipIndex === index}
+              content={`${dataItem.nome}: ${dataItem.value}`}
+              position="top"
+            />
           </View>
         ))}
       </View>
@@ -105,6 +113,7 @@ const styles = StyleSheet.create({
   barContainer: {
     flex: 1,
     alignItems: 'center',
+    position: 'relative', // Ensure tooltips are positioned relative to this container
   },
   bar: {
     width: 20,
