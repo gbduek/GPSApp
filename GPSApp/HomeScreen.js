@@ -84,10 +84,13 @@ const HomeScreen = () => {
           <View style={styles.ringsContainer}>
             <Rings iconName="walk" />
             <Rings iconName="walk" />
-            <Rings iconName="accessibility" />
+            <Rings iconName="body" />
           </View>
 
-          <View style={styles.paragraphContainer}>
+          <View style={[styles.paragraphContainer,
+             {
+              backgroundColor:'rgba(255, 165, 0, 0.2)', padding:10, borderColor:'orange', borderWidth: 1
+             }]}>
             <View style={styles.iconBackground}>
               <Ionicons name="bulb-outline" size={24} color="white" />
             </View>
@@ -175,13 +178,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paragraphTitle: {
-    fontSize: 18,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#000',
     fontFamily: 'Gontserrat-700',
+    marginBottom: 5,
   },
   paragraphDescription: {
-    fontSize: 16,
+    fontSize: 18,
     color: '#333',
     fontFamily: 'Gontserrat-500',
   },

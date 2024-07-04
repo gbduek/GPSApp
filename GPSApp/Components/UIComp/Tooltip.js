@@ -2,14 +2,13 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const Tooltip = ({ isVisible, content, position = 'top', style }) => {
-  if (!isVisible) return null;
-
-  return (
-    <View style={[styles.tooltipContainer, styles[position], style]}>
-      <Text style={styles.tooltipText}>{content}</Text>
-    </View>
-  );
-};
+    return isVisible ? (
+      <View style={[styles.tooltipContainer, styles[position], style]}>
+        <Text style={styles.tooltipText}>{content}</Text>
+      </View>
+    ) : null;
+  };
+  
 
 const styles = StyleSheet.create({
   tooltipContainer: {

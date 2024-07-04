@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
 import Tooltip from './UIComp/Tooltip';
@@ -9,6 +9,7 @@ const GraphicR = ({ id }) => {
   const [loading, setLoading] = useState(true);
   const [tooltipIndex, setTooltipIndex] = useState(null); // State to manage which tooltip is visible
   const { token, userLogged } = useContext(DataContext);
+  const [modalVisible, setModalVisible] = useState(false); // State to manage modal visibility
 
   useEffect(() => {
     const fetchData = async () => {
@@ -29,7 +30,6 @@ const GraphicR = ({ id }) => {
           nome: item.Nome,
         }));
         setData(apiData);
-        console.log(response.data);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -39,6 +39,16 @@ const GraphicR = ({ id }) => {
 
     fetchData();
   }, [id, token, userLogged]);
+
+  const handleBarPress = (index) => {
+    setTooltipIndex(index);
+    setModalVisible(true); // Show the modal when the tooltip is visible
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setTooltipIndex(null); // Close the tooltip
+  };
 
   if (loading) {
     return (
@@ -60,7 +70,7 @@ const GraphicR = ({ id }) => {
         {data.map((dataItem, index) => (
           <View key={index} style={styles.barContainer}>
             <TouchableOpacity
-              onPress={() => setTooltipIndex(index)}
+              onPress={() => handleBarPress(index)}
               style={[
                 styles.bar,
                 {
@@ -70,14 +80,29 @@ const GraphicR = ({ id }) => {
               ]}
             />
             <Text style={styles.dateText}>{dataItem.date}</Text>
-            <Tooltip
-              isVisible={tooltipIndex === index}
-              content={`${dataItem.nome}: ${dataItem.value}`}
-              position="top"
-            />
           </View>
         ))}
       </View>
+
+      {/* Modal for displaying tooltips */}
+      <Modal
+        visible={modalVisible}
+        transparent
+        animationType="fade"
+        onRequestClose={handleCloseModal}
+      >
+        <TouchableWithoutFeedback onPress={handleCloseModal}>
+          <View style={styles.modalContainer}>
+            <View style={styles.tooltipContainer}>
+              <Tooltip
+                isVisible={tooltipIndex !== null}
+                content={`${data[tooltipIndex]?.nome}: ${data[tooltipIndex]?.value}`}
+                position="top"
+              />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 };
@@ -122,6 +147,18 @@ const styles = StyleSheet.create({
   dateText: {
     marginTop: 5,
     fontSize: 12,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tooltipContainer: {
+    padding: 20,
+    borderRadius: 8,
+    maxWidth: 200,
+    alignItems: 'center',
   },
 });
 
