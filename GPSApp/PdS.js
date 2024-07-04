@@ -5,6 +5,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataContext from './Context/DataContext';
+import Compass from './assets/Icons/Compass';
 
 const PdS = () => {
   const { token, userLogged } = useContext(DataContext);
@@ -126,7 +127,15 @@ const PdS = () => {
                   item.subs.map((subItem, subIdx) => (
                     <View key={subIdx} style={styles.subItem}>
                       <Text style={styles.subItemTitle}>{subItem.nome}</Text>
-                      <Text style={styles.subItemText}>Grau: {subItem.grau}</Text>
+                      {/* Here is the compass(green, yellow, red) logic according to the "grau" */}
+                      {subItem.grau == '1' ? (
+                        <Compass color={'#4CAF50'}/>) :
+                      subItem.grau == '2' ? (
+                        <Compass color={'#FFEB3B'}/>) :
+                      subItem.grau == '3' ? (
+                        <Compass color={'#EF4040'}/>) : (
+                        <Text style={styles.subItemText}>Grau: {subItem.grau}</Text>)}
+                      {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
                       {/* Render additional fields here as needed */}
                     </View>
                   ))
@@ -169,26 +178,25 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: '#333',
+    color: '#FFA500',
   },
   subItem: {
     width: 350,
     paddingVertical: 10,
     paddingHorizontal: 15,
     borderRadius: 8,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: 'white',
     marginBottom: 10,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
-    shadowRadius: 2,
     elevation: 3,
   },
   subItemTitle: {
     fontSize: 18,
     fontWeight: 'bold',
     marginBottom: 5,
-    color: '#FFA500',
+    color: '#000',
   },
   subItemText: {
     fontSize: 16,
