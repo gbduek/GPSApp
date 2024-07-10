@@ -2,20 +2,19 @@ import React, { useEffect, useContext } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from '@expo/vector-icons';
-import Banner from './Components/Banner';
-import Rings from './Components/Rings';
-import Menu from './Components/Menu';
-import SliderGeo from './Components/SliderGeo';
-import Header from './Components/Header';
-import DataContext from './Context/DataContext';
+import Banner from '../../Components/Banner';
+import Rings from '../../Components/Rings'
+import SliderGeo from '../../Components/SliderGeo';
+import Header from '../../Components/Header';
+import DataContext from '../../Context/DataContext';
 
 const HomeScreen = () => {
   const { firstName, percentages, fetchPercentages } = useContext(DataContext); // Accessing firstName and percentages from DataContext
 
   const bannerImages = [
-    require('./assets/banner.png'),
-    require('./assets/banner2.png'),
-    require('./assets/banner3.png'),
+    require('../../assets/banner.png'),
+    require('../../assets/banner2.png'),
+    require('../../assets/banner3.png'),
   ];
 
   const navigation = useNavigation();
@@ -45,13 +44,13 @@ const HomeScreen = () => {
           </Text>
 
           <TouchableOpacity onPress={handleNavigation('Mente')}>
-            <SliderGeo iconName="flame-outline" percentage={percentages.mente} title={"Mente"} />
+            <SliderGeo iconName="head-lightbulb-outline" percentage={percentages.mente} title={"Mente"} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={handleNavigation('LifeStyle')}>
-            <SliderGeo iconName="flame-outline" percentage={percentages.lifestyle} title={"Estilo de Vida"} />
+          <TouchableOpacity onPress={handleNavigation('Estilo de Vida')}>
+            <SliderGeo iconName="running" percentage={percentages.lifestyle} title={"Estilo de Vida"} />
           </TouchableOpacity>
           <TouchableOpacity onPress={handleNavigation('Corpo')}>
-            <SliderGeo iconName="body-outline" percentage={percentages.corpo} title={"Corpo"} />
+            <SliderGeo iconName="body" percentage={percentages.corpo} title={"Corpo"} />
           </TouchableOpacity>
 
           <View style={styles.paragraphContainer}>
@@ -107,7 +106,6 @@ const HomeScreen = () => {
           {/*This is a small blank paragraph to make the scroll view go all the way down*/}
         </ScrollView>
       </View>
-      <Menu />
     </View>
   );
 };

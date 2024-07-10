@@ -1,22 +1,20 @@
 import React, { useState, useContext } from 'react';
 import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import DataContext from './Context/DataContext';
+import DataContext from '../../Context/DataContext';
 
-const LoginScreen = () => {
+const LoginScreen = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const navigation = useNavigation();
   const { handleLogin } = useContext(DataContext);
 
   const onLoginPress = async () => {
     setIsLoading(true);
     try {
       await handleLogin(email, password);
-      navigation.navigate('Home');
+      onLoginSuccess(); // Call this to update the authenticated state in App.js
     } catch (error) {
       Alert.alert('O Login falhou', 'Senha ou usuário inválido(s)');
     } finally {
@@ -31,7 +29,7 @@ const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <Image
-        source={require('./assets/gps_logo.png')}
+        source={require('../../assets/gps_logo.png')}
         style={{ width: 300, height: 120, resizeMode: 'stretch', marginBottom: 40 }}
       />
       <TextInput

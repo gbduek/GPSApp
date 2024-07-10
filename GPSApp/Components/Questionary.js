@@ -113,7 +113,6 @@ const Questionary = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Menu />
       <Text style={styles.pageTitle}>Mente &gt; {title}</Text>
       {validationError ? (
         <Text style={styles.validationError}>{validationError}</Text>

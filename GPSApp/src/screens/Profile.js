@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Menu from './Components/Menu';
+import Menu from '../../Components/Menu';
+import Header from '../../Components/Header';
 
 const Profile = () => {
   const [selectedSex, setSelectedSex] = useState('');
@@ -67,6 +68,7 @@ const Profile = () => {
 
   return (
     <View style={{backgroundColor: 'white'}}>
+      <Header/>
       <Menu />
       <FlatList
         data={data}
@@ -93,6 +95,7 @@ const Profile = () => {
                 <Text style={[styles.buttonText, { color: '#FFF' }]}>Salvar</Text>
               </TouchableOpacity>
             </View>
+            <View style={{height: 150}}/>
           </View>
         )}
       />

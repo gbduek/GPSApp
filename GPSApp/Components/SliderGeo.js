@@ -1,15 +1,23 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import { Ionicons } from '@expo/vector-icons';
+import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 
 const SliderGeo = ({ iconName, percentage, title }) => {
-  // Percentage value for the slider bar (for testing, use a random value)
+  // Percentage value for the slider bar
   const barPercentage = percentage;
 
   return (
     <View style={styles.container}>
       <View style={styles.rect}>
-        <Ionicons name={iconName} size={32} color="#ffa500" style={styles.icon} />
+        {title === 'Mente' ? (
+            <MaterialCommunityIcons name={iconName} size={32} color="#ffa500" style={styles.icon} />
+          ) : title === 'Estilo de Vida' ? (
+            <FontAwesome5 name={iconName} size={32} color="#ffa500" style={styles.icon} />
+          ) : title === 'Corpo' ? (
+            <Ionicons name={iconName} size={32} color="#ffa500" style={styles.icon} />
+          ) : (
+            <Ionicons name={'flame-outline'} size={32} color="#ffa500" style={styles.icon} />
+        )}
         <Text style={styles.titleStyle}>{title}</Text>
         <Text style={styles.percentageText}>{Math.round(barPercentage)}%</Text>
         <View style={styles.barContainer}>

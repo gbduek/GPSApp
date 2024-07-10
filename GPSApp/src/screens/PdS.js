@@ -4,8 +4,9 @@ import axios from 'axios';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import DataContext from './Context/DataContext';
-import Compass from './assets/Icons/Compass';
+import DataContext from '../../Context/DataContext';
+import Compass from '../../assets/Icons/Compass';
+import Header from '../../Components/Header';
 
 const PdS = () => {
   const { token, userLogged } = useContext(DataContext);
@@ -114,38 +115,41 @@ const PdS = () => {
   }
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
-      {categoriesData.map((category, index) => (
-        <View key={index} style={styles.categoryContainer}>
-          <Text style={styles.categoryTitle}>{category.category}</Text>
-          {renderLogo(category.logo)}
-          {category.items.length > 0 && (
-            category.items.map((item, idx) => (
-              <View key={idx} style={styles.subCategoryContainer}>
-                <Text style={styles.subCategoryTitle}>{item.nome}</Text>
-                {item.subs.length > 0 && (
-                  item.subs.map((subItem, subIdx) => (
-                    <View key={subIdx} style={styles.subItem}>
-                      <Text style={styles.subItemTitle}>{subItem.nome}</Text>
-                      {/* Here is the compass(green, yellow, red) logic according to the "grau" */}
-                      {subItem.grau == '1' ? (
-                        <Compass color={'#4CAF50'}/>) :
-                      subItem.grau == '2' ? (
-                        <Compass color={'#FFEB3B'}/>) :
-                      subItem.grau == '3' ? (
-                        <Compass color={'#EF4040'}/>) : (
-                        <Text style={styles.subItemText}>Grau: {subItem.grau}</Text>)}
-                      {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
-                      {/* Render additional fields here as needed */}
-                    </View>
-                  ))
-                )}
-              </View>
-            ))
-          )}
-        </View>
-      ))}
-    </ScrollView>
+    <View>
+      <Header/>
+      <ScrollView contentContainerStyle={styles.container}>
+        {categoriesData.map((category, index) => (
+          <View key={index} style={styles.categoryContainer}>
+            <Text style={styles.categoryTitle}>{category.category}</Text>
+            {renderLogo(category.logo)}
+            {category.items.length > 0 && (
+              category.items.map((item, idx) => (
+                <View key={idx} style={styles.subCategoryContainer}>
+                  <Text style={styles.subCategoryTitle}>{item.nome}</Text>
+                  {item.subs.length > 0 && (
+                    item.subs.map((subItem, subIdx) => (
+                      <View key={subIdx} style={styles.subItem}>
+                        <Text style={styles.subItemTitle}>{subItem.nome}</Text>
+                        {/* Here is the compass(green, yellow, red) logic according to the "grau" */}
+                        {subItem.grau == '1' ? (
+                          <Compass color={'#4CAF50'} transf={"rotate(980 2560 2560)"}/>) :
+                        subItem.grau == '2' ? (
+                          <Compass color={'#FFEB3B'} transf={"rotate(1215 2560 2560)"}/>) :
+                        subItem.grau == '3' ? (
+                          <Compass color={'#EF4040'}/>) : (
+                          <Text style={styles.subItemText}>Grau: {subItem.grau}</Text>)}
+                        {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
+                        {/* Render additional fields here as needed */}
+                      </View>
+                    ))
+                  )}
+                </View>
+              ))
+            )}
+          </View>
+        ))}
+      </ScrollView>
+    </View>
   );
 };
 

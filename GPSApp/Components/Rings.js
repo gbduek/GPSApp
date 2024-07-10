@@ -21,9 +21,9 @@ const Rings = ({ iconName }) => {
         <Circle
           cx="50"
           cy="50"
-          r="35"
+          r="40"
           stroke="#4CAF50"
-          strokeWidth="15"
+          strokeWidth="18"
           fill="transparent"
           strokeDasharray={`${greenAngle}, 360`}
           transform="rotate(-90, 50, 50)"
@@ -32,9 +32,9 @@ const Rings = ({ iconName }) => {
         <Circle
           cx="50"
           cy="50"
-          r="35"
+          r="40"
           stroke="#FFEB3B"
-          strokeWidth="15"
+          strokeWidth="18"
           fill="transparent"
           strokeDasharray={`${yellowAngle}, 360`}
           transform={`rotate(${greenAngle - 90}, 50, 50)`}
@@ -43,16 +43,16 @@ const Rings = ({ iconName }) => {
         <Circle
           cx="50"
           cy="50"
-          r="35"
+          r="40"
           stroke="#EF4040"
-          strokeWidth="15"
+          strokeWidth="18"
           fill="transparent"
           strokeDasharray={`${redAngle}, 360`}
           transform={`rotate(${greenAngle + yellowAngle - 90}, 50, 50)`}
         />
       </Svg>
       <View style={styles.iconContainer}>
-        <Ionicons name={iconName} size={35} color="#ffa500" />
+        <Ionicons name={iconName} size={40} color="#ffa500" />
       </View>
     </View>
   );

@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
-import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
-import Menu from './Components/Menu';
+import { MaterialCommunityIcons, Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
-import DataContext from './Context/DataContext';
+import DataContext from '../../Context/DataContext';
+import Header from '../../Components/Header';
 
-const LifeStyle = ({ navigation }) => {
+const Mente = ({ navigation }) => {
   const { percentages, loading, fetchPercentages, token, userLogged } = useContext(DataContext);
   const [apiData, setApiData] = useState(null);
 
@@ -16,9 +16,9 @@ const LifeStyle = ({ navigation }) => {
           throw new Error('Token or userLogged not found');
         }
 
-        fetchPercentages(); // Fetch percentages from context
+        fetchPercentages();
 
-        const indicatorId = '7ed63315-ff7b-4658-b488-7655487e2845';
+        const indicatorId = '40c6eaad-8815-4cbc-9caf-78f081f03674';
         const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/tipo-indicadores-porcetagem-preenchimento/${userLogged}/${indicatorId}`, {
           headers: {
             Authorization: `Bearer ${token}`
@@ -35,16 +35,16 @@ const LifeStyle = ({ navigation }) => {
   }, []);
 
   const data = [
-    { id: 'e32afaa7-f67c-435b-b54b-30ec4a1bb238', title: 'Tabagismo' },
-    { id: '6cebc1b7-8629-4b3f-9e34-262eb0a0559a', title: 'Qualidade de Vida' },
-    { id: '9c82c3c0-e801-49ef-8659-524596dbef5f', title: 'Mudança de Comportamento' },
-    { id: '22fc17f4-9e04-4b16-abbd-7e3a0fc980bb', title: 'Prevenção de Acidentes' },
-    { id: 'cfba6c35-391d-4c4e-ba1b-8d3bda151fba', title: 'Doenças Crônicas' },
-    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', title: 'Exames Preventivos' },
+    { id: '8a47e739-e198-44e4-9445-594a847b4fdb', type: 'Mente', nome: 'Estresse' },
+    { id: 'b2374168-b92a-4ef9-a7ef-0cfdea386d95', type: 'Mente', nome: 'Ansiedade e Humor' },
+    { id: '060a70ed-1d00-4005-b9ad-1e20686416eb', type: 'Mente', nome: 'Estresse Ocupacional' },
+    { id: '8dc55e39-59ed-48de-9f43-084425355452', type: 'Mente', nome: 'Resiliencia' },
+    { id: '3433fe55-0abd-4373-b9f8-f7144aca3257', type: 'Mente', nome: 'Espiritualidade' },
+    { id: '5c4120a7-6f48-47fd-8a54-aac1018d474f', type: 'Mente', nome: 'Inteligencia Emocional' },
   ];
 
   const handleFormOpen = (item) => {
-    navigation.navigate('Registry', { title: item.title, id: item.id });
+    navigation.navigate('Registry', { title: item.nome, id: item.id, type: item.type });
   };
 
   const SubComponent = ({ title, onPress }) => (
@@ -59,32 +59,34 @@ const LifeStyle = ({ navigation }) => {
   );
 
   return (
-    <View style={styles.container}>
-      <Menu />
-      <View style={styles.header}>
-        <FontAwesome5 style={{ paddingRight: 10 }} name="running" size={28} color="orange" />
-        <View style={styles.titleContainer}>
-          <Text style={styles.title}>Estilo de Vida</Text>
-          {loading ? (
-            <Text>Loading...</Text>
-          ) : (
-            <Text style={styles.percentage}>{percentages.lifestyle}%</Text>
-          )}
+    <View style={{flex: 1}}>
+      <Header/>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <MaterialCommunityIcons style={{ paddingRight: 5 }} name="head-lightbulb-outline" size={28} color="orange" />
+          <View style={styles.titleContainer}>
+            <Text style={styles.title}>Mente</Text>
+            {loading ? (
+              <Text>Loading...</Text>
+            ) : (
+              <Text style={styles.percentage}>{percentages.mente}%</Text>
+            )}
+          </View>
         </View>
+        <Image
+          source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=40c6eaad-8815-4cbc-9caf-78f081f03674' }}
+          style={styles.image}
+        />
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <SubComponent title={item.nome} onPress={() => handleFormOpen(item)} />
+          )}
+          ItemSeparatorComponent={() => <View style={styles.separator} />}
+          ListFooterComponent={() => <View style={styles.footer} />}
+        />
       </View>
-      <Image
-        source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=7ed63315-ff7b-4658-b488-7655487e2845' }}
-        style={styles.image}
-      />
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <SubComponent title={item.title} onPress={() => handleFormOpen(item)} />
-        )}
-        ItemSeparatorComponent={() => <View style={styles.separator} />}
-        ListFooterComponent={() => <View style={styles.footer} />}
-      />
     </View>
   );
 };
@@ -93,7 +95,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 20,
+    paddingHorizontal: 15,
+    paddingTop: 15,
   },
   header: {
     flexDirection: 'row',
@@ -118,7 +121,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '100%',
-    height: 250,
+    height: 240,
     marginBottom: 15,
   },
   subComponent: {
@@ -126,6 +129,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   subComponentTitle: {
     fontWeight: 'bold',
@@ -138,6 +142,7 @@ const styles = StyleSheet.create({
   },
   footer: {
     flex: 1,
+    height:50,
   },
   iconContainer: {
     backgroundColor: 'orange',
@@ -149,4 +154,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LifeStyle;
+export default Mente;

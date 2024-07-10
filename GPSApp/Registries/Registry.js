@@ -1,13 +1,13 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Menu from '../Components/Menu';
 import GraphicR from '../Components/GraphicR';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
+import Header from '../Components/Header';
 
-const Registry = ({ route, navigation }) => {
-  const { title, id } = route.params;
+const Registry = ({route, navigation }) => {
+  const { type, title, id } = route.params;
   const [description, setDescription] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [loading, setLoading] = useState(true);
@@ -45,7 +45,7 @@ const Registry = ({ route, navigation }) => {
   const renderItem = ({ item }) => {
     switch (item.type) {
       case 'header':
-        return <Text style={styles.pageTitle}>Mente &gt; {title}</Text>;
+        return <Text style={styles.pageTitle}>{type ? `${type} > ${title}` : title}</Text>;
       case 'image':
         return (
           <Image
@@ -88,15 +88,17 @@ const Registry = ({ route, navigation }) => {
   }
 
   return (
-    <View style={styles.container}>
-      <Menu />
-      <FlatList
-        data={data}
-        keyExtractor={(item) => item.id}
-        renderItem={renderItem}
-        contentContainerStyle={styles.flatListContent}
-        ListFooterComponent={<View style={{height:50}}/>}
-      />
+    <View style={{flex:1}}>
+      <Header/>
+      <View style={styles.container}>
+        <FlatList
+          data={data}
+          keyExtractor={(item) => item.id}
+          renderItem={renderItem}
+          contentContainerStyle={styles.flatListContent}
+          ListFooterComponent={<View style={{height:50}}/>}
+        />
+      </View>
     </View>
   );
 };

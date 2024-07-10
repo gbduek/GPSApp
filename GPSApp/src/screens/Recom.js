@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
 import axios from 'axios';
-import DataContext from './Context/DataContext';
-import Menu from './Components/Menu';
+import DataContext from '../../Context/DataContext';
+import Menu from '../../Components/Menu';
+import Header from '../../Components/Header';
 
 const Recom = () => {
   const { token, userLogged } = useContext(DataContext); // Accessing token and userLogged from context
@@ -66,7 +67,9 @@ const Recom = () => {
 
   // Rendering logic for data
   return (
-    <View>
+    <View style={{flex:1}}>
+      <Header/>
+      <View>
         <Menu/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
         <Text style={styles.title}>Recomendações</Text>
@@ -88,6 +91,7 @@ const Recom = () => {
         ))}
         <View style={styles.footer} />
         </ScrollView>
+      </View>
     </View>
   );
 };

@@ -1,9 +1,9 @@
 import React from 'react';
 import Svg, { Path, G, Circle } from 'react-native-svg';
 
-const Compass = ({color}) => (
+const Compass = ({color, transf}) => (
   <Svg width="24" height="24" viewBox="0 0 5120 5120">
-    <G transform="rotate(45 2560 2560)">
+    <G transform= {transf}>
       <Path
         d="M2321 5110 c-497 -48 -990 -251 -1376 -565 -114 -92 -294 -274 -384
         -387 -229 -287 -417 -675 -495 -1023 -49 -218 -60 -325 -60 -575 0 -250 11
