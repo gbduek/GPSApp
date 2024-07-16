@@ -1,9 +1,47 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import * as d3 from 'd3-shape';
-import Svg, { Circle, Path, Text as SvgText, G, Image } from 'react-native-svg';
+import Svg, { Path, G, Circle, Image, Text as SvgText, Rect } from 'react-native-svg';
 import DataContext from '../Context/DataContext';
+
+const emotionImages = {
+    Medo: require('../assets/emotions/scared.png'),
+    Ansiedade: require('../assets/emotions/anxious.png'),
+    Alegria: require('../assets/emotions/happy.png'),
+    Tristeza: require('../assets/emotions/sad.png'),
+    Nojo: require('../assets/emotions/disgust.png'),
+    Raiva: require('../assets/emotions/angry.png'),
+};
+
+const YAxis = () => {
+    // Define the range and step of the Y-axis
+    const height = 250;
+    const step = height / 10;
+
+    return (
+        <View style={styles.yAxisContainer}>
+            <Svg width={40} height={height}>
+                {/* Draw the axis lines */}
+                <Path d={`M20,7 L20,${height}`} stroke="black" strokeWidth="2" />
+                
+                {/* Add Y-axis labels */}
+                {Array.from({ length: 10 }, (_, index) => (
+                    <SvgText
+                        key={index}
+                        x={30}
+                        y={height - ((index + 1) * step) + 20}
+                        fontSize="10"
+                        fill="black"
+                        textAnchor="middle"
+                    >
+                        {index + 1}
+                    </SvgText>
+                ))}
+            </Svg>
+        </View>
+    );
+};
 
 const GraphDiary = ({ DiaryId }) => {
     const [apiData, setApiData] = useState([]);
@@ -27,66 +65,103 @@ const GraphDiary = ({ DiaryId }) => {
                 };
 
                 const response = await axios.post(url, body, { headers });
-                console.log('API Response:', response.data);
-                setApiData(response.data); // Update state with API response data
+                setApiData(response.data);
             } catch (error) {
                 console.error('API Error:', error);
-                // Handle error
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, []);
+    }, [DiaryId]);
 
     const handlePointPress = (item) => {
         setSelectedItem(item);
     };
 
+    const processData = (data) => {
+        switch (DiaryId) {
+            case 'a8772285-cc12-47c0-b947-eeac0a790b7a':
+                return data.map((entry, index) => ({
+                    x: (index + 1) * 80,
+                    y: 300 - (entry.intensidade * 25),
+                    tooltip: entry.emocao.tooltip || '',
+                    image: emotionImages[entry.emocao.nome] || null
+                }));
+            case 'ee8cf8bb-36ff-4838-883b-75179867d095':
+                return data.map((entry, index) => ({
+                    x: (index + 1) * 80,
+                    y: 300 - ((entry.intensidade/10) * 25),
+                    tooltip: entry.atividades.length > 0 ? entry.atividades[0]?.nome : 'No Activity',
+                    image: null
+                }));
+            case 'a0a1d9b5-2268-4aed-9040-44fb3d88975e':
+                return data.map((entry, index) => ({
+                    x: (index + 1) * 80,
+                    y: 300 - ((entry.intensidade/10) * 25),
+                    tooltip: entry.sintomas.length > 0 ? entry.sintomas[0]?.nome : 'No symptoms',
+                    image: null
+                }));
+        }
+    };
+
     const renderPoints = () => {
         if (apiData.length === 0) return null;
-
-        const maxY = Math.max(...apiData.map(entry => entry.intensidade));
-        const data = apiData.map((entry, index) => ({
-            x: (index + 1) * 50, // Example: Adjust x-coordinates as needed
-            y: 300 - (entry.intensidade * 3), // Adjust y-coordinates based on intensidade
-            tooltip: entry.emocao.tooltip,
-            image: entry.emocao.imagem
-        }));
+        
+        const data = processData(apiData);
 
         const line = d3.line()
-            .x((d) => d.x)
-            .y((d) => d.y)
+            .x(d => d.x)
+            .y(d => d.y)
             .curve(d3.curveCardinal);
 
+        const svgWidth = data.length * 110;
+        const svgHeight = 310;
+
         return (
-            <Svg height="300" width="100%">
-                <Path d={line(data)} stroke="#4682B4" strokeWidth="2" fill="none" />
+            <Svg width={svgWidth} height={svgHeight}>
+                <Path d={line(data)} stroke="black" strokeWidth="2" fill="none" />
                 {data.map((point, index) => (
                     <G key={index}>
-                        <Circle
-                            cx={point.x}
-                            cy={point.y}
-                            r={6}
-                            fill="#4682B4"
-                            onPress={() => handlePointPress(point)}
-                        />
+                        {point.image ? (
+                            <Image
+                                x={point.x - 12}
+                                y={point.y - 12}
+                                width="24"
+                                height="24"
+                                href={point.image}
+                                onPress={() => handlePointPress(point)}
+                            />
+                        ) : (
+                            <Circle
+                                cx={point.x}
+                                cy={point.y}
+                                r={12}
+                                fill="gray"
+                                onPress={() => handlePointPress(point)}
+                            />
+                        )}
                         {selectedItem && selectedItem.x === point.x && selectedItem.y === point.y && (
                             <G>
-                                <Image
-                                    x={point.x + 10}
-                                    y={point.y - 25}
-                                    width="50"
-                                    height="50"
-                                    href={{ uri: point.image }} // Use point.image for actual image
+                                <Rect
+                                    x={point.x + 15}
+                                    y={point.y - 20}
+                                    width="90"
+                                    height="30"
+                                    fill="white"
+                                    stroke="black"
+                                    strokeWidth="1"
+                                    rx="5" // rounded corners
+                                    opacity="0.8" // semi-transparent background
                                 />
                                 <SvgText
-                                    x={point.x + 70}
-                                    y={point.y}
+                                    x={point.x + 20}
+                                    y={point.y - 5}
                                     fontSize="12"
                                     fill="black"
                                     textAnchor="start"
+                                    fontWeight="bold"
                                 >
                                     {point.tooltip}
                                 </SvgText>
@@ -102,23 +177,24 @@ const GraphDiary = ({ DiaryId }) => {
         return (
             <View style={styles.loadingContainer}>
                 <ActivityIndicator size="large" color="#FFA500" />
-                <Text>Loading...</Text>
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
-            <ScrollView contentContainerStyle={{ alignItems: 'center' }}>
-                <Text style={styles.title}>Emotion Intensity Graph</Text>
-                <View style={styles.chart}>
-                    {renderPoints()}
-                </View>
-                {selectedItem && (
-                    <View style={styles.detailsContainer}>
-                        <Text style={styles.detailsText}>Selected Emotion: {selectedItem.tooltip}</Text>
+            <YAxis/>
+            <ScrollView
+                horizontal
+                contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
+                showsHorizontalScrollIndicator={false}
+            >
+                <View style={styles.graphContainer}>
+                   
+                    <View style={styles.graphWrapper}>
+                        {renderPoints()}
                     </View>
-                )}
+                </View>
             </ScrollView>
         </View>
     );
@@ -128,8 +204,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
     },
     loadingContainer: {
         flex: 1,
@@ -137,25 +211,28 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    title: {
-        fontSize: 20,
-        textAlign: 'center',
-        marginTop: 10,
+    graphContainer: {
+        flexDirection: 'row',
+    },
+    yAxisContainer: {
+        position: 'absolute',
+        left: -15,
+        top: 35,
+        bottom: 0,
+        backgroundColor: 'white',
+        zIndex: 1,
+        elevation: 3, // For Android shadow
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 2,
+    },
+    graphWrapper: {
+        marginLeft: 0, // Adjust based on Y-axis width
+        flex: 1,
     },
     chart: {
-        width: '100%',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: 20,
-    },
-    detailsContainer: {
-        marginTop: 20,
-        padding: 10,
-        borderRadius: 5,
-        backgroundColor: '#f0f0f0',
-    },
-    detailsText: {
-        fontSize: 16,
+        marginTop: 0,
     },
 });
 

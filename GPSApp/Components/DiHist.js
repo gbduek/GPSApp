@@ -27,7 +27,7 @@ const DiHist = ({DiaryId}) => {
             },
           }
         );
-        const entries = response.data.slice(0, 5); // Get the latest 5 entries
+        const entries = response.data
         setDiaryEntries(entries);
       } catch (error) {
         console.error('Error fetching diary entries:', error);
@@ -49,20 +49,24 @@ const DiHist = ({DiaryId}) => {
       Raiva: require('../assets/emotions/angry.png'),
     };
 
+  const date = new Date(item.inicio);
+  const formattedDate = date.toLocaleDateString(); // Formats date like "7/15/2024"
+  const formattedTime = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     return (
       <View style={styles.entryContainer}>
         {DiaryId == 'a8772285-cc12-47c0-b947-eeac0a790b7a' &&
         <Image source={emotionImages[item.emocao.nome]} style={styles.emotionImage} />
         }
         <View style={styles.entryDetails}>
-          <Text style={styles.entryDate}>{new Date(item.inicio).toLocaleString()}</Text>
+          <Text style={styles.entryDate}>{`${formattedDate} ${formattedTime}`}</Text>
           {DiaryId == 'a8772285-cc12-47c0-b947-eeac0a790b7a' ? (
             <Text style={styles.entryTitle}>{item.emocao.nome}</Text>
           ) : DiaryId == 'ee8cf8bb-36ff-4838-883b-75179867d095' ? (
-            <Text style={styles.entryTitle}>{item.atividades.length > 0 ? item.atividades[0].nome : 'No Activity'}</Text>
-          ) : 
-            <Text style={styles.entryTitle}>Default Title</Text>
-          }
+            <Text style={styles.entryTitle}>{item.atividades.length > 0 ? item.atividades[0]?.nome : 'No Activity'}</Text>
+          ) : DiaryId == 'a0a1d9b5-2268-4aed-9040-44fb3d88975e' ? (
+            <Text style={styles.entryTitle}>{item.sintomas.length > 0 ? item.sintomas[0]?.nome : 'No symptoms'}</Text>
+          ) : <Text style={styles.entryTitle}>Default Title</Text>}
           {item.observacao &&
           <Text>{item.observacao}</Text>
           }

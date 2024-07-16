@@ -16,43 +16,45 @@ const Rings = ({ iconName }) => {
 
   return (
     <View style={styles.container}>
-      <Svg width="100" height="100">
+      <Svg width="120" height="120">
         {/* Green Circle */}
         <Circle
-          cx="50"
-          cy="50"
-          r="40"
+          cx="60"
+          cy="60"
+          r="47"
           stroke="#4CAF50"
-          strokeWidth="18"
+          strokeWidth="22"
           fill="transparent"
           strokeDasharray={`${greenAngle}, 360`}
-          transform="rotate(-90, 50, 50)"
+          transform="rotate(-90, 60, 60)"
         />
         {/* Yellow Circle */}
         <Circle
-          cx="50"
-          cy="50"
-          r="40"
+          cx="60"
+          cy="60"
+          r="47"
           stroke="#FFEB3B"
-          strokeWidth="18"
+          strokeWidth="22"
           fill="transparent"
           strokeDasharray={`${yellowAngle}, 360`}
-          transform={`rotate(${greenAngle - 90}, 50, 50)`}
+          transform={`rotate(${greenAngle - 90}, 60, 60)`}
         />
         {/* Red Circle */}
         <Circle
-          cx="50"
-          cy="50"
-          r="40"
+          cx="60"
+          cy="60"
+          r="47"
           stroke="#EF4040"
-          strokeWidth="18"
+          strokeWidth="22"
           fill="transparent"
           strokeDasharray={`${redAngle}, 360`}
-          transform={`rotate(${greenAngle + yellowAngle - 90}, 50, 50)`}
+          transform={`rotate(${greenAngle + yellowAngle - 90}, 60, 60)`}
         />
       </Svg>
       <View style={styles.iconContainer}>
-        <Ionicons name={iconName} size={40} color="#ffa500" />
+        {iconName && 
+          <Ionicons name={iconName} size={48} color="#ffa500" />
+        }
       </View>
     </View>
   );
@@ -73,7 +75,7 @@ const styles = StyleSheet.create({
     height: 50,
     borderRadius: 25,
     backgroundColor: 'transparent',
-    top: 25,
+    top: 35,
   },
 });
 

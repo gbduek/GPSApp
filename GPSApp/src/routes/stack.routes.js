@@ -24,7 +24,7 @@ export const MenteStack = () => {
                 name="Registry"
                 component={Registry}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
                 }}
             />
             <Stack.Screen
@@ -53,7 +53,7 @@ export const CorpoStack = () => {
                 name="Registry"
                 component={Registry}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
                 }}
             />
             <Stack.Screen
@@ -82,7 +82,7 @@ export const LifeStyleStack = () => {
                 name="Registry"
                 component={Registry}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
                 }}
             />
             <Stack.Screen

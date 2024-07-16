@@ -7,6 +7,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import DataContext from '../../Context/DataContext';
 import Compass from '../../assets/Icons/Compass';
 import Header from '../../Components/Header';
+import Rings from '../../Components/Rings';
 
 const PdS = () => {
   const { token, userLogged } = useContext(DataContext);
@@ -95,12 +96,15 @@ const PdS = () => {
   };
 
   const renderLogo = (logoUrl) => {
+    let additionalStyle = {};
     if (logoUrl.includes('40c6eaad-8815-4cbc-9caf-78f081f03674')) {
-      return <MaterialCommunityIcons name="head-lightbulb-outline" size={50} color="orange" />;
+      return <MaterialCommunityIcons style={styles.iconContainer} name="head-lightbulb-outline" size={45} color="orange" />;
     } else if (logoUrl.includes('7ed63315-ff7b-4658-b488-7655487e2845')) {
-      return <FontAwesome5 name="running" size={50} color="orange" />;
+      additionalStyle = { left: 41 };
+      return <FontAwesome5 style={[styles.iconContainer, additionalStyle]} name="running" size={45} color="orange" />;
     } else if (logoUrl.includes('20118275-8791-469e-b9f5-3210f990dd01')) {
-      return <Ionicons name="body" size={50} color="orange" />;
+      additionalStyle = { left: 37.5 };
+      return <Ionicons style={[styles.iconContainer, additionalStyle]} name="body" size={45} color="orange" />;
     } else {
       return null; // Handle other cases if necessary
     }
@@ -121,7 +125,10 @@ const PdS = () => {
         {categoriesData.map((category, index) => (
           <View key={index} style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>{category.category}</Text>
-            {renderLogo(category.logo)}
+            <View>
+              <Rings />
+              {renderLogo(category.logo)}
+            </View>
             {category.items.length > 0 && (
               category.items.map((item, idx) => (
                 <View key={idx} style={styles.subCategoryContainer}>
@@ -169,7 +176,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   categoryTitle: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     marginBottom: 10,
     color: '#FFA500',
@@ -207,6 +214,17 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     color: '#333',
   },
+  iconContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'transparent',
+    top: 35,
+    left: 36
+  }
 });
 
 export default PdS;

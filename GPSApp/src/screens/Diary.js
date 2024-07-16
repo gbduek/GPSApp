@@ -106,6 +106,7 @@ const Diary = () => {
             case 'geometricShape2':
                 return (
                     <View style={styles.geometricShape}>
+                        <Text style={styles.shapeTitle}>Diário {selectedOption}</Text>
                         <ScrollView style={{height: 300}}>
                             <DiHist DiaryId={diaryId} />
                         </ScrollView>
@@ -114,7 +115,9 @@ const Diary = () => {
             case 'geometricShape1':
                 return (
                     <View style={styles.geometricShape}>
-                        <ScrollView style={{height: 300}}>
+                        <Text style={[styles.shapeTitle, {marginBottom: -10}]}>Gráfico {selectedOption}</Text>
+                        <ScrollView>
+                            <View style={{height: 10}}/>
                             <GraphDiary DiaryId={diaryId}/>
                         </ScrollView>
                     </View>
@@ -242,6 +245,12 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         elevation: 5,
     },
+    shapeTitle: {
+        color: 'orange',
+        fontWeight: 'bold',
+        fontSize: 20,
+        marginBottom: 10,
+    }
 });
 
 export default Diary;

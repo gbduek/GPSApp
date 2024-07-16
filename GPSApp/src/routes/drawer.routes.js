@@ -1,3 +1,4 @@
+// DrawerRoutes.js
 import React from 'react';
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -7,30 +8,34 @@ import { MenteStack, CorpoStack, LifeStyleStack } from './stack.routes';
 import PdS from "../screens/PdS";
 import Recom from "../screens/Recom";
 import Diary from "../screens/Diary";
+import CustomDrawerContent from './CustomDrawerContent';
 
 const Drawer = createDrawerNavigator();
 
 const DrawerRoutes = () => {
     return (
-        <Drawer.Navigator screenOptions={{
-             headerShown: false,
-             drawerStyle: {backgroundColor: 'orange'},
-             drawerActiveBackgroundColor: 'rgba(255, 255, 255, 0.3)',
-             drawerActiveTintColor: 'white',
-             drawerLabelStyle: {fontSize: 20, fontWeight: 'bold'},
-              }}>
+        <Drawer.Navigator
+            screenOptions={{
+                headerShown: false,
+                drawerStyle: { backgroundColor: 'orange' },
+                drawerActiveBackgroundColor: 'rgba(255, 255, 255, 0.3)',
+                drawerActiveTintColor: 'white',
+                drawerLabelStyle: { fontSize: 20, fontWeight: 'bold', marginLeft: -15 },
+            }}
+            drawerContent={(props) => <CustomDrawerContent {...props} />}
+        >
             <Drawer.Screen
                 name="Home"
                 component={TabRoutes}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="home-outline" size={size} color={color} />
+                        <Ionicons name="home" size={size} color={color} />
                     ),
                 }}
             />
             <Drawer.Screen
                 name="Mente"
-                component={MenteStack} // Use MenteStack navigator
+                component={MenteStack}
                 options={{
                     drawerIcon: ({ color, size }) => (
                         <MaterialCommunityIcons name="head-lightbulb-outline" size={size} color={color} />
@@ -39,19 +44,19 @@ const DrawerRoutes = () => {
             />
             <Drawer.Screen
                 name="Estilo de Vida"
-                component={LifeStyleStack} // Use LifeStyleStack navigator
+                component={LifeStyleStack}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="fitness-outline" size={size} color={color} />
+                        <Ionicons name="fitness" size={size} color={color} />
                     ),
                 }}
             />
             <Drawer.Screen
                 name="Corpo"
-                component={CorpoStack} // Use CorpoStack navigator
+                component={CorpoStack}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="body-outline" size={size} color={color} />
+                        <Ionicons name="body" size={size} color={color} />
                     ),
                 }}
             />
@@ -60,7 +65,7 @@ const DrawerRoutes = () => {
                 component={PdS}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="analytics-outline" size={size} color={color} />
+                        <Ionicons name="bar-chart" size={size} color={color} />
                     ),
                 }}
             />
@@ -69,16 +74,16 @@ const DrawerRoutes = () => {
                 component={Recom}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="bulb-outline" size={size} color={color} />
+                        <Ionicons name="bulb" size={size} color={color} />
                     ),
                 }}
             />
             <Drawer.Screen
-                name="Diário"
+                name="Diários"
                 component={Diary}
                 options={{
                     drawerIcon: ({ color, size }) => (
-                        <Ionicons name="journal-outline" size={size} color={color} />
+                        <Ionicons name="book" size={size} color={color} />
                     ),
                 }}
             />

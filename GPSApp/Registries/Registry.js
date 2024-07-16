@@ -4,7 +4,6 @@ import { Ionicons } from '@expo/vector-icons';
 import GraphicR from '../Components/GraphicR';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
-import Header from '../Components/Header';
 
 const Registry = ({route, navigation }) => {
   const { type, title, id } = route.params;
@@ -89,7 +88,6 @@ const Registry = ({route, navigation }) => {
 
   return (
     <View style={{flex:1}}>
-      <Header/>
       <View style={styles.container}>
         <FlatList
           data={data}
