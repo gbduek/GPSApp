@@ -1,11 +1,10 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
-import Menu from './Menu';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
 
 const Questionary = ({ route, navigation }) => {
-  const { title, id } = route.params;
+  const { type, title, id } = route.params;
   const [questions, setQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [loading, setLoading] = useState(true);
@@ -113,7 +112,7 @@ const Questionary = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.pageTitle}>Mente &gt; {title}</Text>
+      <Text style={styles.pageTitle}>{type ? `${type} > ${title}` : title}</Text>
       {validationError ? (
         <Text style={styles.validationError}>{validationError}</Text>
       ) : null}

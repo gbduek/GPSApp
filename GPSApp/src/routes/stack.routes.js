@@ -18,6 +18,7 @@ export const MenteStack = () => {
                 component={Mente}
                 options={{
                     headerShown: false,
+                    headerTitle: '',
                 }}
             />
             <Stack.Screen
@@ -25,6 +26,8 @@ export const MenteStack = () => {
                 component={Registry}
                 options={{
                     headerShown: true,
+                    headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
             <Stack.Screen
@@ -32,6 +35,7 @@ export const MenteStack = () => {
                 component={Questionary}
                 options={{
                     headerShown: true,
+                    headerTintColor: 'orange',
                 }}
             />
         </Stack.Navigator>
@@ -54,13 +58,15 @@ export const CorpoStack = () => {
                 component={Registry}
                 options={{
                     headerShown: true,
+                    headerTintColor: 'orange',
                 }}
             />
             <Stack.Screen
                 name="Questionary"
                 component={Questionary}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
+                    headerTintColor: 'orange',
                 }}
             />
         </Stack.Navigator>
@@ -76,6 +82,7 @@ export const LifeStyleStack = () => {
                 component={LifeStyle}
                 options={{
                     headerShown: false,
+                    headerTitle: '',
                 }}
             />
             <Stack.Screen
@@ -83,13 +90,17 @@ export const LifeStyleStack = () => {
                 component={Registry}
                 options={{
                     headerShown: true,
+                    headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
             <Stack.Screen
                 name="Questionary"
                 component={Questionary}
                 options={{
-                    headerShown: false,
+                    headerShown: true,
+                    headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
         </Stack.Navigator>

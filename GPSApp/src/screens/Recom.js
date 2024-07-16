@@ -1,15 +1,25 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, ScrollView } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
 import Menu from '../../Components/Menu';
 import Header from '../../Components/Header';
+import Popup from '../../Components/Popups/Popup';
+import Compass from '../../assets/Icons/Compass';
+
+const colorMap = {
+  1: '#4CAF50',  // Grau 1 -> Green
+  2: '#FFEB3B', // Grau 2 -> Yellow
+  3: '#EF4040',    // Grau 3 -> Red
+};
 
 const Recom = () => {
-  const { token, userLogged } = useContext(DataContext); // Accessing token and userLogged from context
+  const { token, userLogged } = useContext(DataContext);
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedRec, setSelectedRec] = useState(null);
+  const [isPopupVisible, setPopupVisible] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -24,7 +34,7 @@ const Recom = () => {
           {
             user: userLogged,
             indicador: '',
-            risco: 3,
+            risco: 0,
             tipo: '',
             filter: ''
           },
@@ -44,7 +54,17 @@ const Recom = () => {
     };
 
     fetchData();
-  }, [token, userLogged]); // Ensure useEffect runs when token or userLogged changes
+  }, [token, userLogged]);
+
+  const showPopup = (rec) => {
+    setSelectedRec(rec);
+    setPopupVisible(true);
+  };
+
+  const hidePopup = () => {
+    setPopupVisible(false);
+    setSelectedRec(null);
+  };
 
   if (loading) {
     return (
@@ -65,32 +85,46 @@ const Recom = () => {
     );
   }
 
-  // Rendering logic for data
   return (
     <View style={{flex:1}}>
       <Header/>
       <View>
         <Menu/>
         <ScrollView contentContainerStyle={styles.scrollContainer}>
-        <Text style={styles.title}>Recomendações</Text>
-        {data && data.map((item, index) => (
-            <View key={index} style={[styles.itemContainer, { borderColor: item.cor }]}>
-            <View style={[styles.indicator, { backgroundColor: item.cor }]} />
-            <View style={styles.itemContent}>
+          <Text style={styles.title}>Recomendações</Text>
+          {data && data.map((item, index) => (
+            <View key={index} style={styles.itemContainer}>
+              <View style={styles.itemContent}>
                 <Text style={styles.indicador}>{item.indicador}</Text>
                 <Text style={styles.tipo}>{item.tipo}</Text>
-                <Text style={styles.grau}>Grau: {item.grau}</Text>
                 {item.recomendacoes && item.recomendacoes.map((rec, idx) => (
-                <View key={idx} style={styles.recommendation}>
+                  <View key={idx} style={styles.recommendation}>
+                    {/* Render Compass icon based on Grau */}
+                    <Compass
+                      color={colorMap[rec.grau]}
+                    />
                     <Text style={styles.recommendationText}>{rec.nome}</Text>
-                    <Text style={styles.recommendationText}>{rec.recomendacao}</Text>
-                </View>
+                    {/* Button to show popup */}
+                    <TouchableOpacity 
+                      style={styles.button} 
+                      onPress={() => showPopup(rec)}
+                    >
+                      <Text style={styles.buttonText}>Detalhes</Text>
+                    </TouchableOpacity>
+                  </View>
                 ))}
+              </View>
             </View>
-            </View>
-        ))}
-        <View style={styles.footer} />
+          ))}
+          <View style={styles.footer} />
         </ScrollView>
+
+        {/* Render Popup if visible */}
+        <Popup 
+          isVisible={isPopupVisible}
+          data={selectedRec}
+          onClose={hidePopup}
+        />
       </View>
     </View>
   );
@@ -106,27 +140,25 @@ const styles = StyleSheet.create({
   scrollContainer: {
     flexGrow: 1,
     padding: 16,
+    backgroundColor: 'white',
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
     textAlign: 'center',
+    color: 'orange',
   },
   itemContainer: {
-    borderWidth: 2,
+    marginBottom: 16,
+    backgroundColor: '#ffff',
     borderRadius: 8,
     padding: 16,
-    marginBottom: 16,
-    backgroundColor: '#fff',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  indicator: {
-    width: 24,
-    height: 24,
-    borderRadius: 12,
-    marginRight: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   itemContent: {
     flex: 1,
@@ -134,16 +166,15 @@ const styles = StyleSheet.create({
   indicador: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: 'orange',
   },
   tipo: {
     fontSize: 14,
     color: '#666',
   },
-  grau: {
-    fontSize: 14,
-    marginVertical: 4,
-  },
   recommendation: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 8,
     backgroundColor: '#f0f0f0',
     padding: 8,
@@ -151,6 +182,20 @@ const styles = StyleSheet.create({
   },
   recommendationText: {
     fontSize: 14,
+    flex: 1,
+    marginLeft: 10,
+    fontWeight: 'bold',
+  },
+  button: {
+    backgroundColor: 'orange',
+    padding: 10,
+    borderRadius: 5,
+    marginLeft: 10,
+    alignItems: 'center',
+  },
+  buttonText: {
+    color: '#fff',
+    fontWeight: 'bold',
   },
   errorText: {
     fontSize: 16,

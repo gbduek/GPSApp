@@ -38,7 +38,7 @@ const Registry = ({route, navigation }) => {
 
   const handleNewRecord = () => {
     // Navigate to the Questionary screen with dynamic questions and options
-    navigation.navigate('Questionary', { title, id });
+    navigation.navigate('Questionary', { type, title, id });
   };
 
   const renderItem = ({ item }) => {

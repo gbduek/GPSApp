@@ -1,21 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import axios from 'axios';
+import DataContext from '../../Context/DataContext';
 import Menu from '../../Components/Menu';
 import Header from '../../Components/Header';
 
 const Profile = () => {
+  const { token, userLogged } = useContext(DataContext);
+  const [profileData, setProfileData] = useState({});
   const [selectedSex, setSelectedSex] = useState('');
   const [isDropdownVisible, setIsDropdownVisible] = useState(false);
 
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const response = await axios.get(`https://api3.gps.med.br/API/GPS_PessoaFisica(Id=${userLogged})`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        const data = JSON.parse(response.data.value);
+        setProfileData(data);
+        setSelectedSex(data.Sexo === 'M' ? 'masculino' : 'feminino');
+      } catch (error) {
+        console.error('Error fetching profile data:', error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
   const data = [
-    { title: 'Nome e Sobrenome*', placeholder: 'Digite seu nome completo', type: 'text' },
-    { title: 'CPF*', placeholder: 'Digite seu CPF', type: 'text' },
-    { title: 'E-mail*', placeholder: 'Digite seu e-mail', type: 'text' },
-    { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text' },
-    { title: 'Sexo*', placeholder: '', type: 'selector' },  // Indicate this is a selector type
-    { title: 'Situação*', placeholder: 'Digite sua situação', type: 'text' },
-    { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text' },
+    { title: 'Nome e Sobrenome*', placeholder: 'Digite seu nome completo', type: 'text', value: profileData.Nome },
+    { title: 'CPF*', placeholder: 'Digite seu CPF', type: 'text', value: profileData.CPF },
+    { title: 'E-mail*', placeholder: 'Digite seu e-mail', type: 'text', value: profileData.Email },
+    { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text', value: profileData.DataNascimento },
+    { title: 'Sexo*', placeholder: '', type: 'selector', value: profileData.Sexo },
+    { title: 'Situação*', placeholder: 'Digite sua situação', type: 'text', value: profileData.Ativo ? 'Ativo' : 'Inativo' },
+    { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text', value: profileData.DataCadastro },
   ];
 
   const renderItem = ({ item }) => {
@@ -58,12 +81,13 @@ const Profile = () => {
           style={styles.input}
           placeholder={item.placeholder}
           placeholderTextColor="#999"
+          value={item.value}
         />
       </View>
     );
   };
 
-  // Generate a random image URL for the dummy profile picture
+
   const randomImageURL = `https://api3.gps.med.br/API/upload/image?vinculo=e91f978d-da58-e792-92cb-c0b993b24afd&tipo=pessoa`;
 
   return (
@@ -75,7 +99,6 @@ const Profile = () => {
         ListHeaderComponent={() => (
           <View style={styles.container}>
             <View style={styles.profileContainer}>
-              {/* Use the random image URL as the dummy profile picture */}
               <Image
                 style={styles.profileImage}
                 source={{ uri: randomImageURL }}
@@ -115,28 +138,28 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   profileImage: {
-    width: 120,  // Increased size
-    height: 120,  // Increased size
-    borderRadius: 60,  // Adjusted to match new size
-    borderWidth: 3,  // Increased border width
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
     borderColor: '#FFA500',
   },
   inputContainer: {
-    marginBottom: 25,  // Increased margin
+    marginBottom: 25,
   },
   inputTitle: {
     fontWeight: 'bold',
     color: '#FFA500',
-    marginBottom: 10,  // Increased margin
-    fontSize: 18,  // Increased font size
+    marginBottom: 10,
+    fontSize: 18,
   },
   input: {
     borderWidth: 1,
     borderColor: '#999',
     borderRadius: 5,
-    paddingHorizontal: 12,  // Increased padding
-    paddingVertical: 10,  // Increased padding
-    fontSize: 18,  // Increased font size
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    fontSize: 18,
   },
   selector: {
     flexDirection: 'row',
@@ -145,11 +168,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#999',
     borderRadius: 5,
-    paddingHorizontal: 12,  // Increased padding
-    paddingVertical: 10,  // Increased padding
+    paddingHorizontal: 12,
+    paddingVertical: 10,
   },
   selectorText: {
-    fontSize: 18,  // Increased font size
+    fontSize: 18,
     color: '#000',
   },
   dropdown: {
@@ -159,29 +182,29 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   dropdownOption: {
-    padding: 12,  // Increased padding
+    padding: 12,
     borderBottomWidth: 1,
     borderBottomColor: '#ddd',
   },
   dropdownText: {
-    fontSize: 18,  // Increased font size
+    fontSize: 18,
   },
   buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 30,  // Increased margin
+    marginTop: 30,
   },
   button: {
     width: '48%',
-    borderRadius: 30,  // Increased border radius
-    paddingVertical: 12,  // Increased padding
+    borderRadius: 30,
+    paddingVertical: 12,
     alignItems: 'center',
     backgroundColor: '#FFF',
     borderWidth: 2,
     borderColor: '#FFA500',
   },
   buttonText: {
-    fontSize: 18,  // Increased font size
+    fontSize: 18,
     fontWeight: 'bold',
     color: '#FFA500',
   },

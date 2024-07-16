@@ -87,21 +87,24 @@ const GraphDiary = ({ DiaryId }) => {
                     x: (index + 1) * 80,
                     y: 300 - (entry.intensidade * 25),
                     tooltip: entry.emocao.tooltip || '',
-                    image: emotionImages[entry.emocao.nome] || null
+                    image: emotionImages[entry.emocao.nome] || null,
+                    date: new Date(entry.inicio).toLocaleDateString() || null
                 }));
             case 'ee8cf8bb-36ff-4838-883b-75179867d095':
                 return data.map((entry, index) => ({
                     x: (index + 1) * 80,
                     y: 300 - ((entry.intensidade/10) * 25),
                     tooltip: entry.atividades.length > 0 ? entry.atividades[0]?.nome : 'No Activity',
-                    image: null
+                    image: null,
+                    date: new Date(entry.inicio).toLocaleDateString() || null
                 }));
             case 'a0a1d9b5-2268-4aed-9040-44fb3d88975e':
                 return data.map((entry, index) => ({
                     x: (index + 1) * 80,
                     y: 300 - ((entry.intensidade/10) * 25),
                     tooltip: entry.sintomas.length > 0 ? entry.sintomas[0]?.nome : 'No symptoms',
-                    image: null
+                    image: null,
+                    date: new Date(entry.inicio).toLocaleDateString() || null
                 }));
         }
     };
@@ -148,18 +151,28 @@ const GraphDiary = ({ DiaryId }) => {
                                     x={point.x + 15}
                                     y={point.y - 20}
                                     width="90"
-                                    height="30"
-                                    fill="white"
+                                    height="35"
+                                    fill="black"
                                     stroke="black"
                                     strokeWidth="1"
                                     rx="5" // rounded corners
-                                    opacity="0.8" // semi-transparent background
+                                    opacity="0.7"
                                 />
                                 <SvgText
                                     x={point.x + 20}
                                     y={point.y - 5}
                                     fontSize="12"
-                                    fill="black"
+                                    fill="white"
+                                    textAnchor="start"
+                                    fontWeight="bold"
+                                >
+                                    {point.date}
+                                </SvgText>
+                                <SvgText
+                                    x={point.x + 20}
+                                    y={point.y + 10}
+                                    fontSize="12"
+                                    fill="white"
                                     textAnchor="start"
                                     fontWeight="bold"
                                 >
@@ -228,7 +241,7 @@ const styles = StyleSheet.create({
         shadowRadius: 2,
     },
     graphWrapper: {
-        marginLeft: 0, // Adjust based on Y-axis width
+        marginLeft: 0,
         flex: 1,
     },
     chart: {

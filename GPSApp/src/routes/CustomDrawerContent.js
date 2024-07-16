@@ -1,8 +1,13 @@
 import React from 'react';
-import { View, StyleSheet, Image } from 'react-native';
-import { DrawerItemList } from '@react-navigation/drawer';
+import { View, StyleSheet, Image, Linking } from 'react-native';
+import { DrawerItemList, DrawerItem } from '@react-navigation/drawer';
+import { Ionicons } from "@expo/vector-icons";
 
 const CustomDrawerContent = (props) => {
+  const handleAjudaPress = () => {
+    Linking.openURL('https://gps.med.br/biblioteca-de-tutoriais/');
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <View style={styles.header}>
@@ -13,6 +18,15 @@ const CustomDrawerContent = (props) => {
       </View>
       <View style={styles.drawerItems}>
         <DrawerItemList {...props} />
+        <DrawerItem
+          label="Ajuda"
+          labelStyle={styles.drawerLabel}
+          icon={({ color, size }) => (
+            <Ionicons name="alert-circle" size={size} color={color} />
+          )}
+          onPress={handleAjudaPress}
+          style={styles.drawerItem}
+        />
       </View>
     </View>
   );
@@ -35,6 +49,14 @@ const styles = StyleSheet.create({
     top: 20,
     flex: 1,
     backgroundColor: 'orange',
+  },
+  drawerLabel: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginLeft: -15,
+  },
+  drawerItem: {
+    marginTop: 10,
   },
 });
 
