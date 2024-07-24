@@ -78,6 +78,7 @@ const LifeStyle = ({ navigation }) => {
           style={styles.image}
         />
         <FlatList
+          scrollIndicatorInsets={{right: 1}}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (

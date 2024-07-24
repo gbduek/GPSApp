@@ -61,6 +61,15 @@ const DrawerRoutes = () => {
                 }}
             />
             <Drawer.Screen
+                name="Diários"
+                component={Diary}
+                options={{
+                    drawerIcon: ({ color, size }) => (
+                        <Ionicons name="book" size={size} color={color} />
+                    ),
+                }}
+            />
+            <Drawer.Screen
                 name="Perfil de Saúde"
                 component={PdS}
                 options={{
@@ -75,15 +84,6 @@ const DrawerRoutes = () => {
                 options={{
                     drawerIcon: ({ color, size }) => (
                         <Ionicons name="bulb" size={size} color={color} />
-                    ),
-                }}
-            />
-            <Drawer.Screen
-                name="Diários"
-                component={Diary}
-                options={{
-                    drawerIcon: ({ color, size }) => (
-                        <Ionicons name="book" size={size} color={color} />
                     ),
                 }}
             />

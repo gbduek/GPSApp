@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import EmotionPopup from '../../Components/Popups/EmotionPopup';
 import MovementPopup from '../../Components/Popups/MovementPopup';
 import DiHist from '../../Components/DiHist';
 import Header from '../../Components/Header';
 import GraphDiary from '../../Components/GraphDiary';
+import Picker from '../../Components/Picker'; // Import the Picker component
 
 const Diary = () => {
-    const [isSelectorOpen, setIsSelectorOpen] = useState(false);
     const [diaryId, setDiaryId] = useState('a8772285-cc12-47c0-b947-eeac0a790b7a');
     const [selectedOption, setSelectedOption] = useState('de Emoções');
     const [isEmotionPopupOpen, setIsEmotionPopupOpen] = useState(false);
@@ -18,13 +18,11 @@ const Diary = () => {
 
     const options = ['de Emoções', 'de Movimento', 'de Sintomas'];
 
-    const handleSelectorPress = () => setIsSelectorOpen(!isSelectorOpen);
-
-    const handleOptionPress = (option) => {
+    // Function to handle option change
+    const handleOptionChange = (option) => {
         setSelectedOption(option);
-        setIsSelectorOpen(false);
-        closeAllPopups();
         updateImageUriAndDescription(option);
+        closeAllPopups();
     };
 
     const toggleEmotionPopup = () => setIsEmotionPopupOpen(!isEmotionPopupOpen);
@@ -87,21 +85,11 @@ const Diary = () => {
                 );
             case 'selector':
                 return (
-                    <View>
-                        <TouchableOpacity style={[styles.selector, isSelectorOpen && styles.selectorOpen]} onPress={handleSelectorPress}>
-                            <Text style={styles.selectorText}>{selectedOption}</Text>
-                            <FontAwesome name={isSelectorOpen ? 'angle-up' : 'angle-down'} size={20} color="orange" />
-                        </TouchableOpacity>
-                        {isSelectorOpen && (
-                            <View style={styles.optionsContainer}>
-                                {options.map((option) => (
-                                    <TouchableOpacity key={option} style={styles.option} onPress={() => handleOptionPress(option)}>
-                                        <Text style={styles.optionText}>{option}</Text>
-                                    </TouchableOpacity>
-                                ))}
-                            </View>
-                        )}
-                    </View>
+                    <Picker
+                        options={options}
+                        selectedOption={selectedOption}
+                        onSelect={handleOptionChange}
+                    />
                 );
             case 'geometricShape2':
                 return (
@@ -199,39 +187,6 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
         marginBottom: 20, // spacing between shapes
-    },
-    selector: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: 10,
-        borderWidth: 1,
-        borderColor: 'orange',
-        borderRadius: 25,
-        marginBottom: 20,
-    },
-    selectorOpen: {
-        marginBottom: 10,
-    },
-    selectorText: {
-        fontSize: 16,
-        color: 'orange',
-    },
-    optionsContainer: {
-        backgroundColor: 'white',
-        borderWidth: 1,
-        borderColor: 'orange',
-        borderRadius: 5,
-        marginBottom: 10,
-    },
-    option: {
-        padding: 10,
-        borderBottomWidth: 1,
-        borderBottomColor: 'orange',
-    },
-    optionText: {
-        fontSize: 16,
-        color: 'orange',
     },
     addButton: {
         position: 'absolute',

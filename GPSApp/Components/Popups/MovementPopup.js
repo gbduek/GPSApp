@@ -1,189 +1,140 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState, useEffect, useContext } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Slider from '@react-native-community/slider';
+import axios from 'axios';
+import DataContext from '../../Context/DataContext';
 import { FontAwesome } from '@expo/vector-icons';
+import Picker from '../Picker';
 
 const MovementPopup = ({ onClose }) => {
+  const { token, userLogged } = useContext(DataContext);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedActivity, setSelectedActivity] = useState(null);
-  const [intensity, setIntensity] = useState(5);
+  const [activities, setActivities] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const activities = [
-    'Artes Marciais', 'Basquete', 'Beach tênis', 'Caiaque', 'Caminhada',
-    'Esteira', 'Canoa', 'Ciclismo', 'Spinning', 'Futebol', 'Meditação'
-  ];
+  useEffect(() => {
+    const fetchActivities = async () => {
+      try {
+        const response = await axios.get('https://api3.gps.med.br/API/diario/dados/ee8cf8bb-36ff-4838-883b-75179867d095', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setActivities(response.data);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error fetching activities:', error);
+        setLoading(false);
+      }
+    };
 
-  const toggleDatePicker = () => {
-    setShowDatePicker(!showDatePicker);
-  };
-
-  const onDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setShowDatePicker(false);
-    setDate(currentDate);
-  };
-
-  const toggleActivityDropdown = () => {
-    setSelectedActivity(selectedActivity === null ? activities[0] : null);
-  };
+    fetchActivities();
+  }, []);
 
   return (
     <View style={styles.popupContainer}>
-      <View style={styles.popupContent}>
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-          <FontAwesome name="times" size={24} color="orange" />
-        </TouchableOpacity>
-        <Text style={styles.popupTitle}>Novo Registro</Text>
-        
-        <Text style={styles.subtitle}>Data e Hora</Text>
-        <TouchableOpacity onPress={toggleDatePicker} style={styles.datePicker}>
-          <Text style={styles.dateText}>{date.toLocaleString()}</Text>
-        </TouchableOpacity>
-        {showDatePicker && (
-          <DateTimePicker
-            value={date}
-            mode="datetime"
-            display="default"
-            onChange={onDateChange}
-          />
-        )}
-
-        <TouchableOpacity onPress={toggleActivityDropdown} style={styles.dropdownButton}>
-          <Text style={styles.subtitle}>Atividades</Text>
-          <Text style={styles.dropdownText}>{selectedActivity || 'Selecionar atividade'}</Text>
-          <FontAwesome name={selectedActivity ? 'angle-up' : 'angle-down'} size={20} color="orange" />
-        </TouchableOpacity>
-        {selectedActivity && (
-          <View style={styles.activitiesContainer}>
-            {activities.map((activity, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.activityItem}
-                onPress={() => setSelectedActivity(activity)}
-              >
-                <Text style={styles.activityText}>{activity}</Text>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-
-        <Text style={styles.subtitle}>Intensidade</Text>
-        <Slider
-          style={styles.slider}
-          minimumValue={0}
-          maximumValue={10}
-          step={1}
-          value={intensity}
-          onValueChange={(value) => setIntensity(value)}
-          minimumTrackTintColor="orange"
-          maximumTrackTintColor="#000000"
-          thumbTintColor="orange"
+      <TouchableOpacity onPress={onClose} style={styles.closeButton}>
+        <FontAwesome name="close" size={24} color="black" />
+      </TouchableOpacity>
+      <Text style={styles.label}>Select Date</Text>
+      <TouchableOpacity onPress={() => setShowDatePicker(true)} style={styles.datePickerButton}>
+        <Text style={styles.dateText}>{date.toDateString()}</Text>
+      </TouchableOpacity>
+      {showDatePicker && (
+        <DateTimePicker
+          value={date}
+          mode="date"
+          display="default"
+          onChange={(event, selectedDate) => {
+            const currentDate = selectedDate || date;
+            setShowDatePicker(false);
+            setDate(currentDate);
+          }}
         />
-        <Text style={styles.intensityValue}>{intensity}</Text>
-
-        <TouchableOpacity style={styles.registerButton}>
-          <Text style={styles.registerButtonText}>Registrar</Text>
-        </TouchableOpacity>
-      </View>
+      )}
+      <Text style={styles.label}>Select Activity</Text>
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <Picker
+          options={activities.map((activity) => activity.nome)}
+          selectedOption={selectedActivity}
+          onSelect={(option) => {
+            const selected = activities.find((activity) => activity.nome === option);
+            setSelectedActivity(selected.id);
+          }}
+        />
+      )}
+      <Text style={styles.label}>Select Intensity</Text>
+      <Slider
+        style={styles.slider}
+        minimumValue={0}
+        maximumValue={100}
+        step={1}
+        onValueChange={(value) => console.log(value)}
+      />
+      <TouchableOpacity style={styles.submitButton}>
+        <Text style={styles.submitButtonText}>Submit</Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   popupContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.8,
+    shadowRadius: 2,
+    elevation: 5,
     position: 'absolute',
     top: 0,
     left: 0,
     right: 0,
     bottom: 0,
-    zIndex: 1000,
-  },
-  popupContent: {
-    width: '80%',
-    backgroundColor: 'white',
-    borderRadius: 10,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    justifyContent: 'center',
   },
   closeButton: {
-    position: 'absolute',
-    top: 10,
-    right: 10,
+    alignSelf: 'flex-end',
   },
-  popupTitle: {
-    fontSize: 20,
-    fontWeight: 'bold',
-    color: 'orange',
-    textAlign: 'center',
+  label: {
+    fontSize: 16,
     marginBottom: 10,
   },
-  subtitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: 'orange',
-    marginTop: 10,
-  },
-  datePicker: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'orange',
+  datePickerButton: {
+    padding: 10,
+    backgroundColor: '#f0f0f0',
+    borderRadius: 5,
+    marginBottom: 20,
   },
   dateText: {
     fontSize: 16,
   },
-  dropdownButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'orange',
-    marginTop: 10,
-  },
-  dropdownText: {
-    fontSize: 16,
-  },
-  activitiesContainer: {
-    maxHeight: 150,
-    overflowY: 'scroll',
-    marginTop: 10,
-  },
-  activityItem: {
-    paddingVertical: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: 'orange',
-  },
-  activityText: {
-    fontSize: 16,
+  picker: {
+    height: 50,
+    width: '100%',
+    marginBottom: 20,
   },
   slider: {
-    marginTop: 10,
+    width: '100%',
+    height: 40,
+    marginBottom: 20,
   },
-  intensityValue: {
-    fontSize: 16,
-    textAlign: 'center',
-    marginTop: 10,
-  },
-  registerButton: {
+  submitButton: {
     backgroundColor: 'orange',
-    borderRadius: 25,
-    paddingVertical: 15,
-    marginTop: 20,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
   },
-  registerButtonText: {
-    fontSize: 16,
+  submitButtonText: {
     color: 'white',
-    textAlign: 'center',
+    fontSize: 16,
   },
 });
 

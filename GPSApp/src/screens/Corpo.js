@@ -77,6 +77,7 @@ const Corpo = ({ navigation }) => {
           style={styles.image}
         />
         <FlatList
+          scrollIndicatorInsets={{right: 1}}
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
@@ -127,6 +128,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
+    paddingHorizontal: 10,
   },
   subComponentTitle: {
     fontWeight: 'bold',

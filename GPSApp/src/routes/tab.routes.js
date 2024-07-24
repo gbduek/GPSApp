@@ -8,7 +8,9 @@ const Tab = createBottomTabNavigator();
 
 const TabRoutes = () => {
     return (
-        <Tab.Navigator screenOptions={{headerShown: false, tabBarActiveTintColor: 'orange'}}>
+        <Tab.Navigator screenOptions={{
+          headerShown: false,
+          tabBarActiveTintColor: 'orange'}}>
             <Tab.Screen name="Feed" component={HomeScreen}
              options={{
                 tabBarIcon: ({size, color}) => <Ionicons name={'home'} color={color} size={size}/>,
