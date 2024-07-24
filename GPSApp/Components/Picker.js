@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     maxHeight: 200, // Adjust the max height as needed
   },
   flatList: {
-    maxHeight: 200, // Adjust the max height as needed
+    maxHeight: 100, // Adjust the max height as needed
   },
   option: {
     padding: 10,
