@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import GraphicR from '../Components/GraphicR';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
+import GraphEvolutivo from '../Components/GraphEvolutivo';
 
 const Registry = ({route, navigation }) => {
   const { type, title, id } = route.params;
@@ -55,16 +56,22 @@ const Registry = ({route, navigation }) => {
         );
       case 'geometricShape':
         return (
-          <View style={styles.geometricShape}>
-            <View style={styles.shapeHeader}>
-              <Text style={styles.shapeTitle}>{title}</Text>
-              <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
-                <Ionicons name="add" size={30} color="white" />
-              </TouchableOpacity>
+          <View>
+            <View style={styles.geometricShape}>
+              <View style={styles.shapeHeader}>
+                <Text style={styles.shapeTitle}>{title}</Text>
+                <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
+                  <Ionicons name="add" size={30} color="white" />
+                </TouchableOpacity>
+              </View>
+              <Text style={styles.description}>{description}</Text>
+              <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>
+              <GraphicR id={id}/>
             </View>
-            <Text style={styles.description}>{description}</Text>
-            <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>
-            <GraphicR id={id}/>
+            <View style={[styles.geometricShape, {marginTop: 20}]}>
+              <Text style={styles.shapeTitle}>Gráfico Evolutivo</Text>
+              <GraphEvolutivo id={id}/>
+            </View>
           </View>
         );
       default:

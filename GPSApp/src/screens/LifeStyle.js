@@ -40,7 +40,7 @@ const LifeStyle = ({ navigation }) => {
     { id: '9c82c3c0-e801-49ef-8659-524596dbef5f', type: 'Estilo de Vida', title: 'Mudança de Comportamento' },
     { id: '22fc17f4-9e04-4b16-abbd-7e3a0fc980bb', type: 'Estilo de Vida', title: 'Prevenção de Acidentes' },
     { id: 'cfba6c35-391d-4c4e-ba1b-8d3bda151fba', type: 'Estilo de Vida', title: 'Doenças Crônicas' },
-    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', type: 'Estilo de Vida', title: 'Exames Preventivos' },
+    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', type: 'Estilo de Vida', title: 'Exames Preventivos (m)' },
   ];
 
   const handleFormOpen = (item) => {

@@ -35,10 +35,10 @@ const Profile = () => {
     { title: 'Nome e Sobrenome*', placeholder: 'Digite seu nome completo', type: 'text', value: profileData.Nome },
     { title: 'CPF*', placeholder: 'Digite seu CPF', type: 'text', value: profileData.CPF },
     { title: 'E-mail*', placeholder: 'Digite seu e-mail', type: 'text', value: profileData.Email },
-    { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text', value: profileData.DataNascimento },
+    { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text', value: new Date(profileData.DataNascimento).toLocaleDateString() },
     { title: 'Sexo*', placeholder: '', type: 'selector', value: profileData.Sexo },
     { title: 'Situação*', placeholder: 'Digite sua situação', type: 'text', value: profileData.Ativo ? 'Ativo' : 'Inativo' },
-    { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text', value: profileData.DataCadastro },
+    { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text', value: new Date(profileData.DataCadastro).toLocaleDateString() },
   ];
 
   const renderItem = ({ item }) => {

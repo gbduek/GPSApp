@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity }
 import { FontAwesome } from '@expo/vector-icons';
 import EmotionPopup from '../../Components/Popups/EmotionPopup';
 import MovementPopup from '../../Components/Popups/MovementPopup';
+import SymptomPopup from '../../Components/Popups/SymptomPopup';
 import DiHist from '../../Components/DiHist';
 import Header from '../../Components/Header';
 import GraphDiary from '../../Components/GraphDiary';
@@ -13,6 +14,7 @@ const Diary = () => {
     const [selectedOption, setSelectedOption] = useState('de Emoções');
     const [isEmotionPopupOpen, setIsEmotionPopupOpen] = useState(false);
     const [isMovementPopupOpen, setIsMovementPopupOpen] = useState(false);
+    const [isSymptomPopupOpen, setIsSymptomPopupOpen] = useState(false);
     const [imageUri, setImageUri] = useState('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
     const [description, setDescription] = useState('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
 
@@ -29,9 +31,12 @@ const Diary = () => {
 
     const toggleMovementPopup = () => setIsMovementPopupOpen(!isMovementPopupOpen);
 
+    const toggleSymptomPopup = () => setIsSymptomPopupOpen(!isSymptomPopupOpen);
+
     const closeAllPopups = () => {
         setIsEmotionPopupOpen(false);
         setIsMovementPopupOpen(false);
+        setIsSymptomPopupOpen(false);
     };
 
     const updateImageUriAndDescription = (option) => {
@@ -65,6 +70,8 @@ const Diary = () => {
                 return <EmotionPopup onClose={() => setIsEmotionPopupOpen(false)} />;
             case 'de Movimento':
                 return <MovementPopup onClose={() => setIsMovementPopupOpen(false)} />;
+            case 'de Sintomas':
+                return <SymptomPopup onClose={() => setIsSymptomPopupOpen(false)}/>
             default:
                 return null;
         }
@@ -131,12 +138,15 @@ const Diary = () => {
                     keyExtractor={(item) => item.id}
                     renderItem={renderItem}
                     contentContainerStyle={styles.flatListContent}
+                    scrollIndicatorInsets={{right: 1}}
                 />
 
                 {isEmotionPopupOpen && renderPopup()}
                 {isMovementPopupOpen && renderPopup()}
+                {isSymptomPopupOpen && renderPopup()}
 
-                <TouchableOpacity style={styles.addButton} onPress={() => selectedOption === 'de Emoções' ? toggleEmotionPopup() : toggleMovementPopup()}>
+                <TouchableOpacity style={styles.addButton} onPress={() => selectedOption === 'de Emoções' ? toggleEmotionPopup() :
+                     selectedOption === 'de Movimento' ? toggleMovementPopup() :  toggleSymptomPopup()}>
                     <FontAwesome name="plus" size={20} color="white" />
                 </TouchableOpacity>
             </View>

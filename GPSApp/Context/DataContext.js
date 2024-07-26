@@ -11,6 +11,7 @@ export const DataProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [userLogged, setUserLogged] = useState(null); //Id do Usuário
   const [token, setToken] = useState(null); // Token do Usuário
+  const [temDiario, setTemDiario] = useState(false);
 
   // Function to handle login
   const handleLogin = async (email, password) => {
@@ -31,7 +32,7 @@ export const DataProvider = ({ children }) => {
         }
       });
 
-      const { userLogged, userLoggedName, profilePhoto } = userDataResponse.data;
+      const { userLogged, userLoggedName, profilePhoto, temDiario } = userDataResponse.data;
 
       setUserLogged(userLogged); // Set userLogged to state
       await AsyncStorage.setItem('userLogged', userLogged);
@@ -43,6 +44,7 @@ export const DataProvider = ({ children }) => {
 
       setProfilePhoto(profilePhoto); // Set profile photo to state
       await AsyncStorage.setItem('profilePhoto', profilePhoto);
+      setTemDiario(temDiario);
     } catch (error) {
       throw error; // Propagate error to handle in LoginScreen
     } finally {
@@ -101,7 +103,8 @@ export const DataProvider = ({ children }) => {
       percentages, 
       loading, 
       token, 
-      userLogged, 
+      userLogged,
+      temDiario,
       handleLogin, 
       fetchPercentages
     }}>
