@@ -80,6 +80,7 @@ const PdS = () => {
               subs: sub.Subs.map(subItem => ({
                 nome: subItem.Nome,
                 grau: subItem.Grau,
+                valor: subItem.valor ?? null,
                 // Add more fields as needed
               })),
             }));
@@ -144,9 +145,12 @@ const PdS = () => {
                           <Compass color={'#FFEB3B'} transf={"rotate(1215 2560 2560)"}/>) :
                         subItem.grau == '3' ? (
                           <Compass color={'#EF4040'}/>) : (
-                          <Text style={styles.subItemText}>Grau: {subItem.grau}</Text>)}
+                          <Text></Text>)}
                         {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
                         {/* Render additional fields here as needed */}
+                        {subItem.valor && (
+                          <Text style={styles.subItemText}>Valor: {subItem.valor}</Text>
+                        )}
                       </View>
                     ))
                   )}

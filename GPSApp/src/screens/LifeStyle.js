@@ -36,11 +36,15 @@ const LifeStyle = ({ navigation }) => {
 
   const data = [
     { id: 'e32afaa7-f67c-435b-b54b-30ec4a1bb238', type: 'Estilo de Vida', title: 'Tabagismo' },
+    { id: '65e5dc7f-259d-441f-a1b7-5a88193c486c', type: 'Estilo de Vida', title: 'Sonolência' },
+    { id: '31d5ae3c-82f6-41d0-a46c-28c77772207f', type: 'Estilo de Vida', title: 'Atividade física' },
     { id: '6cebc1b7-8629-4b3f-9e34-262eb0a0559a', type: 'Estilo de Vida', title: 'Qualidade de Vida' },
+    { id: 'c020996a-56c9-4427-87e5-10afbce5cb62', type: 'Estilo de Vida', title: 'Alimentação Saudável' },
+    { id: '8ffb9e24-ced6-4566-a6b5-4e255d958c7a', type: 'Estilo de Vida', title: 'Uso de álcool' },
     { id: '9c82c3c0-e801-49ef-8659-524596dbef5f', type: 'Estilo de Vida', title: 'Mudança de Comportamento' },
     { id: '22fc17f4-9e04-4b16-abbd-7e3a0fc980bb', type: 'Estilo de Vida', title: 'Prevenção de Acidentes' },
     { id: 'cfba6c35-391d-4c4e-ba1b-8d3bda151fba', type: 'Estilo de Vida', title: 'Doenças Crônicas' },
-    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', type: 'Estilo de Vida', title: 'Exames Preventivos (m)' },
+    { id: '4ebdaf1b-f3e2-4a7e-a001-28c36036aafa', type: 'Estilo de Vida', title: 'Exames Preventivos' },
   ];
 
   const handleFormOpen = (item) => {

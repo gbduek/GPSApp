@@ -30,7 +30,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
     <View style={styles.container}>
       <Image
         source={require('../../assets/gps_logo.png')}
-        style={{ width: 300, height: 120, resizeMode: 'stretch', marginBottom: 40 }}
+        style={{ width: 315, height: 125, resizeMode: 'stretch', marginBottom: 40 }}
       />
       <TextInput
         style={[styles.input, emailFocused && styles.inputFocused]}
@@ -93,7 +93,7 @@ const styles = StyleSheet.create({
     borderColor: 'white',
     borderRadius: 20,
     borderWidth: 3,
-    marginBottom: 30,
+    marginBottom: 25,
     paddingHorizontal: 15,
     backgroundColor: '#ffa500',
   },

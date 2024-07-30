@@ -59,6 +59,7 @@ export const CorpoStack = () => {
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
             <Stack.Screen

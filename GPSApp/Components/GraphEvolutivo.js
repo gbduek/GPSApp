@@ -1,18 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import Picker from './Picker';
 import axios from 'axios';
 import * as d3 from 'd3-shape';
 import Svg, { Path, G, Circle, Text as SvgText, Rect } from 'react-native-svg';
 import DataContext from '../Context/DataContext';
-
-const emotionImages = {
-    Medo: require('../assets/emotions/scared.png'),
-    Ansiedade: require('../assets/emotions/anxious.png'),
-    Alegria: require('../assets/emotions/happy.png'),
-    Tristeza: require('../assets/emotions/sad.png'),
-    Nojo: require('../assets/emotions/disgust.png'),
-    Raiva: require('../assets/emotions/angry.png'),
-};
 
 const YAxis = () => {
     const height = 250;
@@ -44,6 +36,8 @@ const GraphEvolutivo = ({ id }) => {
     const { token, userLogged } = useContext(DataContext);
     const [selectedItem, setSelectedItem] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [selectedNome, setSelectedNome] = useState(null);
+    const [nomeOptions, setNomeOptions] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -56,6 +50,14 @@ const GraphEvolutivo = ({ id }) => {
                 const response = await axios.get(url, { headers });
                 const fetchedData = response.data.GraficoEvolutivo || [];
                 setApiData(fetchedData);
+
+                // Extract unique "Nome" values
+                const uniqueNome = [...new Set(fetchedData.map(entry => entry.Nome))];
+                setNomeOptions(uniqueNome);
+
+                if (uniqueNome.length === 1) {
+                    setSelectedNome(uniqueNome[0]);
+                }
             } catch (error) {
                 console.error('API Error:', error);
                 setApiData([]); // Set to empty array on error
@@ -72,44 +74,111 @@ const GraphEvolutivo = ({ id }) => {
     };
 
     const processData = (data) => {
-        // Find max and min values
-        const allValues = data.flatMap(entry => entry.Dados.map(d => d.Value));
-        const maxValue = Math.max(...allValues);
-        const minValue = Math.min(...allValues);
-
-        // Set x-axis spacing
+        const filteredData = selectedNome ? data.filter(entry => entry.Nome === selectedNome) : data;
+    
+        const minValue = Math.min(...data.flatMap(entry => entry.Dados.map(d => d.Value)));
+        const maxValue = Math.max(...data.flatMap(entry => entry.Dados.map(d => d.Value)));
+    
+        const defaultY = 80;
+    
+        if (filteredData.length === 1 && filteredData[0].Dados.length === 1) {
+            const item = filteredData[0].Dados[0];
+            const y = 244 - ((item.Value - minValue) / (maxValue - minValue) * 200);
+            return [{
+                x: 45, // Position near the y-axis
+                y: isNaN(y) ? defaultY : y,
+                tooltip: filteredData[0].Nome + item.Value || '',
+                date: new Date(item.Data).toLocaleDateString() || null,
+                color: filteredData[0].CorExibicao,
+                key: `${filteredData[0].Id}-${0}`
+            }];
+        }
+    
         const xSpacing = 80;
         let xOffset = 0;
-
-        return data.flatMap((entry) =>
+    
+        return filteredData.flatMap((entry) =>
             entry.Dados.map((item, index) => {
                 const x = xOffset;
-                const y = 250 - ((item.Value - minValue) / (maxValue - minValue) * 250); // Scale y-axis
-                xOffset += xSpacing; // Update x position for the next point
-
+                const y = 250 - ((item.Value - minValue) / (maxValue - minValue) * 250);
+                xOffset += xSpacing;
+    
                 return {
                     x,
-                    y,
-                    tooltip: item.Description || '',
+                    y: isNaN(y) ? defaultY : y,
+                    tooltip: entry.Nome + item.Value || '',
                     date: new Date(item.Data).toLocaleDateString() || null,
-                    color: entry.CorExibicao,
+                    color: item.Cor,
                     key: `${entry.Id}-${index}`
                 };
             })
         );
     };
+    
 
     const renderPoints = () => {
         if (apiData.length === 0) return null;
 
         const data = processData(apiData);
 
+        if (data.length === 1) {
+            // Render single point
+            const point = data[0];
+            return (
+                <Svg width={400} height={300}>
+                    <Circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={12}
+                        fill={point.color || 'gray'}
+                        onPress={() => handlePointPress(point)}
+                    />
+                    {selectedItem && selectedItem.key === point.key && (
+                        <G>
+                            <Rect
+                                x={point.x + 15}
+                                y={point.y + 20}
+                                width="90"
+                                height="35"
+                                fill="black"
+                                stroke="black"
+                                strokeWidth="1"
+                                rx="5"
+                                opacity="0.7"
+                            />
+                            <SvgText
+                                x={point.x + 18}
+                                y={point.y + 50}
+                                fontSize="12"
+                                fill="white"
+                                textAnchor="start"
+                                fontWeight="bold"
+                            >
+                                {point.tooltip}
+                            </SvgText>
+                            <SvgText
+                                x={point.x + 18}
+                                y={point.y + 33}
+                                fontSize="12"
+                                fill="white"
+                                textAnchor="start"
+                                fontWeight="bold"
+                            >
+                                {point.date}
+                            </SvgText>
+                        </G>
+                    )}
+                </Svg>
+            );
+        }
+
+        // Render line if more than one point
         const line = d3.line()
             .x(d => d.x + 40)
             .y(d => d.y + 40)
             .curve(d3.curveCardinal);
 
-        const svgWidth = Math.max(data.length * 80 + 50, 300); // Ensure a minimum width
+        const svgWidth = Math.max(data.length * 80 + 50, 300);
         const svgHeight = 310;
 
         return (
@@ -127,8 +196,8 @@ const GraphEvolutivo = ({ id }) => {
                         {selectedItem && selectedItem.key === point.key && (
                             <G>
                                 <Rect
-                                    x={point.x + 15}
-                                    y={point.y - 20}
+                                    x={point.x + 55}
+                                    y={point.y + 20}
                                     width="90"
                                     height="35"
                                     fill="black"
@@ -138,24 +207,24 @@ const GraphEvolutivo = ({ id }) => {
                                     opacity="0.7"
                                 />
                                 <SvgText
-                                    x={point.x + 20}
-                                    y={point.y - 5}
-                                    fontSize="12"
-                                    fill="white"
-                                    textAnchor="start"
-                                    fontWeight="bold"
-                                >
-                                    {point.date}
-                                </SvgText>
-                                <SvgText
-                                    x={point.x + 20}
-                                    y={point.y + 10}
+                                    x={point.x + 58}
+                                    y={point.y + 50}
                                     fontSize="12"
                                     fill="white"
                                     textAnchor="start"
                                     fontWeight="bold"
                                 >
                                     {point.tooltip}
+                                </SvgText>
+                                <SvgText
+                                    x={point.x + 58}
+                                    y={point.y + 33}
+                                    fontSize="12"
+                                    fill="white"
+                                    textAnchor="start"
+                                    fontWeight="bold"
+                                >
+                                    {point.date}
                                 </SvgText>
                             </G>
                         )}
@@ -176,16 +245,17 @@ const GraphEvolutivo = ({ id }) => {
     return (
         <View style={styles.container}>
             <YAxis />
+            <Picker
+                options={nomeOptions}
+                selectedOption={selectedNome || 'Selecione uma opção'}
+                onSelect={(option) => setSelectedNome(option)}
+            />
             <ScrollView
                 horizontal
                 contentContainerStyle={{ flexGrow: 1, alignItems: 'center' }}
                 showsHorizontalScrollIndicator={false}
             >
-                <View style={styles.graphContainer}>
-                    <View style={styles.graphWrapper}>
-                        {renderPoints()}
-                    </View>
-                </View>
+                {renderPoints()}
             </ScrollView>
         </View>
     );
@@ -195,6 +265,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
+        marginTop: 20,
     },
     loadingContainer: {
         flex: 1,
@@ -208,22 +279,13 @@ const styles = StyleSheet.create({
     yAxisContainer: {
         position: 'absolute',
         left: -15,
-        top: 35,
+        top: 100,
         bottom: 0,
         backgroundColor: 'white',
-        zIndex: 1,
-        elevation: 3,
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.1,
-        shadowRadius: 2,
     },
     graphWrapper: {
         marginLeft: 0,
         flex: 1,
-    },
-    chart: {
-        marginTop: 0,
     },
 });
 

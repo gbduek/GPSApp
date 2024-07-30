@@ -13,14 +13,22 @@ const Picker = ({ options, selectedOption, onSelect }) => {
   };
 
   const renderOption = ({ item }) => (
-    <TouchableOpacity style={styles.option} onPress={() => handleOptionPress(item)}>
+    <TouchableOpacity
+      style={styles.option}
+      onPress={() => handleOptionPress(item)}
+      accessibilityLabel={`Option ${item}`}
+    >
       <Text style={styles.optionText}>{item}</Text>
     </TouchableOpacity>
   );
 
   return (
     <View>
-      <TouchableOpacity style={[styles.selector, isSelectorOpen && styles.selectorOpen]} onPress={handleSelectorPress}>
+      <TouchableOpacity
+        style={[styles.selector, isSelectorOpen && styles.selectorOpen]}
+        onPress={handleSelectorPress}
+        accessibilityLabel="Toggle picker"
+      >
         <Text style={styles.selectorText}>{selectedOption}</Text>
         <FontAwesome name={isSelectorOpen ? 'angle-up' : 'angle-down'} size={22} color="orange" />
       </TouchableOpacity>
@@ -30,12 +38,17 @@ const Picker = ({ options, selectedOption, onSelect }) => {
             <FlatList
               data={options}
               renderItem={renderOption}
-              keyExtractor={(item) => item.toString()}
+              keyExtractor={(index) => index.toString()}
               style={styles.flatList}
             />
           ) : (
-            options.map((option) => (
-              <TouchableOpacity key={option} style={styles.option} onPress={() => handleOptionPress(option)}>
+            options.map((option, index) => (
+              <TouchableOpacity
+                key={index}
+                style={styles.option}
+                onPress={() => handleOptionPress(option)}
+                accessibilityLabel={`Option ${option}`}
+              >
                 <Text style={styles.optionText}>{option}</Text>
               </TouchableOpacity>
             ))
