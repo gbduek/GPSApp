@@ -81,6 +81,7 @@ const PdS = () => {
                 nome: subItem.Nome,
                 grau: subItem.Grau,
                 valor: subItem.valor ?? null,
+                unidade: subItem.unidade ?? null,
                 // Add more fields as needed
               })),
             }));
@@ -127,7 +128,7 @@ const PdS = () => {
           <View key={index} style={styles.categoryContainer}>
             <Text style={styles.categoryTitle}>{category.category}</Text>
             <View>
-              <Rings />
+              <Rings dimen={category.category}/>
               {renderLogo(category.logo)}
             </View>
             {category.items.length > 0 && (
@@ -142,14 +143,14 @@ const PdS = () => {
                         {subItem.grau == '1' ? (
                           <Compass color={'#4CAF50'} transf={"rotate(980 2560 2560)"}/>) :
                         subItem.grau == '2' ? (
-                          <Compass color={'#FFEB3B'} transf={"rotate(1215 2560 2560)"}/>) :
+                          <Compass color={'#FFE500'} transf={"rotate(1215 2560 2560)"}/>) :
                         subItem.grau == '3' ? (
                           <Compass color={'#EF4040'}/>) : (
                           <Text></Text>)}
                         {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
                         {/* Render additional fields here as needed */}
                         {subItem.valor && (
-                          <Text style={styles.subItemText}>Valor: {subItem.valor}</Text>
+                          <Text style={styles.subItemText}>{subItem.valor}{subItem.unidade}</Text>
                         )}
                       </View>
                     ))

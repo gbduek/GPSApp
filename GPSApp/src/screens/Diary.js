@@ -7,7 +7,7 @@ import SymptomPopup from '../../Components/Popups/SymptomPopup';
 import DiHist from '../../Components/DiHist';
 import Header from '../../Components/Header';
 import GraphDiary from '../../Components/GraphDiary';
-import Picker from '../../Components/Picker'; // Import the Picker component
+import Picker from '../../Components/UIComp/Picker';
 
 const Diary = () => {
     const [diaryId, setDiaryId] = useState('a8772285-cc12-47c0-b947-eeac0a790b7a');

@@ -9,7 +9,7 @@ import Header from '../../Components/Header';
 import DataContext from '../../Context/DataContext';
 
 const HomeScreen = () => {
-  const { firstName, percentages, fetchPercentages } = useContext(DataContext); // Accessing firstName and percentages from DataContext
+  const { firstName, percentages, fetchPercentages } = useContext(DataContext);
 
   const bannerImages = [
     require('../../assets/banner.png'),
@@ -81,9 +81,9 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.ringsContainer}>
-            <Rings iconName="walk" />
-            <Rings iconName="walk" />
-            <Rings iconName="body" />
+            <Rings iconName="walk" dimen={'Mente'} />
+            <Rings iconName="walk" dimen={'Estilo de Vida'}/>
+            <Rings iconName="body" dimen={'Corpo'} />
           </View>
 
           <View style={[styles.paragraphContainer,

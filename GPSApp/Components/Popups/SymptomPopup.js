@@ -5,7 +5,7 @@ import Slider from '@react-native-community/slider';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
 import { FontAwesome } from '@expo/vector-icons';
-import Picker from '../Picker';
+import Picker from '../UIComp/Picker';
 
 const SymptomPopup = ({ onClose }) => {
   const { token, userLogged } = useContext(DataContext);

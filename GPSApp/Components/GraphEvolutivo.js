@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
-import Picker from './Picker';
+import Picker from './UIComp/Picker';
 import axios from 'axios';
 import * as d3 from 'd3-shape';
 import Svg, { Path, G, Circle, Text as SvgText, Rect } from 'react-native-svg';

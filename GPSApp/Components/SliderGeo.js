@@ -1,14 +1,15 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
 
 const SliderGeo = ({ iconName, percentage, title }) => {
   // Percentage value for the slider bar
   const barPercentage = percentage;
+  const windowWidth = Dimensions.get('window').width;
 
   return (
     <View style={styles.container}>
-      <View style={styles.rect}>
+      <View style={[styles.rect, {width: windowWidth - 45}]}>
         {title === 'Mente' ? (
             <MaterialCommunityIcons name={iconName} size={32} color="#ffa500" style={styles.icon} />
           ) : title === 'Estilo de Vida' ? (
@@ -34,7 +35,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   rect: {
-    width: 330,
     height: 100,
     backgroundColor: '#fff',
     borderRadius: 10,

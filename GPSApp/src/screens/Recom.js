@@ -6,11 +6,11 @@ import DataContext from '../../Context/DataContext';
 import Header from '../../Components/Header';
 import Popup from '../../Components/Popups/Popup';
 import Compass from '../../assets/Icons/Compass';
-import Picker from '../../Components/Picker'; // Import the Picker component
+import Picker from '../../Components/UIComp/Picker';
 
 const colorMap = {
   1: '#4CAF50',  // Grau 1 -> Green
-  2: '#FFEB3B', // Grau 2 -> Yellow
+  2: '#FFE500', // Grau 2 -> Yellow
   3: '#EF4040', // Grau 3 -> Red
 };
 
