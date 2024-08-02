@@ -37,8 +37,8 @@ const Profile = () => {
     { title: 'E-mail*', placeholder: 'Digite seu e-mail', type: 'text', value: profileData.Email },
     { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text', value: new Date(profileData.DataNascimento).toLocaleDateString() },
     { title: 'Sexo*', placeholder: '', type: 'selector', value: profileData.Sexo },
-    { title: 'Situação*', placeholder: 'Digite sua situação', type: 'text', value: profileData.Ativo ? 'Ativo' : 'Inativo' },
     { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text', value: new Date(profileData.DataCadastro).toLocaleDateString() },
+    { title: 'Telefone Celular*', placeholder: 'Digite seu telefone celular', type: 'text', value: profileData.TelefoneCelular },
   ];
 
   const renderItem = ({ item }) => {

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import Menu from '../../Components/Menu';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
 import Header from '../../Components/Header';
@@ -40,6 +39,12 @@ const Corpo = ({ navigation }) => {
     { id: 'f60c4af7-21eb-4eeb-b5d2-cd37817d2c6c', type: 'Corpo', title: 'Hemoglobina' },
     { id: 'c879f3dc-3aee-492b-8254-8239be0399c0', type: 'Corpo', title: 'Plaquetas' },
     { id: 'd7d7260d-d248-4a85-abab-375895d336e0', type: 'Corpo', title: 'Glicose' },
+    { id: '09a69282-fa3f-4b63-89b0-d5a67652f4fe', type: 'Corpo', title: 'Hemogolobina Glicada' },
+    { id: '758379a2-8f49-49cf-83b7-bd8586e0f747', type: 'Corpo', title: 'Colesterol' },
+    { id: '664433dd-1252-43cc-9c78-e64570203fd0', type: 'Corpo', title: 'Triglicerídeos' },
+    { id: '0596d72a-9be6-499d-949f-20e691886309', type: 'Corpo', title: 'Creatina' },
+    { id: 'c9d8bb91-a448-405e-92fb-4ae542982dea', type: 'Corpo', title: 'PSA' },
+    { id: '5bdefa56-4559-4d9a-b550-c29599fcb4aa', type: 'Corpo', title: 'Risco Cardiovascular'}
   ];
 
   const handleFormOpen = (item) => {

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, FlatList, Dimensions } from 'react-native';
+import { View, StyleSheet, Image, FlatList, Dimensions, TouchableOpacity, Text, Linking } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
-const Banner = ({ images }) => {
+const Banner = ({ images, links }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
@@ -14,13 +14,18 @@ const Banner = ({ images }) => {
         showsHorizontalScrollIndicator={false}
         data={images}
         keyExtractor={(item, index) => index.toString()}
-        renderItem={({ item }) => (
-          <Image source={item} style={styles.bannerImage} resizeMode="stretch" />
+        renderItem={({ item, index }) => (
+          <View style={styles.imageContainer}>
+            <Image source={item} style={styles.bannerImage} resizeMode="stretch" />
+            <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(links[index])}>
+              <Text style={styles.buttonText}>Saiba mais</Text>
+            </TouchableOpacity>
+          </View>
         )}
         onScrollToIndexFailed={() => {}}
         initialScrollIndex={0}
         getItemLayout={(data, index) => ({
-          length: screenWidth - 30, // Adjusted for padding/margin if needed
+          length: screenWidth - 30,
           offset: (screenWidth - 30) * index,
           index,
         })}
@@ -53,12 +58,32 @@ const styles = StyleSheet.create({
     marginTop: 50,
     height: 400,
     marginBottom: 15,
-    alignItems: 'center', // Center the container
+    alignItems: 'center',
   },
-  bannerImage: {
-    width: screenWidth - 30, // Adjust width based on screen size
+  imageContainer: {
+    width: screenWidth - 30,
     height: 400,
     borderRadius: 30,
+    overflow: 'hidden',
+  },
+  bannerImage: {
+    width: '100%',
+    height: '100%',
+  },
+  button: {
+    position: 'absolute',
+    top: '66%',
+    left: '45%',
+    transform: [{ translateX: -50 }, { translateY: -50 }],
+    backgroundColor: 'rgba(255, 165, 0, 0.9)',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 15,
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   indicatorContainer: {
     flexDirection: 'row',

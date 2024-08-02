@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import DataContext from '../Context/DataContext';
 
 const Header = () => {
   const navigation = useNavigation();
+  const {companyPhoto} = useContext(DataContext);
 
   const openDrawer = () => {
     navigation.openDrawer();
@@ -21,7 +23,7 @@ const Header = () => {
         resizeMode="contain"
       />
       <Image
-        source={{ uri: 'https://api3.gps.med.br/api/upload/image?vinculo=f606e77e-3086-472f-87c9-70d3541635ce' }}
+        source={{ uri: companyPhoto }}
         style={styles.logoRight}
         resizeMode="contain"
       />

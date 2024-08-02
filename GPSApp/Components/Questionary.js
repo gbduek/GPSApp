@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, FlatList, ActivityIndicator } from 'react-native';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
 
@@ -7,6 +7,7 @@ const Questionary = ({ route, navigation }) => {
   const { type, title, id } = route.params;
   const [questions, setQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
+  const [textInputs, setTextInputs] = useState({});
   const [loading, setLoading] = useState(true);
   const [saveLoading, setSaveLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
@@ -40,8 +41,22 @@ const Questionary = ({ route, navigation }) => {
     }));
   };
 
+  const handleTextInputChange = (questionId, text) => {
+    setTextInputs(prev => ({
+      ...prev,
+      [questionId]: text,
+    }));
+  };
+
   const handleSave = async () => {
-    const unansweredQuestions = questions.flatMap(questionary => questionary.questoes).filter(q => !selectedOptions[q.id]);
+    let unansweredQuestions = [];
+
+    if (type === 'Corpo') {
+      unansweredQuestions = questions.flatMap(questionary => questionary.questoes).filter(q => !textInputs[q.id]);
+    } else {
+      unansweredQuestions = questions.flatMap(questionary => questionary.questoes).filter(q => !selectedOptions[q.id]);
+    }
+
     if (unansweredQuestions.length > 0) {
       setValidationError('Por favor, responda todas as perguntas antes de salvar.');
       return;
@@ -49,10 +64,15 @@ const Questionary = ({ route, navigation }) => {
 
     setSaveLoading(true);
 
-    const Medidores = Object.keys(selectedOptions).map(questionId => ({
-      Medidor: questionId,
-      Opcao: selectedOptions[questionId],
-    }));
+    const Medidores = type === 'Corpo'
+      ? Object.keys(textInputs).map(questionId => ({
+          Medidor: questionId,
+          Valor: textInputs[questionId],  // Assuming the backend expects a "Valor" field for text inputs
+        }))
+      : Object.keys(selectedOptions).map(questionId => ({
+          Medidor: questionId,
+          Opcao: selectedOptions[questionId],
+        }));
 
     const body = {
       DataFinal: new Date().toISOString(),
@@ -62,7 +82,6 @@ const Questionary = ({ route, navigation }) => {
       Medidores,
       PessoaFisica: userLogged,
     };
-
 
     try {
       const response = await axios.post('https://api3.gps.med.br/API/Medicao/SaveMedicao/', body, {
@@ -84,21 +103,30 @@ const Questionary = ({ route, navigation }) => {
   const renderItem = ({ item }) => (
     <View style={styles.geometricShape}>
       <Text style={styles.question}>{item.questao}</Text>
-      {item.opcoes.map(option => (
-        <TouchableOpacity
-          key={option.id}
-          style={[
-            styles.option,
-            selectedOptions[item.id] === option.id && styles.selectedOption,
-          ]}
-          onPress={() => handleOptionSelect(item.id, option.id)}
-        >
-          <View style={styles.optionCircle}>
-            {selectedOptions[item.id] === option.id && <View style={styles.filledCircle} />}
-          </View>
-          <Text style={styles.optionText}>{option.opcao}</Text>
-        </TouchableOpacity>
-      ))}
+      {type === 'Corpo' ? (
+        <TextInput
+          style={styles.textInput}
+          placeholder="Digite sua resposta (Sem medida)"
+          value={textInputs[item.id] || ''}
+          onChangeText={(text) => handleTextInputChange(item.id, text)}
+        />
+      ) : (
+        item.opcoes.map(option => (
+          <TouchableOpacity
+            key={option.id}
+            style={[
+              styles.option,
+              selectedOptions[item.id] === option.id && styles.selectedOption,
+            ]}
+            onPress={() => handleOptionSelect(item.id, option.id)}
+          >
+            <View style={styles.optionCircle}>
+              {selectedOptions[item.id] === option.id && <View style={styles.filledCircle} />}
+            </View>
+            <Text style={styles.optionText}>{option.opcao}</Text>
+          </TouchableOpacity>
+        ))
+      )}
     </View>
   );
 
@@ -202,6 +230,14 @@ const styles = StyleSheet.create({
   },
   selectedOption: {
     fontWeight: 'bold',
+  },
+  textInput: {
+    borderWidth: 1,
+    borderColor: 'orange',
+    borderRadius: 10,
+    padding: 10,
+    fontSize: 16,
+    marginBottom: 10,
   },
   saveButton: {
     flexDirection: 'row',

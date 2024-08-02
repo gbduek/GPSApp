@@ -138,20 +138,22 @@ const PdS = () => {
                   {item.subs.length > 0 && (
                     item.subs.map((subItem, subIdx) => (
                       <View key={subIdx} style={styles.subItem}>
-                        <Text style={styles.subItemTitle}>{subItem.nome}</Text>
-                        {/* Here is the compass(green, yellow, red) logic according to the "grau" */}
-                        {subItem.grau == '1' ? (
-                          <Compass color={'#4CAF50'} transf={"rotate(980 2560 2560)"}/>) :
-                        subItem.grau == '2' ? (
-                          <Compass color={'#FFE500'} transf={"rotate(1215 2560 2560)"}/>) :
-                        subItem.grau == '3' ? (
-                          <Compass color={'#EF4040'}/>) : (
-                          <Text></Text>)}
-                        {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
-                        {/* Render additional fields here as needed */}
-                        {subItem.valor && (
-                          <Text style={styles.subItemText}>{subItem.valor}{subItem.unidade}</Text>
-                        )}
+                        <View style={{flexDirection: 'row'}}>
+                          {/* Here is the compass(green, yellow, red) logic according to the "grau" */}
+                          {subItem.grau == '1' ? (
+                            <Compass color={'#4CAF50'} transf={"rotate(980 2560 2560)"}/>) :
+                          subItem.grau == '2' ? (
+                            <Compass color={'#FFE500'} transf={"rotate(1215 2560 2560)"}/>) :
+                          subItem.grau == '3' ? (
+                            <Compass color={'#EF4040'}/>) : (
+                            <Text></Text>)}
+                          {/* Here ends the compass(green, yellow, red) logic according to the "grau" */}
+                          <Text style={styles.subItemTitle}>{subItem.nome}</Text>
+                          </View>
+                          {/* Render additional fields here as needed */}
+                          {subItem.valor && (
+                            <Text style={styles.subItemText}>{subItem.valor}{subItem.unidade}</Text>
+                          )}
                       </View>
                     ))
                   )}
@@ -198,7 +200,7 @@ const styles = StyleSheet.create({
   },
   subItem: {
     width: 350,
-    paddingVertical: 10,
+    paddingVertical: 20,
     paddingHorizontal: 15,
     borderRadius: 8,
     backgroundColor: 'white',
@@ -213,6 +215,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 5,
     color: '#000',
+    marginLeft: 10
   },
   subItemText: {
     fontSize: 16,

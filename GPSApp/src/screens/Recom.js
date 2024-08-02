@@ -22,9 +22,16 @@ const Recom = () => {
   const [selectedRec, setSelectedRec] = useState(null);
   const [isPopupVisible, setPopupVisible] = useState(false);
   const [selectedRisk, setSelectedRisk] = useState('Todos os níveis de risco');
+  const [selectedDimen, setSelectedDimen] = useState({ title: 'Todas as dimensões', id: "" });
   const [riskLevel, setRiskLevel] = useState(0);
 
   const riskOptions = ['Todos os níveis de risco', 'Alto risco', 'Médio risco', 'Baixo risco'];
+  const dimenOptions = [
+    {title: 'Todas as dimensões', id: ""},
+    {title: 'Mente', id: '40c6eaad-8815-4cbc-9caf-78f081f03674'},
+    {title: 'Estilo de Vida', id: '7ed63315-ff7b-4658-b488-7655487e2845'},
+    {title: 'Corpo', id: '20118275-8791-469e-b9f5-3210f990dd01'}
+  ];
 
   const handleRiskSelect = (option) => {
     setSelectedRisk(option);
@@ -35,7 +42,15 @@ const Recom = () => {
       'Baixo risco': 1
     };
     setRiskLevel(riskMap[option]);
+    setError(false);
   };
+
+  const handleDimenSelect = (selectedTitle) => {
+    const selected = dimenOptions.find(option => option.title === selectedTitle);
+    setSelectedDimen(selected || { title: '', id: '' });
+    setError(false);
+  };
+  
 
   const getTransformation = (grau) => {
     switch (grau) {
@@ -65,7 +80,7 @@ const Recom = () => {
             user: userLogged,
             indicador: '',
             risco: riskLevel,
-            tipo: '',
+            tipo: selectedDimen.id,
             filter: ''
           },
           {
@@ -84,7 +99,7 @@ const Recom = () => {
     };
 
     fetchData();
-  }, [token, userLogged, riskLevel]);
+  }, [token, userLogged, riskLevel, selectedDimen]);
 
   const showPopup = (rec) => {
     setSelectedRec(rec);
@@ -105,14 +120,41 @@ const Recom = () => {
 
     if (error) {
       return (
-        <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>Error: {error.message}</Text>
-          {error.response && (
-            <Text style={styles.errorText}>Details: {JSON.stringify(error.response.data)}</Text>
-          )}
-        </View>
+        <ScrollView contentContainerStyle={styles.scrollContainer}>
+          <View style={styles.titleContainer}>
+            <Ionicons name="bulb" size={30} color={'orange'} style={styles.icon} />
+            <Text style={styles.title}>Recomendações</Text>
+          </View>
+          <View style={styles.pickerContainer}>
+            <Picker
+              options={dimenOptions.map(option => option.title)}  // Pass array of titles
+              selectedOption={selectedDimen.title}  // Display the selected title
+              onSelect={handleDimenSelect}
+            />
+            <Picker
+              options={riskOptions}
+              selectedOption={selectedRisk}
+              onSelect={handleRiskSelect}
+            />
+          </View>
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>Não foi encontrada nenhuma recomendação nestes
+              parâmetros. Vá
+              até suas dimensões e faça
+              um novo registro!
+            </Text>
+          </View>
+        </ScrollView>
       );
     }
+
+    if (!data || data.length === 0) {
+      return (
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>Nada para mostrar aqui agora!</Text>
+        </View>
+      );
+    }    
 
     return (
       <ScrollView contentContainerStyle={styles.scrollContainer}>
@@ -121,6 +163,11 @@ const Recom = () => {
           <Text style={styles.title}>Recomendações</Text>
         </View>
         <View style={styles.pickerContainer}>
+          <Picker
+            options={dimenOptions.map(option => option.title)}  // Pass array of titles
+            selectedOption={selectedDimen.title}  // Display the selected title
+            onSelect={handleDimenSelect}
+          />
           <Picker
             options={riskOptions}
             selectedOption={selectedRisk}
@@ -183,6 +230,16 @@ const styles = StyleSheet.create({
   errorText: {
     fontSize: 16,
     color: 'red',
+    textAlign: 'center',
+  },
+  emptyContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  emptyText: {
+    fontSize: 18,
+    color: '#666',
     textAlign: 'center',
   },
   pickerContainer: {

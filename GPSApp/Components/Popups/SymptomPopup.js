@@ -11,17 +11,17 @@ const SymptomPopup = ({ onClose }) => {
   const { token, userLogged } = useContext(DataContext);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState({ nome: '', id: '' });
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [intensity, setIntensity] = useState(5);
   const [note, setNote] = useState('');
-  const diaryId = 'ee8cf8bb-36ff-4838-883b-75179867d095';
+  const diaryId = 'a0a1d9b5-2268-4aed-9040-44fb3d88975e';
 
   useEffect(() => {
     const fetchActivities = async () => {
       try {
-        const response = await axios.get('https://api3.gps.med.br/API/diario/dados/ee8cf8bb-36ff-4838-883b-75179867d095', {
+        const response = await axios.get('https://api3.gps.med.br/API/diario/dados/a0a1d9b5-2268-4aed-9040-44fb3d88975e', {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -39,7 +39,7 @@ const SymptomPopup = ({ onClose }) => {
 
   const handleRegister = async () => {
     if (!selectedActivity) {
-      Alert.alert('Erro', 'Por favor, selecione uma atividade.');
+      Alert.alert('Erro', 'Por favor, selecione um sintoma.');
       return;
     }
 
@@ -48,6 +48,7 @@ const SymptomPopup = ({ onClose }) => {
     try {
       const postData = {
         alimento: null,
+        atividade: null,
         duracao: 0,
         emocao: null,
         pessoa: userLogged,
@@ -57,7 +58,7 @@ const SymptomPopup = ({ onClose }) => {
         inicio: date.toISOString(),
         fim: date.toISOString(),
         intensidade: intensity,
-        atividade: selectedActivity,
+        sintomas: [selectedActivity.id]
       };
 
       await axios.post('https://api3.gps.med.br/API/diario', postData, {
@@ -107,10 +108,10 @@ const SymptomPopup = ({ onClose }) => {
         ) : (
           <Picker
             options={activities.map((activity) => activity.nome)}
-            selectedOption={selectedActivity}
+            selectedOption={selectedActivity.nome}
             onSelect={(option) => {
               const selected = activities.find((activity) => activity.nome === option);
-              setSelectedActivity(selected.id);
+              setSelectedActivity({ nome: selected.nome, id: selected.id }); // Store both nome and id
             }}
           />
         )}

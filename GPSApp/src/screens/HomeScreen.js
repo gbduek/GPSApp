@@ -1,7 +1,9 @@
 import React, { useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import Banner from '../../Components/Banner';
 import Rings from '../../Components/Rings'
 import SliderGeo from '../../Components/SliderGeo';
@@ -9,13 +11,33 @@ import Header from '../../Components/Header';
 import DataContext from '../../Context/DataContext';
 
 const HomeScreen = () => {
-  const { firstName, percentages, fetchPercentages } = useContext(DataContext);
+  const { firstName, percentages, fetchPercentages, temDiario } = useContext(DataContext);
 
   const bannerImages = [
-    require('../../assets/banner.png'),
-    require('../../assets/banner2.png'),
-    require('../../assets/banner3.png'),
+    require('../../assets/banner_cedae.png'),
+    require('../../assets/banner_cedae_equilibrio.png'),
   ];
+
+  const links = [
+    'https://cedaesaude.org.br/index.php/cedae-saude/',
+    'https://cedaesaude.org.br/index.php/programa-equilibrio-emocional/',
+    // Add more links corresponding to the images
+  ];
+
+  const renderLogo = (logoUrl) => {
+    let additionalStyle = {};
+    if (logoUrl.includes('Mente')) {
+      return <MaterialCommunityIcons style={styles.iconContainer} name="head-lightbulb-outline" size={45} color="orange" />;
+    } else if (logoUrl.includes('Estilo de Vida')) {
+      additionalStyle = { left: 41, top: 177 };
+      return <FontAwesome5 style={[styles.iconContainer, additionalStyle]} name="running" size={45} color="orange" />;
+    } else if (logoUrl.includes('Corpo')) {
+      additionalStyle = { left: 37.5, top: 320 };
+      return <Ionicons style={[styles.iconContainer, additionalStyle]} name="body" size={45} color="orange" />;
+    } else {
+      return null; // Handle other cases if necessary
+    }
+  };
 
   const navigation = useNavigation();
 
@@ -34,13 +56,16 @@ const HomeScreen = () => {
       <View style={styles.content}>
         <ScrollView contentContainerStyle={styles.scrollViewContent} horizontal={false}>
           <Text style={styles.greetingText}>Olá, {firstName}</Text>
-          <Banner images={bannerImages} />
+
+          <View style={{paddingHorizontal: 15}}>
+            <Banner images={bannerImages} links={links} />
+          </View>
 
           <Text style={styles.heading}>
-            Veja os percentuais de preenchimento do seu GPS MED!
+            Como está sua saúde e sua qualidade de vida?
           </Text>
           <Text style={styles.paragraph}>
-            Que tal clicar em uma das dimensões para ver em detalhes?
+            Veja os percentuais de preenchimento da sua GPS MED!
           </Text>
 
           <TouchableOpacity onPress={handleNavigation('Mente')}>
@@ -64,9 +89,17 @@ const HomeScreen = () => {
               </Text>
             </View>
           </View>
-          <View style={styles.ribbonContainer}>
-            <Text style={styles.ribbonText}>Você ainda não registrou nenhum diário</Text>
-          </View>
+
+          {temDiario ? 
+            <View>
+              <Image style={{width: 150, height: 150, marginTop: 20}} source={require('../../assets/temDiary.png')}/>
+            </View>
+            :(
+            <View style={styles.ribbonContainer}>
+              <Text style={styles.ribbonText}>Você ainda não registrou nenhum diário</Text>
+            </View>
+            )
+          }
 
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
@@ -81,9 +114,12 @@ const HomeScreen = () => {
           </View>
 
           <View style={styles.ringsContainer}>
-            <Rings iconName="walk" dimen={'Mente'} />
-            <Rings iconName="walk" dimen={'Estilo de Vida'}/>
-            <Rings iconName="body" dimen={'Corpo'} />
+            <Rings dimen={'Mente'} />
+            {renderLogo('Mente')}
+            <Rings dimen={'Estilo de Vida'}/>
+            {renderLogo('Estilo de Vida')}
+            <Rings dimen={'Corpo'} />
+            {renderLogo('Corpo')}
           </View>
 
           <View style={[styles.paragraphContainer,
@@ -94,8 +130,8 @@ const HomeScreen = () => {
               <Ionicons name="bulb-outline" size={24} color="white" />
             </View>
             <View style={styles.paragraphTextContainer}>
-              <Text style={styles.paragraphTitle}>O que você precisa fazer?</Text>
-              <Text style={styles.paragraphDescription}>
+              <Text style={[styles.paragraphTitle, {marginTop: 10}]}>O que você precisa fazer?</Text>
+              <Text style={[styles.paragraphDescription, {marginBottom: 10}]}>
                 Veja as recomendações!
               </Text>
             </View>
@@ -119,7 +155,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: 15,
     marginTop: 0,
   },
   scrollViewContent: {
@@ -127,22 +162,22 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   heading: {
-    fontSize: 18,
+    fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    marginTop: 40,
-    textAlign: 'center',
-    color: '#504b4b',
-    fontFamily: 'Gontserrat-700',
-  },
-  paragraph: {
-    fontSize: 16,
+    marginTop: 30,
     textAlign: 'center',
     color: 'orange',
-    fontWeight: 'bold',
-    fontSize: 22,
-    letterSpacing: 1,
     fontFamily: 'Gontserrat-700',
+    paddingHorizontal: 15,
+  },
+  paragraph: {
+    textAlign: 'center',
+    color: '#504b4b',
+    fontWeight: 'bold',
+    fontSize: 18,
+    letterSpacing: 1,
+    paddingHorizontal: 15
   },
   greetingText: {
     position: 'absolute',
@@ -151,7 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'orange',
     fontSize: 22,
-    fontFamily: 'Gontserrat-700',
+    paddingHorizontal: 15,
   },
   ringsContainer: {
     flex: 1,
@@ -178,18 +213,25 @@ const styles = StyleSheet.create({
   paragraphTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#000',
-    fontFamily: 'Gontserrat-700',
+    color: '#504b4b',
     marginBottom: 5,
   },
   paragraphDescription: {
     fontSize: 18,
-    color: '#333',
-    fontFamily: 'Gontserrat-500',
+    color: '#7b7b7b',
+    fontFamily: 'Arial'
   },
   ribbonContainer: {
     marginTop: 10,
     backgroundColor: '#ffcccc',
+    padding: 10,
+    borderRadius: 5,
+    alignItems: 'center',
+    width: '100%',
+  },
+  ribbonContainerOk: {
+    marginTop: 10,
+    backgroundColor: 'green',
     padding: 10,
     borderRadius: 5,
     alignItems: 'center',
@@ -201,6 +243,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  iconContainer: {
+    position: 'absolute',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: 'transparent',
+    top: 35,
+    left: 36
+  }
 });
 
 export default HomeScreen;
