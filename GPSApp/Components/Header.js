@@ -1,19 +1,33 @@
-import React, { useContext } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useContext, useState, useEffect } from 'react';
+import { View, Image, StyleSheet, TouchableOpacity, Platform } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import DataContext from '../Context/DataContext';
 
 const Header = () => {
   const navigation = useNavigation();
-  const {companyPhoto} = useContext(DataContext);
+  const { companyPhoto } = useContext(DataContext);
+  const [paddingOS, setPaddingOS] = useState(0);
+
+  useEffect(() => {
+    const osCheckPadding = () => {
+      if (Platform.OS === 'ios') {
+        setPaddingOS(40);
+      } else if (Platform.OS === 'android') {
+        setPaddingOS(10);
+      } else {
+        setPaddingOS(0);
+      }
+    };
+    osCheckPadding(); // Invoke the function
+  }, []); // Empty dependency array to run once on mount
 
   const openDrawer = () => {
     navigation.openDrawer();
   };
 
   return (
-    <View style={styles.headerContainer}>
+    <View style={[styles.headerContainer, { paddingTop: paddingOS }]}>
       <TouchableOpacity onPress={openDrawer} style={styles.drawerButton}>
         <Ionicons name="menu" size={28} color="orange" />
       </TouchableOpacity>
@@ -37,7 +51,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
-    paddingTop: 40,
     paddingHorizontal: 20, // Adjusted paddingHorizontal for more space
     backgroundColor: 'white',
     shadowColor: '#000',

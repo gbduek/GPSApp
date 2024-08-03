@@ -57,7 +57,7 @@ const SymptomPopup = ({ onClose }) => {
         observacao: note,
         inicio: date.toISOString(),
         fim: date.toISOString(),
-        intensidade: intensity,
+        intensidade: intensity*10,
         sintomas: [selectedActivity.id]
       };
 

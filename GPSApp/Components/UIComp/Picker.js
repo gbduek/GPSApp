@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
-const Picker = ({ options, selectedOption, onSelect }) => {
+const Picker = ({ options, selectedOption, onSelect, displayMode = 'flatlist' }) => {
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
 
   const handleSelectorPress = () => setIsSelectorOpen(!isSelectorOpen);
@@ -12,13 +12,14 @@ const Picker = ({ options, selectedOption, onSelect }) => {
     setIsSelectorOpen(false);
   };
 
-  const renderOption = ({ item }) => (
+  const renderOption = (option, index) => (
     <TouchableOpacity
+      key={index}
       style={styles.option}
-      onPress={() => handleOptionPress(item)}
-      accessibilityLabel={`Option ${item}`}
+      onPress={() => handleOptionPress(option)}
+      accessibilityLabel={`Option ${option}`}
     >
-      <Text style={styles.optionText}>{item}</Text>
+      <Text style={styles.optionText}>{option}</Text>
     </TouchableOpacity>
   );
 
@@ -35,23 +36,20 @@ const Picker = ({ options, selectedOption, onSelect }) => {
       {isSelectorOpen && (
         <View style={styles.optionsContainer}>
           {options.length > 4 ? (
-            <FlatList
-              data={options}
-              renderItem={renderOption}
-              keyExtractor={(index) => index.toString()}
-              style={styles.flatList}
-            />
+            displayMode === 'flatlist' ? (
+              <FlatList
+                data={options}
+                renderItem={({ item, index }) => renderOption(item, index)}
+                keyExtractor={(item, index) => index.toString()}
+                style={styles.flatList}
+              />
+            ) : (
+              <ScrollView style={styles.scrollView}>
+                {options.map(renderOption)}
+              </ScrollView>
+            )
           ) : (
-            options.map((option, index) => (
-              <TouchableOpacity
-                key={index}
-                style={styles.option}
-                onPress={() => handleOptionPress(option)}
-                accessibilityLabel={`Option ${option}`}
-              >
-                <Text style={styles.optionText}>{option}</Text>
-              </TouchableOpacity>
-            ))
+            options.map(renderOption)
           )}
         </View>
       )}
@@ -89,6 +87,9 @@ const styles = StyleSheet.create({
   flatList: {
     maxHeight: 100, // Adjust the max height as needed
   },
+  scrollView: {
+    maxHeight: 100, // Adjust the max height as needed
+  },
   option: {
     padding: 10,
     borderBottomWidth: 1,
@@ -99,6 +100,5 @@ const styles = StyleSheet.create({
     color: 'orange',
   },
 });
-
 
 export default Picker;

@@ -1,5 +1,6 @@
 import React, { useState, useContext } from 'react';
-import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert } from 'react-native';
+import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, Linking, Platform } from 'react-native';
+import axios from 'axios';
 import DataContext from '../../Context/DataContext';
 
 const LoginScreen = ({ onLoginSuccess }) => {
@@ -9,6 +10,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { handleLogin } = useContext(DataContext);
+  const [nonExistEmail, setNonExistEmail] = useState(false);
 
   const onLoginPress = async () => {
     setIsLoading(true);
@@ -22,12 +24,42 @@ const LoginScreen = ({ onLoginSuccess }) => {
     }
   };
 
-  const handleForgotPassword = () => {
-    Alert.alert('Esqueci minha senha', 'Implementar a lógica de recuperação de senha');
+  const handleForgotPassword = async () => {
+    if (email !== '') {
+      try {
+        const url = `https://api3.gps.med.br/API/Acesso/EsqueciSenha`;
+        const postData = {
+          Usuario: email
+        };
+
+        const response = await axios.post(url, postData);
+        const { message, status } = response.data;
+
+        if (status === 200) {
+          Alert.alert('Sucesso', 'Um email foi enviado para resetar sua senha.');
+        } else {
+          Alert.alert('Erro', message || 'Ocorreu um erro ao tentar resetar a senha.');
+        }
+        
+      } catch (error) {
+        console.error('API Error:', error);
+        Alert.alert('Erro', 'Ocorreu um erro ao tentar resetar a senha.');
+      }
+    } else {
+      if(Platform.OS === 'android'){
+        setNonExistEmail(true);
+      }
+      Alert.alert('Erro', 'Por favor, insira um email válido.');
+    }
+  };
+
+  const handleInterativaPress = () => {
+    Linking.openURL('https://interativasaude.com.br/');
   };
 
   return (
     <View style={styles.container}>
+      <View style={{height: 20}}/>
       <Image
         source={require('../../assets/gps_logo.png')}
         style={{ width: 315, height: 125, resizeMode: 'stretch', marginBottom: 40 }}
@@ -74,6 +106,13 @@ const LoginScreen = ({ onLoginSuccess }) => {
           Esqueci minha senha
         </Text>
       </TouchableOpacity>
+      {nonExistEmail &&
+        <View><Text style={{color: 'red'}}>Por favor, insira um email válido.</Text></View>}
+      <View style={{top: 100, alignItems: 'center'}}>
+        <TouchableOpacity onPress={handleInterativaPress}>
+          <Text style={{color: 'white'}}>by Interativa Saúde</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -91,7 +130,7 @@ const styles = StyleSheet.create({
     height: 50,
     width: '100%',
     borderColor: 'white',
-    borderRadius: 20,
+    borderRadius: 25,
     borderWidth: 3,
     marginBottom: 25,
     paddingHorizontal: 15,
@@ -106,10 +145,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 15,
     paddingHorizontal: 32,
-    borderRadius: 20,
+    borderRadius: 25,
     elevation: 3,
     backgroundColor: 'white',
-    width: 300,
+    width: '90%',
     marginTop: 5,
   },
   text: {

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet, Alert } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
@@ -30,6 +30,32 @@ const Profile = () => {
 
     fetchProfileData();
   }, []);
+
+  const handleForgotPassword = async (email) => {
+    if (email !== '') {
+      try {
+        const url = `https://api3.gps.med.br/API/Acesso/EsqueciSenha`;
+        const postData = {
+          Usuario: email
+        };
+
+        const response = await axios.post(url, postData);
+        const { message, status } = response.data;
+
+        if (status === 200) {
+          Alert.alert('Sucesso', 'Um email foi enviado para resetar sua senha.');
+        } else {
+          Alert.alert('Erro', message || 'Ocorreu um erro ao tentar resetar a senha.');
+        }
+        
+      } catch (error) {
+        console.error('API Error:', error);
+        Alert.alert('Erro', 'Ocorreu um erro ao tentar resetar a senha.');
+      }
+
+      Alert.alert('Erro', 'Por favor, insira um email válido.');
+    }
+  };
 
   const data = [
     { title: 'Nome e Sobrenome*', placeholder: 'Digite seu nome completo', type: 'text', value: profileData.Nome },
@@ -111,7 +137,7 @@ const Profile = () => {
               style={styles.inputList}
             />
             <View style={styles.buttonContainer}>
-              <TouchableOpacity style={styles.button}>
+              <TouchableOpacity onPress={() => handleForgotPassword(profileData.Email)} style={styles.button}>
                 <Text style={styles.buttonText}>Alterar senha</Text>
               </TouchableOpacity>
               <TouchableOpacity style={[styles.button, { backgroundColor: '#FFA500' }]}>

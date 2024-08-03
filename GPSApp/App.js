@@ -1,12 +1,10 @@
 import React, { useState } from 'react';
+import { StatusBar } from 'react-native';
 import 'react-native-gesture-handler'
 import { NavigationContainer } from '@react-navigation/native';
 import { DataProvider } from './Context/DataContext.js';
 import LoginScreen from './src/screens/LoginScreen.js';
 import DrawerRoutes from './src/routes/drawer.routes.js';
-
-
-
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -17,9 +15,10 @@ const App = () => {
 
   return (
     <DataProvider>
+      <StatusBar hidden={true}/>
       <NavigationContainer>
         {isAuthenticated ? (
-          <DrawerRoutes/>
+          <DrawerRoutes setIsAuthenticated={setIsAuthenticated} />
         ) : (
           <LoginScreen onLoginSuccess={handleLoginSuccess} />
         )}

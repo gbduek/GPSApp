@@ -249,6 +249,7 @@ const GraphEvolutivo = ({ id }) => {
                 options={nomeOptions}
                 selectedOption={selectedNome || 'Selecione uma opção'}
                 onSelect={(option) => setSelectedNome(option)}
+                displayMode='scrollview'
             />
             <ScrollView
                 horizontal

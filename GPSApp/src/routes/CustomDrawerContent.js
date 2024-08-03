@@ -1,11 +1,26 @@
-import React from 'react';
-import { View, StyleSheet, Image, Linking } from 'react-native';
+import React, {useContext} from 'react';
+import { View, StyleSheet, Image, Linking, Alert } from 'react-native';
 import { DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { Ionicons } from "@expo/vector-icons";
+import axios from 'axios';
+import DataContext from '../../Context/DataContext';
 
 const CustomDrawerContent = (props) => {
+  const { userLogged } = useContext(DataContext);
+
   const handleAjudaPress = () => {
     Linking.openURL('https://gps.med.br/biblioteca-de-tutoriais/');
+  };
+
+  const handleLogout = async () => {
+    try {
+      // Make the Axios request to log out
+      await axios.get(`https://api3.gps.med.br/API/Acesso/Logout/${userLogged}`);
+      // Reset authentication state to log out the user
+      props.setIsAuthenticated(false);
+    } catch (error) {
+      Alert.alert('Error', 'Failed to log out. Please try again.');
+    }
   };
 
   return (
@@ -25,6 +40,15 @@ const CustomDrawerContent = (props) => {
             <Ionicons name="alert-circle" size={size} color={color} />
           )}
           onPress={handleAjudaPress}
+          style={styles.drawerItem}
+        />
+        <DrawerItem
+          label="Sair"
+          labelStyle={styles.drawerLabel}
+          icon={({ color, size }) => (
+            <Ionicons name="exit-outline" size={size} color={color} />
+          )}
+          onPress={handleLogout}
           style={styles.drawerItem}
         />
       </View>

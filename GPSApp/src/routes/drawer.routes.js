@@ -12,7 +12,7 @@ import CustomDrawerContent from './CustomDrawerContent';
 
 const Drawer = createDrawerNavigator();
 
-const DrawerRoutes = () => {
+const DrawerRoutes = ({ setIsAuthenticated }) => {
     return (
         <Drawer.Navigator
             screenOptions={{
@@ -22,7 +22,7 @@ const DrawerRoutes = () => {
                 drawerActiveTintColor: 'white',
                 drawerLabelStyle: { fontSize: 20, fontWeight: 'bold', marginLeft: -15 },
             }}
-            drawerContent={(props) => <CustomDrawerContent {...props} />}
+            drawerContent={(props) => <CustomDrawerContent {...props} setIsAuthenticated={setIsAuthenticated}/>}
         >
             <Drawer.Screen
                 name="Home"

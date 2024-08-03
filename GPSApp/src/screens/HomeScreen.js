@@ -14,8 +14,8 @@ const HomeScreen = () => {
   const { firstName, percentages, fetchPercentages, temDiario } = useContext(DataContext);
 
   const bannerImages = [
-    require('../../assets/banner_cedae.png'),
-    require('../../assets/banner_cedae_equilibrio.png'),
+    require('../../assets/Banners/cedae/banner_cedae.png'),
+    require('../../assets/Banners/cedae/banner_cedae_equilibrio.png'),
   ];
 
   const links = [
@@ -80,7 +80,9 @@ const HomeScreen = () => {
 
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
-              <Ionicons name="book-outline" size={24} color="white" />
+              <TouchableOpacity onPress={handleNavigation('Diários')}>
+                <Ionicons name="book-outline" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             <View style={styles.paragraphTextContainer}>
               <Text style={styles.paragraphTitle}>Como você está hoje?</Text>
@@ -103,7 +105,9 @@ const HomeScreen = () => {
 
           <View style={styles.paragraphContainer}>
             <View style={styles.iconBackground}>
-              <Ionicons name="bar-chart-outline" size={24} color="white" />
+              <TouchableOpacity onPress={handleNavigation('Perfil de Saúde')}>
+                <Ionicons name="bar-chart-outline" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             <View style={styles.paragraphTextContainer}>
               <Text style={styles.paragraphTitle}>Quer saber o que pode melhorar em sua saúde?</Text>
@@ -127,7 +131,9 @@ const HomeScreen = () => {
               backgroundColor:'rgba(255, 165, 0, 0.2)', padding:10, borderColor:'orange', borderWidth: 1
              }]}>
             <View style={styles.iconBackground}>
-              <Ionicons name="bulb-outline" size={24} color="white" />
+              <TouchableOpacity onPress={handleNavigation('Recomendações')}>
+                <Ionicons name="bulb-outline" size={24} color="white" />
+              </TouchableOpacity>
             </View>
             <View style={styles.paragraphTextContainer}>
               <Text style={[styles.paragraphTitle, {marginTop: 10}]}>O que você precisa fazer?</Text>
