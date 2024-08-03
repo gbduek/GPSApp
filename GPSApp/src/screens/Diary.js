@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity, Platform } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import EmotionPopup from '../../Components/Popups/EmotionPopup';
 import MovementPopup from '../../Components/Popups/MovementPopup';
@@ -15,10 +15,17 @@ const Diary = () => {
     const [isEmotionPopupOpen, setIsEmotionPopupOpen] = useState(false);
     const [isMovementPopupOpen, setIsMovementPopupOpen] = useState(false);
     const [isSymptomPopupOpen, setIsSymptomPopupOpen] = useState(false);
+    const [histSizeH, setHistSizeH] = useState();
     const [imageUri, setImageUri] = useState('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
     const [description, setDescription] = useState('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
 
     const options = ['de Emoções', 'de Movimento', 'de Sintomas'];
+
+    useEffect(() => {
+        if (Platform.OS === 'ios') {
+            setHistSizeH(300);
+        }
+    }, []);
 
     // Function to handle option change
     const handleOptionChange = (option) => {
@@ -102,7 +109,7 @@ const Diary = () => {
                 return (
                     <View style={styles.geometricShape}>
                         <Text style={styles.shapeTitle}>Diário {selectedOption}</Text>
-                        <ScrollView style={{height: 300}}>
+                        <ScrollView style={{height: histSizeH}}>
                             <DiHist DiaryId={diaryId} />
                         </ScrollView>
                     </View>
