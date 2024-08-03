@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, FlatList, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, ScrollView, Modal } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
 const Picker = ({ options, selectedOption, onSelect, displayMode = 'flatlist' }) => {
@@ -43,11 +43,32 @@ const Picker = ({ options, selectedOption, onSelect, displayMode = 'flatlist' })
                 keyExtractor={(item, index) => index.toString()}
                 style={styles.flatList}
               />
-            ) : (
+            ) : displayMode === 'scrollview' ? (
               <ScrollView style={styles.scrollView}>
                 {options.map(renderOption)}
               </ScrollView>
-            )
+            ) : displayMode === 'modal' ? (
+              <Modal
+                transparent={true}
+                visible={isSelectorOpen}
+                onRequestClose={() => setIsSelectorOpen(false)}
+                animationType="slide"
+              >
+                <View style={styles.modalContainer}>
+                  <View style={styles.modalContent}>
+                    <ScrollView style={styles.scrollView}>
+                      {options.map(renderOption)}
+                    </ScrollView>
+                    <TouchableOpacity
+                      style={styles.closeButton}
+                      onPress={() => setIsSelectorOpen(false)}
+                    >
+                      <Text style={styles.closeButtonText}>Fechar</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            ) : null
           ) : (
             options.map(renderOption)
           )}
@@ -98,6 +119,31 @@ const styles = StyleSheet.create({
   optionText: {
     fontSize: 16,
     color: 'orange',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: '80%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  closeButton: {
+    marginTop: 10,
+    padding: 10,
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'orange',
+    borderRadius: 10,
+  },
+  closeButtonText: {
+    fontSize: 16,
+    color: 'orange',
+    fontWeight: 'bold',
   },
 });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from 'react';
-import { View, StyleSheet, ScrollView, ActivityIndicator } from 'react-native';
+import { View, StyleSheet, ScrollView, ActivityIndicator, Platform } from 'react-native';
 import Picker from './UIComp/Picker';
 import axios from 'axios';
 import * as d3 from 'd3-shape';
@@ -8,7 +8,7 @@ import DataContext from '../Context/DataContext';
 
 const YAxis = () => {
     const height = 250;
-    const step = height / 10;
+    const step = height / 10; 
 
     return (
         <View style={styles.yAxisContainer}>
@@ -38,8 +38,14 @@ const GraphEvolutivo = ({ id }) => {
     const [loading, setLoading] = useState(true);
     const [selectedNome, setSelectedNome] = useState(null);
     const [nomeOptions, setNomeOptions] = useState([]);
+    const [pickerDisplayMode, setPickerDisplayMode] = useState('scrollview');
 
     useEffect(() => {
+        {/* The Picker is set to be a Modal, instead of list, if the user is using Android */}
+        if (Platform.OS === 'android') {
+            setPickerDisplayMode('modal');
+        }
+
         const fetchData = async () => {
             try {
                 const url = `https://api3.gps.med.br/API/DadosIndicadores/page-data/${userLogged}/${id}`;
@@ -249,7 +255,7 @@ const GraphEvolutivo = ({ id }) => {
                 options={nomeOptions}
                 selectedOption={selectedNome || 'Selecione uma opção'}
                 onSelect={(option) => setSelectedNome(option)}
-                displayMode='scrollview'
+                displayMode={pickerDisplayMode}
             />
             <ScrollView
                 horizontal

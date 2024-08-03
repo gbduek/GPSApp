@@ -1,8 +1,8 @@
 {
   "expo": {
     "name": "GPS MED",
-    "slug": "GPS MED",
-    "version": "1.0.0",
+    "slug": "GPSApp",
+    "version": "2.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -22,7 +22,8 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.gbduek.GPSMed"
+      "package": "com.gbduek.GPSMed",
+      "versionCode": 2
     },
     "web": {
       "favicon": "./assets/favicon.png"
