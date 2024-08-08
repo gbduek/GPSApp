@@ -31,7 +31,7 @@ const YAxis = () => {
     );
 };
 
-const GraphEvolutivo = ({ id }) => {
+const GraphEvolutivo = ({ id, refreshing }) => {
     const [apiData, setApiData] = useState([]);
     const { token, userLogged } = useContext(DataContext);
     const [selectedItem, setSelectedItem] = useState(null);
@@ -40,40 +40,57 @@ const GraphEvolutivo = ({ id }) => {
     const [nomeOptions, setNomeOptions] = useState([]);
     const [pickerDisplayMode, setPickerDisplayMode] = useState('scrollview');
 
-    useEffect(() => {
-        {/* The Picker is set to be a Modal, instead of list, if the user is using Android */}
-        if (Platform.OS === 'android') {
-            setPickerDisplayMode('modal');
-        }
+    const fetchData = async () => {
+        try {
+            const url = `https://api3.gps.med.br/API/DadosIndicadores/page-data/${userLogged}/${id}`;
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+    
+            const response = await axios.get(url, { headers });
+            let fetchedData = response.data.GraficoEvolutivo || [];
 
-        const fetchData = async () => {
-            try {
-                const url = `https://api3.gps.med.br/API/DadosIndicadores/page-data/${userLogged}/${id}`;
-                const headers = {
-                    Authorization: `Bearer ${token}`
-                };
-
-                const response = await axios.get(url, { headers });
-                const fetchedData = response.data.GraficoEvolutivo || [];
-                setApiData(fetchedData);
-
-                // Extract unique "Nome" values
-                const uniqueNome = [...new Set(fetchedData.map(entry => entry.Nome))];
-                setNomeOptions(uniqueNome);
-
-                if (uniqueNome.length === 1) {
-                    setSelectedNome(uniqueNome[0]);
-                }
-            } catch (error) {
-                console.error('API Error:', error);
-                setApiData([]); // Set to empty array on error
-            } finally {
-                setLoading(false);
+            // Extract unique "Nome" values
+            const uniqueNome = [...new Set(fetchedData.map(entry => entry.Nome))];
+            setNomeOptions(uniqueNome);
+    
+            // Apply the exception for specific IdMedicao (Exceptions List)
+            if (uniqueNome.includes('IMC')) {
+                fetchedData = fetchedData.filter(entry => entry.Nome === 'IMC');
+                setNomeOptions(['IMC']);
             }
-        };
+    
+            setApiData(fetchedData);
+    
+            if (uniqueNome.length === 1) {
+                setSelectedNome(uniqueNome[0]);
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            setApiData([]); // Set to empty array on error
+        } finally {
+            setLoading(false);
+        }
+    };
 
+    useEffect(() => {
         fetchData();
     }, [id, token, userLogged]);
+
+    useEffect(() => {
+        setLoading(true);
+        
+        if(refreshing){
+            fetchData();
+        }
+    }, [refreshing]);
+
+    useEffect(() => {
+        if(Platform.OS == 'android'){
+            setPickerDisplayMode('modal');
+        }
+    }, [])
+    
 
     const handlePointPress = (item) => {
         setSelectedItem(item);
@@ -81,6 +98,8 @@ const GraphEvolutivo = ({ id }) => {
 
     const processData = (data) => {
         const filteredData = selectedNome ? data.filter(entry => entry.Nome === selectedNome) : data;
+
+        if(filteredData.length === 0) return [];
     
         const minValue = Math.min(...data.flatMap(entry => entry.Dados.map(d => d.Value)));
         const maxValue = Math.max(...data.flatMap(entry => entry.Dados.map(d => d.Value)));
@@ -253,7 +272,7 @@ const GraphEvolutivo = ({ id }) => {
             <YAxis />
             <Picker
                 options={nomeOptions}
-                selectedOption={selectedNome || 'Selecione uma opção'}
+                selectedOption={selectedNome || nomeOptions[0] || 'Selecione uma opção'}
                 onSelect={(option) => setSelectedNome(option)}
                 displayMode={pickerDisplayMode}
             />
@@ -280,19 +299,12 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    graphContainer: {
-        flexDirection: 'row',
-    },
     yAxisContainer: {
         position: 'absolute',
         left: -15,
         top: 100,
         bottom: 0,
         backgroundColor: 'white',
-    },
-    graphWrapper: {
-        marginLeft: 0,
-        flex: 1,
     },
 });
 

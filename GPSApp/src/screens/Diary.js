@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Image, StyleSheet, FlatList, ScrollView, TouchableOpacity, Platform } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, Image, StyleSheet, FlatList, ScrollView,
+         TouchableOpacity, Platform, RefreshControl } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import EmotionPopup from '../../Components/Popups/EmotionPopup';
 import MovementPopup from '../../Components/Popups/MovementPopup';
@@ -18,6 +19,7 @@ const Diary = () => {
     const [histSizeH, setHistSizeH] = useState();
     const [imageUri, setImageUri] = useState('https://api3.gps.med.br/api/upload/image?vinculo=a8772285-cc12-47c0-b947-eeac0a790b7a');
     const [description, setDescription] = useState('Registre aqui suas fontes de estresse e suas emoções, positivas e negativas.');
+    const [refreshing, setRefreshing] = useState(false);
 
     const options = ['de Emoções', 'de Movimento', 'de Sintomas'];
 
@@ -71,6 +73,12 @@ const Diary = () => {
         }
     };
 
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        // Assuming DiHist and GraphDiary have internal fetch logic, this will refresh them.
+        setTimeout(() => setRefreshing(false), 2000); // Optional: simulate loading
+    }, []);
+
     const renderPopup = () => {
         switch (selectedOption) {
             case 'de Emoções':
@@ -110,7 +118,7 @@ const Diary = () => {
                     <View style={styles.geometricShape}>
                         <Text style={styles.shapeTitle}>Diário {selectedOption}</Text>
                         <ScrollView style={{height: histSizeH}}>
-                            <DiHist DiaryId={diaryId} />
+                            <DiHist DiaryId={diaryId} refreshing={refreshing} />
                         </ScrollView>
                     </View>
                 );
@@ -120,7 +128,7 @@ const Diary = () => {
                         <Text style={[styles.shapeTitle, {marginBottom: -10}]}>Gráfico {selectedOption}</Text>
                         <ScrollView>
                             <View style={{height: 10}}/>
-                            <GraphDiary DiaryId={diaryId}/>
+                            <GraphDiary DiaryId={diaryId} refreshing={refreshing} />
                         </ScrollView>
                     </View>
                 );
@@ -146,6 +154,13 @@ const Diary = () => {
                     renderItem={renderItem}
                     contentContainerStyle={styles.flatListContent}
                     scrollIndicatorInsets={{right: 1}}
+                    refreshControl={
+                        <RefreshControl
+                            refreshing={refreshing}
+                            onRefresh={onRefresh}
+                            tintColor="orange"
+                        />
+                    }
                 />
 
                 {isEmotionPopupOpen && renderPopup()}

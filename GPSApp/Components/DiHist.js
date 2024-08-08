@@ -4,41 +4,47 @@ import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import DataContext from '../Context/DataContext';
 
-const DiHist = ({ DiaryId }) => {
+const DiHist = ({ DiaryId, refreshing }) => {
   const { token, userLogged } = useContext(DataContext);
   const [diaryEntries, setDiaryEntries] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDiaryEntries = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.post(
-          'https://api3.gps.med.br/API/diario/diarios',
-          {
-            pessoa: userLogged,
-            tipoDiario: DiaryId,
-            dadoTipoDiario: null,
-            dataInicio: null,
-            dataFinal: null,
+  const fetchDiaryEntries = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        'https://api3.gps.med.br/API/diario/diarios',
+        {
+          pessoa: userLogged,
+          tipoDiario: DiaryId,
+          dadoTipoDiario: null,
+          dataInicio: null,
+          dataFinal: null,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const entries = response.data;
-        setDiaryEntries(entries);
-      } catch (error) {
-        console.error('Error fetching diary entries:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
+        }
+      );
+      const entries = response.data;
+      setDiaryEntries(entries);
+    } catch (error) {
+      console.error('Error fetching diary entries:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     fetchDiaryEntries();
   }, [token, userLogged, DiaryId]);
+
+  useEffect(() => {
+    if (refreshing) {
+      fetchDiaryEntries();
+    }
+  }, [refreshing]);
 
   const handleDelete = async (id) => {
     setLoading(true);

@@ -114,7 +114,7 @@ const Profile = () => {
   };
 
 
-  const randomImageURL = `https://api3.gps.med.br/API/upload/image?vinculo=e91f978d-da58-e792-92cb-c0b993b24afd&tipo=pessoa`;
+  const randomImageURL = `https://api3.gps.med.br/API/upload/image?vinculo=${userLogged}&tipo=pessoa`;
 
   return (
     <View style={{backgroundColor: 'white'}}>

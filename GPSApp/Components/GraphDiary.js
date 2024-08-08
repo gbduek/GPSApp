@@ -43,38 +43,45 @@ const YAxis = () => {
     );
 };
 
-const GraphDiary = ({ DiaryId }) => {
+const GraphDiary = ({ DiaryId, refreshing }) => {
     const [apiData, setApiData] = useState([]);
     const { token, userLogged } = useContext(DataContext);
     const [selectedItem, setSelectedItem] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const fetchData = async () => {
+        setLoading(true);
+        try {
+            const url = 'https://api3.gps.med.br/API/diario/diarios';
+            const headers = {
+                Authorization: `Bearer ${token}`
+            };
+            const body = {
+                pessoa: userLogged,
+                tipoDiario: DiaryId,
+                dadoTipoDiario: null,
+                dataInicio: null,
+                dataFinal: null
+            };
+
+            const response = await axios.post(url, body, { headers });
+            setApiData(response.data);
+        } catch (error) {
+            console.error('API Error:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const url = 'https://api3.gps.med.br/API/diario/diarios';
-                const headers = {
-                    Authorization: `Bearer ${token}`
-                };
-                const body = {
-                    pessoa: userLogged,
-                    tipoDiario: DiaryId,
-                    dadoTipoDiario: null,
-                    dataInicio: null,
-                    dataFinal: null
-                };
-
-                const response = await axios.post(url, body, { headers });
-                setApiData(response.data);
-            } catch (error) {
-                console.error('API Error:', error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
         fetchData();
     }, [DiaryId]);
+
+    useEffect(() => {
+        if (refreshing) {
+          fetchData();
+        }
+      }, [refreshing]);
 
     const handlePointPress = (item) => {
         setSelectedItem(item);

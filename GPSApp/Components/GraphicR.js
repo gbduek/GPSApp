@@ -4,41 +4,56 @@ import axios from 'axios';
 import DataContext from '../Context/DataContext';
 import Tooltip from './UIComp/Tooltip';
 
-const GraphicR = ({ id }) => {
+const GraphicR = ({ id, refreshing }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [tooltipIndex, setTooltipIndex] = useState(null); // State to manage which tooltip is visible
   const { token, userLogged } = useContext(DataContext);
   const [modalVisible, setModalVisible] = useState(false); // State to manage modal visibility
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/page-data/${userLogged}/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`https://api3.gps.med.br/API/DadosIndicadores/page-data/${userLogged}/${id}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
 
-        const apiData = response.data.GraficoEvolutivo.map(item => ({
-          date: new Date(item.UltimaMedicaoData).toLocaleDateString('en-US', {
-            year: '2-digit',
-            month: '2-digit',
-          }),
-          value: item.UltimaMedicao,
-          color: item.CorExibicao,
-          nome: item.Nome,
-        }));
-        setData(apiData);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      } finally {
-        setLoading(false);
+      let apiData = response.data.GraficoEvolutivo.map(item => ({
+        idMedicao: response.data.Historico[0]?.IdMedicao,
+        nome: item.Nome,
+        date: new Date(item.UltimaMedicaoData).toLocaleDateString('en-US', {
+          year: '2-digit',
+          month: '2-digit',
+        }),
+        value: item.UltimaMedicao,
+        color: item.CorExibicao,
+      }));
+
+      // Exception: Only show IMC if IdMedicao matches the specified ID
+      if (response.data.Historico[0]?.IdMedicao === '43999272-9447-486e-980e-74f94c99a85b') {
+        apiData = apiData.filter(item => item.nome === 'IMC');
       }
-    };
 
+      setData(apiData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchData();
   }, [id, token, userLogged]);
+
+  useEffect(() => {
+    setLoading(true);
+    
+    if(refreshing){
+      fetchData();
+    }
+  }, [refreshing]);
 
   const handleBarPress = (index) => {
     setTooltipIndex(index);

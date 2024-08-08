@@ -36,6 +36,7 @@ export const MenteStack = () => {
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
         </Stack.Navigator>
@@ -68,6 +69,7 @@ export const CorpoStack = () => {
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
+                    headerTitle: '',
                 }}
             />
         </Stack.Navigator>
