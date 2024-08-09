@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
+import { View, Text, StyleSheet, ActivityIndicator, ScrollView,
+         TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
 import Tooltip from './UIComp/Tooltip';
@@ -25,6 +27,7 @@ const GraphicR = ({ id, refreshing }) => {
         date: new Date(item.UltimaMedicaoData).toLocaleDateString('en-US', {
           year: '2-digit',
           month: '2-digit',
+          day: '2-digit'
         }),
         value: item.UltimaMedicao,
         color: item.CorExibicao,
@@ -43,9 +46,13 @@ const GraphicR = ({ id, refreshing }) => {
     }
   };
 
-  useEffect(() => {
-    fetchData();
-  }, [id, token, userLogged]);
+
+  useFocusEffect(
+    useCallback(() => {
+      setLoading(true);
+      fetchData(); // Fetch data when the screen comes into focus
+    }, [id, userLogged])
+  );
 
   useEffect(() => {
     setLoading(true);
@@ -76,28 +83,51 @@ const GraphicR = ({ id, refreshing }) => {
   return (
     <View style={styles.container}>
       {/* These are the vertical numbers on the left of the graphic */}
-      <View style={styles.yAxis}>
+      <View style={[styles.yAxis, {height: 200}]}>
         {[100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].map((value) => (
           <Text key={value} style={styles.yAxisText}>{value}</Text>
         ))}
       </View>
-      <View style={styles.graph}>
-        {data.map((dataItem, index) => (
-          <View key={index} style={styles.barContainer}>
-            <TouchableOpacity
-              onPress={() => handleBarPress(index)}
-              style={[
-                styles.bar,
-                {
-                  height: `${Math.min(dataItem.value, 100)}%`,
-                  backgroundColor: dataItem.color,
-                },
-              ]}
-            />
-            <Text style={styles.dateText}>{dataItem.date}</Text>
+      {/* If there are more than 7 bars, render within a ScrollView */}
+      {data.length > 7 ? (
+        <ScrollView horizontal contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator='false'>
+          <View style={[styles.graph, {height: 200}]}>
+            {data.map((dataItem, index) => (
+              <View key={index} style={[styles.barContainer, {marginRight: 5, marginBottom: 20}]}>
+                <TouchableOpacity
+                  onPress={() => handleBarPress(index)}
+                  style={[
+                    styles.bar,
+                    {
+                      height: `${Math.min(dataItem.value, 100)}%`,
+                      backgroundColor: dataItem.color,
+                    },
+                  ]}
+                />
+                <Text style={styles.dateText}>{dataItem.date}</Text>
+              </View>
+            ))}
           </View>
-        ))}
-      </View>
+        </ScrollView>
+      ) : (
+        <View style={[styles.graph, {height: 200}]}>
+          {data.map((dataItem, index) => (
+            <View key={index} style={styles.barContainer}>
+              <TouchableOpacity
+                onPress={() => handleBarPress(index)}
+                style={[
+                  styles.bar,
+                  {
+                    height: `${Math.min(dataItem.value, 100)}%`,
+                    backgroundColor: dataItem.color,
+                  },
+                ]}
+              />
+              <Text style={styles.dateText}>{dataItem.date}</Text>
+            </View>
+          ))}
+        </View>
+      )}
 
       {/* Modal for displaying tooltips */}
       <Modal
@@ -137,7 +167,6 @@ const styles = StyleSheet.create({
   },
   yAxis: {
     justifyContent: 'space-between',
-    height: 200,
   },
   yAxisText: {
     fontSize: 14,
@@ -146,9 +175,11 @@ const styles = StyleSheet.create({
   graph: {
     flexDirection: 'row',
     alignItems: 'flex-end',
-    height: 200,
     width: '100%',
     top: 20,
+  },
+  scrollViewContent: {
+    alignItems: 'flex-end',
   },
   barContainer: {
     flex: 1,

@@ -1,5 +1,6 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useCallback } from 'react';
 import { View, StyleSheet, ScrollView, ActivityIndicator, Platform } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import Picker from './UIComp/Picker';
 import axios from 'axios';
 import * as d3 from 'd3-shape';
@@ -73,9 +74,12 @@ const GraphEvolutivo = ({ id, refreshing }) => {
         }
     };
 
-    useEffect(() => {
-        fetchData();
-    }, [id, token, userLogged]);
+    useFocusEffect(
+        useCallback(() => {
+          setLoading(true);
+          fetchData(); // Fetch data when the screen comes into focus
+        }, [id, userLogged])
+    );
 
     useEffect(() => {
         setLoading(true);

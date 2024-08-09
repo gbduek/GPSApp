@@ -1,8 +1,8 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-
 import HomeScreen from "../screens/HomeScreen";
 import Profile from "../screens/Profile";
-import { Ionicons } from "@expo/vector-icons";
+import { PermissionStack } from "./stack.routes";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 
 const Tab = createBottomTabNavigator();
 
@@ -16,6 +16,13 @@ const TabRoutes = () => {
                 tabBarIcon: ({size, color}) => <Ionicons name={'home'} color={color} size={size}/>,
                 tabBarShowLabel: false
              }}/>
+
+            <Tab.Screen 
+                name="Permissões" component={PermissionStack} 
+                options={{
+                    tabBarIcon: ({size, color}) => <MaterialIcons name={'check-circle'} color={color} size={size}/>,
+                    tabBarShowLabel: false
+             }}/> 
 
             <Tab.Screen name="Perfil" component={Profile}
               options={{

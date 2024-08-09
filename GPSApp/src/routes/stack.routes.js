@@ -6,6 +6,8 @@ import Corpo from "../screens/Corpo";
 import LifeStyle from "../screens/LifeStyle";
 import Registry from "../../Registries/Registry";
 import Questionary from "../../Components/Questionary";
+import PermissionProfile from '../screens/PermissionProfile';
+import PermissionScreen from '../screens/PermissionScreen';
 
 const Stack = createStackNavigator();
 
@@ -18,7 +20,7 @@ export const MenteStack = () => {
                 component={Mente}
                 options={{
                     headerShown: false,
-                    headerTitle: '',
+                    headerTitle: 'Mente',
                 }}
             />
             <Stack.Screen
@@ -52,6 +54,7 @@ export const CorpoStack = () => {
                 component={Corpo}
                 options={{
                     headerShown: false,
+                    headerTitle: 'Corpo',
                 }}
             />
             <Stack.Screen
@@ -85,7 +88,7 @@ export const LifeStyleStack = () => {
                 component={LifeStyle}
                 options={{
                     headerShown: false,
-                    headerTitle: '',
+                    headerTitle: 'Estilo de Vida',
                 }}
             />
             <Stack.Screen
@@ -100,6 +103,32 @@ export const LifeStyleStack = () => {
             <Stack.Screen
                 name="Questionary"
                 component={Questionary}
+                options={{
+                    headerShown: true,
+                    headerTintColor: 'orange',
+                    headerTitle: '',
+                }}
+            />
+        </Stack.Navigator>
+    );
+};
+
+
+// Stack navigator for Permissão screens
+export const PermissionStack = () => {
+    return (
+        <Stack.Navigator>
+            <Stack.Screen
+                name="PermissionScreen"
+                component={PermissionScreen}
+                options={{
+                    headerShown: false,
+                    headerTitle: 'Permissões',
+                }}
+            />
+            <Stack.Screen
+                name="PermissionProfile"
+                component={PermissionProfile}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',

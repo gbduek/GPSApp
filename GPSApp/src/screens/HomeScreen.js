@@ -16,11 +16,13 @@ const HomeScreen = () => {
   const bannerImages = [
     require('../../assets/Banners/cedae/banner_cedae.png'),
     require('../../assets/Banners/cedae/banner_cedae_equilibrio.png'),
+    require('../../assets/Banners/generic/banner_generic.png')
   ];
 
   const links = [
     'https://cedaesaude.org.br/index.php/cedae-saude/',
     'https://cedaesaude.org.br/index.php/programa-equilibrio-emocional/',
+    'https://gps.med.br/autoavaliacao-em-saude/',
     // Add more links corresponding to the images
   ];
 

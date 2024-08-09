@@ -3,7 +3,6 @@ import { View, Text, TextInput, TouchableOpacity, FlatList, Image, StyleSheet, A
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
-import Menu from '../../Components/Menu';
 import Header from '../../Components/Header';
 
 const Profile = () => {
@@ -64,7 +63,7 @@ const Profile = () => {
     { title: 'Data de Nascimento*', placeholder: 'Digite sua data de nascimento', type: 'text', value: new Date(profileData.DataNascimento).toLocaleDateString() },
     { title: 'Sexo*', placeholder: '', type: 'selector', value: profileData.Sexo },
     { title: 'Data de Cadastro*', placeholder: 'Digite a data de cadastro', type: 'text', value: new Date(profileData.DataCadastro).toLocaleDateString() },
-    { title: 'Telefone Celular*', placeholder: 'Digite seu telefone celular', type: 'text', value: profileData.TelefoneCelular },
+    { title: 'Telefone Celular', placeholder: 'Digite seu telefone celular', type: 'text', value: profileData.TelefoneCelular },
   ];
 
   const renderItem = ({ item }) => {
@@ -119,7 +118,6 @@ const Profile = () => {
   return (
     <View style={{backgroundColor: 'white'}}>
       <Header/>
-      <Menu />
       <FlatList
         data={data}
         ListHeaderComponent={() => (
