@@ -17,12 +17,12 @@ const TabRoutes = () => {
                 tabBarShowLabel: false
              }}/>
 
-            <Tab.Screen 
+            {/* <Tab.Screen 
                 name="Permissões" component={PermissionStack} 
                 options={{
                     tabBarIcon: ({size, color}) => <MaterialIcons name={'check-circle'} color={color} size={size}/>,
                     tabBarShowLabel: false
-             }}/> 
+             }}/>  */}
 
             <Tab.Screen name="Perfil" component={Profile}
               options={{

@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, ScrollView, StyleSheet, Image, TouchableOpacity, Alert, TextInput } from 'react-native';
 import axios from 'axios';
-import DataContext from '../../Context/DataContext';
+import DataContext from '../../../Context/DataContext';
+import { MaterialIcons } from '@expo/vector-icons'; // Assuming you use Expo, you can replace it with your icon library
 
 const PermissionProfile = ({ route }) => {
     const { idPessoa } = route.params;
@@ -52,6 +53,14 @@ const PermissionProfile = ({ route }) => {
         </View>
     );
 
+    // Render each permission item
+    const renderPermissionItem = (permission) => (
+        <View key={permission.id} style={styles.permissionItem}>
+            <Text style={styles.permissionTitle}>{permission.nome}</Text>
+            <Text style={styles.permissionDescription}>{permission.descricao}</Text>
+        </View>
+    );
+
     return (
         <View style={{ backgroundColor: 'white', flex: 1 }}>
             <ScrollView contentContainerStyle={styles.container}>
@@ -64,11 +73,16 @@ const PermissionProfile = ({ route }) => {
                 <View style={styles.infoContainer}>
                     {data.map(renderItem)}
                 </View>
-                <View style={styles.buttonContainer}>
-                    <TouchableOpacity style={[styles.button, { backgroundColor: '#FFA500' }]}>
-                        <Text style={[styles.buttonText, { color: '#FFF' }]}>Editar</Text>
-                    </TouchableOpacity>
+
+                {/* New "Permissão Pendente" Section */}
+                <View style={styles.permissionsContainer}>
+                    <View style={styles.permissionHeader}>
+                        <MaterialIcons name="check-circle-outline" size={24} color="#FFA500" />
+                        <Text style={styles.permissionHeaderTitle}>Permissão Pendente</Text>
+                    </View>
+                    {profile.permissions.map(renderPermissionItem)}
                 </View>
+
                 <View style={{ height: 150 }} />
             </ScrollView>
         </View>
@@ -132,6 +146,36 @@ const styles = StyleSheet.create({
         fontSize: 18,
         fontWeight: 'bold',
         color: '#FFA500',
+    },
+    permissionsContainer: {
+        marginTop: 30,
+    },
+    permissionHeader: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 15,
+    },
+    permissionHeaderTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: '#FFA500',
+        marginLeft: 10,
+    },
+    permissionItem: {
+        backgroundColor: '#FFF3E0',
+        padding: 15,
+        borderRadius: 10,
+        marginBottom: 10,
+    },
+    permissionTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+        color: '#FFA500',
+    },
+    permissionDescription: {
+        fontSize: 14,
+        color: '#333',
+        marginTop: 5,
     },
 });
 

@@ -24,7 +24,7 @@ const GraphicR = ({ id, refreshing }) => {
       let apiData = response.data.GraficoEvolutivo.map(item => ({
         idMedicao: response.data.Historico[0]?.IdMedicao,
         nome: item.Nome,
-        date: new Date(item.UltimaMedicaoData).toLocaleDateString('en-US', {
+        date: new Date(item.UltimaMedicaoData).toLocaleDateString({
           year: '2-digit',
           month: '2-digit',
           day: '2-digit'

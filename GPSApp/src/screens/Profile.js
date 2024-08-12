@@ -28,7 +28,7 @@ const Profile = () => {
     };
 
     fetchProfileData();
-  }, []);
+  }, [userLogged]);
 
   const handleForgotPassword = async (email) => {
     if (email !== '') {

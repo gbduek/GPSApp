@@ -6,8 +6,8 @@ import Corpo from "../screens/Corpo";
 import LifeStyle from "../screens/LifeStyle";
 import Registry from "../../Registries/Registry";
 import Questionary from "../../Components/Questionary";
-import PermissionProfile from '../screens/PermissionProfile';
-import PermissionScreen from '../screens/PermissionScreen';
+import PermissionProfile from '../screens/Permissions/PermissionProfile';
+import PermissionScreen from '../screens/Permissions/PermissionScreen';
 
 const Stack = createStackNavigator();
 

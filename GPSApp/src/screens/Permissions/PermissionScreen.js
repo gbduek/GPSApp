@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, ScrollView } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
-import DataContext from '../../Context/DataContext';
-import Header from '../../Components/Header';
+import DataContext from '../../../Context/DataContext';
+import Header from '../../../Components/Header';
 
 const PermissionScreen = () => {
     const [permissions, setPermissions] = useState([]);
@@ -39,7 +39,7 @@ const PermissionScreen = () => {
             <Header />
             <ScrollView contentContainerStyle={styles.container}>
                 {permissions.length === 0 ? (
-                    <Text>No permission requests at the moment.</Text>
+                    <Text style={{color:'orange', fontWeight:'bold', fontSize:'20'}}>Não há requisicões de permissão no momento</Text>
                 ) : (
                     permissions.map((permission) => (
                         <View key={permission.id} style={styles.card}>

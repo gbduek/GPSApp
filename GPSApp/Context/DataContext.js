@@ -13,6 +13,7 @@ export const DataProvider = ({ children }) => {
   const [token, setToken] = useState(null); // Token do Usuário
   const [companyPhoto, setCompanyPhoto] = useState(null);
   const [temDiario, setTemDiario] = useState(false);
+  const [userCompany, setUserCompany] = useState(null);
 
   // Function to handle login
   const handleLogin = async (email, password) => {
@@ -33,12 +34,13 @@ export const DataProvider = ({ children }) => {
         }
       });
 
-      const { userLogged, userLoggedName, profilePhoto, temDiario, companyPhoto } = userDataResponse.data;
+      const { userLogged, userLoggedName, profilePhoto, temDiario, companyPhoto, userCompany } = userDataResponse.data;
 
       setUserLogged(userLogged); // Set userLogged to state
       await AsyncStorage.setItem('userLogged', userLogged);
       await AsyncStorage.setItem('userLoggedName', userLoggedName);
       setCompanyPhoto(companyPhoto);
+      setUserCompany(userCompany);
 
       const firstName = userLoggedName.split(' ')[0].toUpperCase();
       setFirstName(firstName);
@@ -107,6 +109,7 @@ export const DataProvider = ({ children }) => {
       userLogged,
       temDiario,
       companyPhoto,
+      userCompany,
       handleLogin, 
       fetchPercentages
     }}>

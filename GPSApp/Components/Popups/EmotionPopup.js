@@ -23,7 +23,7 @@ const emotions = [
   { name: 'Tristeza', color: 'gray', id: '65af4d97-2942-4676-82fa-f15362b56ae7', image: tristezaImage },
 ];
 
-const EmotionPopup = ({ onClose }) => {
+const EmotionPopup = ({ onClose, refreshDiary }) => {
   const { token, userLogged } = useContext(DataContext);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -76,6 +76,7 @@ const EmotionPopup = ({ onClose }) => {
       console.error('Error registering emotion:', error);
       Alert.alert('Erro', 'Ocorreu um erro ao registrar. Por favor, tente novamente.');
     } finally {
+      refreshDiary();
       setLoading(false);
     }
   };

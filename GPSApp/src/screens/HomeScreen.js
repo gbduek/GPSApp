@@ -11,20 +11,32 @@ import Header from '../../Components/Header';
 import DataContext from '../../Context/DataContext';
 
 const HomeScreen = () => {
-  const { firstName, percentages, fetchPercentages, temDiario } = useContext(DataContext);
+  const { firstName, percentages, fetchPercentages, temDiario, userCompany } = useContext(DataContext);
 
-  const bannerImages = [
-    require('../../assets/Banners/cedae/banner_cedae.png'),
-    require('../../assets/Banners/cedae/banner_cedae_equilibrio.png'),
-    require('../../assets/Banners/generic/banner_generic.png')
+  const cedaeIds = [
+    "74ec66e6-87a4-3e6c-9ab2-55b3d91772a7",
+    "f7eef769-4739-fa45-834a-a2827c24d234",
+    "de12a610-8e5e-525e-3661-d19a33168e29",
+    "650b0e12-4361-6eee-9588-e8bbcacab0cef"
   ];
 
-  const links = [
-    'https://cedaesaude.org.br/index.php/cedae-saude/',
-    'https://cedaesaude.org.br/index.php/programa-equilibrio-emocional/',
-    'https://gps.med.br/autoavaliacao-em-saude/',
-    // Add more links corresponding to the images
-  ];
+  const bannerImages = cedaeIds.includes(userCompany)
+    ? [
+        require('../../assets/Banners/cedae/banner_cedae.png'),
+        require('../../assets/Banners/cedae/banner_cedae_equilibrio.png'),
+      ]
+    : [
+        require('../../assets/Banners/generic/banner_generic.png')
+      ];
+
+  const links = cedaeIds.includes(userCompany)
+    ? [
+        'https://cedaesaude.org.br/index.php/cedae-saude/',
+        'https://cedaesaude.org.br/index.php/programa-equilibrio-emocional/',
+      ]
+    : [
+        'https://gps.med.br/autoavaliacao-em-saude/' // Single link for the generic banner
+      ];
 
   const renderLogo = (logoUrl) => {
     let additionalStyle = {};

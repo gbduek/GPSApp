@@ -79,14 +79,21 @@ const Diary = () => {
         setTimeout(() => setRefreshing(false), 2000); // Optional: simulate loading
     }, []);
 
+    const refreshDiary = () => {
+        setRefreshing(true);
+        setTimeout(() => {
+          setRefreshing(false);
+        }, 2000); // Optional: simulate loading
+    };
+
     const renderPopup = () => {
         switch (selectedOption) {
             case 'de Emoções':
-                return <EmotionPopup onClose={() => setIsEmotionPopupOpen(false)} />;
+                return <EmotionPopup onClose={() => setIsEmotionPopupOpen(false)} refreshDiary={refreshDiary} />;
             case 'de Movimento':
-                return <MovementPopup onClose={() => setIsMovementPopupOpen(false)} />;
+                return <MovementPopup onClose={() => setIsMovementPopupOpen(false)} refreshDiary={refreshDiary} />;
             case 'de Sintomas':
-                return <SymptomPopup onClose={() => setIsSymptomPopupOpen(false)}/>
+                return <SymptomPopup onClose={() => setIsSymptomPopupOpen(false)} refreshDiary={refreshDiary} />
             default:
                 return null;
         }

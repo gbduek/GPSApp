@@ -7,11 +7,11 @@ import DataContext from '../../Context/DataContext';
 import { FontAwesome } from '@expo/vector-icons';
 import Picker from '../UIComp/Picker';
 
-const MovementPopup = ({ onClose }) => {
+const MovementPopup = ({ onClose, refreshDiary }) => {
   const { token, userLogged } = useContext(DataContext);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [selectedActivity, setSelectedActivity] = useState(null);
+  const [selectedActivity, setSelectedActivity] = useState({ nome: '', id: '' });
   const [activities, setActivities] = useState([]);
   const [loading, setLoading] = useState(true);
   const [intensity, setIntensity] = useState(5);
@@ -57,7 +57,7 @@ const MovementPopup = ({ onClose }) => {
         inicio: date.toISOString(),
         fim: date.toISOString(),
         intensidade: intensity * 10,
-        atividade: selectedActivity,
+        atividade: selectedActivity.id,
       };
 
       await axios.post('https://api3.gps.med.br/API/diario', postData, {
@@ -73,6 +73,7 @@ const MovementPopup = ({ onClose }) => {
       Alert.alert('Erro', 'Ocorreu um erro ao registrar. Por favor, tente novamente.');
     } finally {
       setLoading(false);
+      refreshDiary();
     }
   };
 
@@ -107,10 +108,10 @@ const MovementPopup = ({ onClose }) => {
         ) : (
           <Picker
             options={activities.map((activity) => activity.nome)}
-            selectedOption={selectedActivity}
+            selectedOption={selectedActivity.nome}
             onSelect={(option) => {
               const selected = activities.find((activity) => activity.nome === option);
-              setSelectedActivity(selected.id);
+              setSelectedActivity({ nome: selected.nome, id: selected.id });
             }}
           />
         )}

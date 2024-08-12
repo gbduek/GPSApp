@@ -7,7 +7,7 @@ import DataContext from '../../Context/DataContext';
 import { FontAwesome } from '@expo/vector-icons';
 import Picker from '../UIComp/Picker';
 
-const SymptomPopup = ({ onClose }) => {
+const SymptomPopup = ({ onClose, refreshDiary }) => {
   const { token, userLogged } = useContext(DataContext);
   const [date, setDate] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -74,6 +74,7 @@ const SymptomPopup = ({ onClose }) => {
       Alert.alert('Erro', 'Ocorreu um erro ao registrar. Por favor, tente novamente.');
     } finally {
       setLoading(false);
+      refreshDiary();
     }
   };
 
@@ -102,7 +103,7 @@ const SymptomPopup = ({ onClose }) => {
           />
         )}
 
-        <Text style={styles.subtitle}>Atividade</Text>
+        <Text style={styles.subtitle}>Sintoma</Text>
         {loading ? (
           <ActivityIndicator size="large" color="orange" />
         ) : (
@@ -111,7 +112,7 @@ const SymptomPopup = ({ onClose }) => {
             selectedOption={selectedActivity.nome}
             onSelect={(option) => {
               const selected = activities.find((activity) => activity.nome === option);
-              setSelectedActivity({ nome: selected.nome, id: selected.id }); // Store both nome and id
+              setSelectedActivity({ nome: selected.nome, id: selected.id });
             }}
           />
         )}

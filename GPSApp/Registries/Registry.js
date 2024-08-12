@@ -14,10 +14,11 @@ const Registry = ({ route, navigation }) => {
   const [loading, setLoading] = useState(true);
   const { token, userLogged } = useContext(DataContext);
   const [refreshing, setRefreshing] = useState(false);
+  const [exemplos, setExemplos] = useState([]);
 
   const onRefresh = useCallback(() => {
     setRefreshing(true);
-    setTimeout(() => setRefreshing(false), 2000); // Optional: simulate loading
+    setTimeout(() => setRefreshing(false), 2000);
   }, []);
 
   const fetchData = async () => {
@@ -31,6 +32,16 @@ const Registry = ({ route, navigation }) => {
           Authorization: `Bearer ${token}`
         }
       });
+
+      if(type == 'Corpo'){
+        const medidores = response.data.MedidoresForm || [];
+        const exemplos = medidores.flatMap(m => 
+          m.Medidores.map(med => med.Exemplo)
+        );
+
+        setExemplos(exemplos);
+      }
+
       setDescription(response.data.Descricao);
       setImageUrl(response.data.Imagem);
       setLoading(false);
@@ -52,7 +63,11 @@ const Registry = ({ route, navigation }) => {
 
   const handleNewRecord = () => {
     // Navigate to the Questionary screen with dynamic questions and options
-    navigation.navigate('Questionary', { type, title, id });
+    if(type === 'Corpo'){
+      navigation.navigate('Questionary', { type, title, id, examples: exemplos });
+    } else {
+      navigation.navigate('Questionary', { type, title, id });
+    }
   };
 
   const renderItem = ({ item }) => {
@@ -73,9 +88,11 @@ const Registry = ({ route, navigation }) => {
             <View style={styles.geometricShape}>
               <View style={styles.shapeHeader}>
                 <Text style={styles.shapeTitle}>{title}</Text>
-                <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
-                  <Ionicons name="add" size={30} color="white" />
-                </TouchableOpacity>
+                {id !== '5bdefa56-4559-4d9a-b550-c29599fcb4aa' && (
+                  <TouchableOpacity style={styles.newRecordButton} onPress={handleNewRecord}>
+                    <Ionicons name="add" size={30} color="white" />
+                  </TouchableOpacity>
+                )}
               </View>
               <Text style={styles.description}>{description}</Text>
               <Text style={styles.message}>Veja abaixo o gráfico do seu último registro!</Text>

@@ -100,6 +100,15 @@ const GraphEvolutivo = ({ id, refreshing }) => {
         setSelectedItem(item);
     };
 
+    const splitTooltip = (tooltip) => {
+        if (tooltip.length > 12) {
+            const splitIndex = tooltip.slice(0, 12).lastIndexOf(' ') !== -1 ? tooltip.slice(0, 12).lastIndexOf(' ') : 12;
+            return [tooltip.slice(0, splitIndex).trim(), tooltip.slice(splitIndex).trim()];
+        }
+        return [tooltip];
+    };
+    
+
     const processData = (data) => {
         const filteredData = selectedNome ? data.filter(entry => entry.Nome === selectedNome) : data;
 
@@ -116,7 +125,7 @@ const GraphEvolutivo = ({ id, refreshing }) => {
             return [{
                 x: 45, // Position near the y-axis
                 y: isNaN(y) ? defaultY : y,
-                tooltip: filteredData[0].Nome + item.Value || '',
+                tooltip: splitTooltip(filteredData[0].Nome + item.Value || ''),
                 date: new Date(item.Data).toLocaleDateString() || null,
                 color: filteredData[0].CorExibicao,
                 key: `${filteredData[0].Id}-${0}`
@@ -135,7 +144,7 @@ const GraphEvolutivo = ({ id, refreshing }) => {
                 return {
                     x,
                     y: isNaN(y) ? defaultY : y,
-                    tooltip: entry.Nome + item.Value || '',
+                    tooltip: splitTooltip(entry.Nome + item.Value || ''),
                     date: new Date(item.Data).toLocaleDateString() || null,
                     color: item.Cor,
                     key: `${entry.Id}-${index}`
@@ -153,6 +162,7 @@ const GraphEvolutivo = ({ id, refreshing }) => {
         if (data.length === 1) {
             // Render single point
             const point = data[0];
+            
             return (
                 <Svg width={400} height={300}>
                     <Circle
@@ -168,23 +178,26 @@ const GraphEvolutivo = ({ id, refreshing }) => {
                                 x={point.x + 15}
                                 y={point.y + 20}
                                 width="90"
-                                height="35"
+                                height="50"
                                 fill="black"
                                 stroke="black"
                                 strokeWidth="1"
                                 rx="5"
                                 opacity="0.7"
                             />
-                            <SvgText
-                                x={point.x + 18}
-                                y={point.y + 50}
-                                fontSize="12"
-                                fill="white"
-                                textAnchor="start"
-                                fontWeight="bold"
-                            >
-                                {point.tooltip}
-                            </SvgText>
+                            {point.tooltip.map((text, idx) => (
+                                <SvgText
+                                    key={idx}
+                                    x={point.x + 18}
+                                    y={point.y + 55 + (idx * 15)}
+                                    fontSize="12"
+                                    fill="white"
+                                    textAnchor="start"
+                                    fontWeight="bold"
+                                >
+                                    {text}
+                                </SvgText>
+                            ))}
                             <SvgText
                                 x={point.x + 18}
                                 y={point.y + 33}
@@ -228,23 +241,26 @@ const GraphEvolutivo = ({ id, refreshing }) => {
                                     x={point.x + 55}
                                     y={point.y + 20}
                                     width="90"
-                                    height="35"
+                                    height="50"
                                     fill="black"
                                     stroke="black"
                                     strokeWidth="1"
                                     rx="5"
                                     opacity="0.7"
                                 />
-                                <SvgText
-                                    x={point.x + 58}
-                                    y={point.y + 50}
-                                    fontSize="12"
-                                    fill="white"
-                                    textAnchor="start"
-                                    fontWeight="bold"
-                                >
-                                    {point.tooltip}
-                                </SvgText>
+                                {point.tooltip.map((text, idx) => (
+                                    <SvgText
+                                        key={idx}
+                                        x={point.x + 58}
+                                        y={point.y + 45 + (idx * 15)}
+                                        fontSize="12"
+                                        fill="white"
+                                        textAnchor="start"
+                                        fontWeight="bold"
+                                    >
+                                        {text}
+                                    </SvgText>
+                                ))}
                                 <SvgText
                                     x={point.x + 58}
                                     y={point.y + 33}

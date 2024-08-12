@@ -4,7 +4,7 @@ import axios from 'axios';
 import DataContext from '../Context/DataContext';
 
 const Questionary = ({ route, navigation }) => {
-  const { type, title, id } = route.params;
+  const { type, title, id, examples = [] } = route.params;
   const [questions, setQuestions] = useState([]);
   const [selectedOptions, setSelectedOptions] = useState({});
   const [textInputs, setTextInputs] = useState({});
@@ -12,6 +12,7 @@ const Questionary = ({ route, navigation }) => {
   const [saveLoading, setSaveLoading] = useState(false);
   const [validationError, setValidationError] = useState('');
   const { token, userLogged } = useContext(DataContext);
+
 
   useEffect(() => {
     const fetchQuestions = async () => {
@@ -57,6 +58,14 @@ const Questionary = ({ route, navigation }) => {
       unansweredQuestions = questions.flatMap(questionary => questionary.questoes).filter(q => !selectedOptions[q.id]);
     }
 
+    if (id === '04870942-8621-45e4-a781-d1f58f99ecd1') {
+      // Filter out the question with questao === 'IMC'
+      unansweredQuestions = unansweredQuestions.filter(q => {
+        const question = questions.flatMap(questionary => questionary.questoes).find(qItem => qItem.id === q.id);
+        return question && question.questao !== 'IMC';
+      });
+    }
+
     if (unansweredQuestions.length > 0) {
       setValidationError('Por favor, responda todas as perguntas antes de salvar.');
       return;
@@ -83,6 +92,8 @@ const Questionary = ({ route, navigation }) => {
       PessoaFisica: userLogged,
     };
 
+    console.log(body);
+
     try {
       const response = await axios.post('https://api3.gps.med.br/API/Medicao/SaveMedicao/', body, {
         headers: {
@@ -100,16 +111,21 @@ const Questionary = ({ route, navigation }) => {
     }
   };
 
-  const renderItem = ({ item }) => (
+  const renderItem = ({ item, index }) => (
     <View style={styles.geometricShape}>
-      <Text style={styles.question}>{item.questao}</Text>
+      {item.questao !== 'IMC' && (
+        <Text style={styles.question}>{item.questao}</Text>
+      )}
+      
       {type === 'Corpo' ? (
-        <TextInput
-          style={styles.textInput}
-          placeholder="Digite sua resposta (Sem medida)"
-          value={textInputs[item.id] || ''}
-          onChangeText={(text) => handleTextInputChange(item.id, text)}
-        />
+        item.questao !== 'IMC' ? (
+          <TextInput
+            style={styles.textInput}
+            placeholder={examples[index % examples.length] || "Digite sua resposta"}
+            value={textInputs[item.id] || ''}
+            onChangeText={(text) => handleTextInputChange(item.id, text)}
+          />
+        ) : null
       ) : (
         item.opcoes.map(option => (
           <TouchableOpacity
