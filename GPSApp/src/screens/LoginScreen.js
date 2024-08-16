@@ -2,6 +2,7 @@ import React, { useState, useContext } from 'react';
 import { View, TextInput, Text, StyleSheet, Image, TouchableOpacity, ActivityIndicator, Alert, Linking, Platform } from 'react-native';
 import axios from 'axios';
 import DataContext from '../../Context/DataContext';
+import Icon from 'react-native-vector-icons/FontAwesome'; // Import FontAwesome icons
 
 const LoginScreen = ({ onLoginSuccess }) => {
   const [email, setEmail] = useState('');
@@ -9,6 +10,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
   const [emailFocused, setEmailFocused] = useState(false);
   const [passwordFocused, setPasswordFocused] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // State for password visibility
   const { handleLogin } = useContext(DataContext);
   const [nonExistEmail, setNonExistEmail] = useState(false);
 
@@ -46,7 +48,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
         Alert.alert('Erro', 'Ocorreu um erro ao tentar resetar a senha.');
       }
     } else {
-      if(Platform.OS === 'android'){
+      if (Platform.OS === 'android') {
         setNonExistEmail(true);
       }
       Alert.alert('Erro', 'Por favor, insira um email válido.');
@@ -59,7 +61,7 @@ const LoginScreen = ({ onLoginSuccess }) => {
 
   return (
     <View style={styles.container}>
-      <View style={{height: 20}}/>
+      <View style={{ height: 20 }} />
       <Image
         source={require('../../assets/gps_logo.png')}
         style={{ width: 315, height: 125, resizeMode: 'stretch', marginBottom: 40 }}
@@ -73,15 +75,27 @@ const LoginScreen = ({ onLoginSuccess }) => {
         onFocus={() => setEmailFocused(true)}
         onBlur={() => setEmailFocused(false)}
       />
-      <TextInput
-        style={[styles.input, passwordFocused && styles.inputFocused]}
-        placeholder="Senha"
-        onChangeText={setPassword}
-        value={password}
-        secureTextEntry
-        onFocus={() => setPasswordFocused(true)}
-        onBlur={() => setPasswordFocused(false)}
-      />
+      <View style={styles.passwordContainer}>
+        <TextInput
+          style={[styles.input, passwordFocused && styles.inputFocused, { flex: 1 }]}
+          placeholder="Senha"
+          onChangeText={setPassword}
+          value={password}
+          secureTextEntry={!showPassword} // Toggle password visibility
+          onFocus={() => setPasswordFocused(true)}
+          onBlur={() => setPasswordFocused(false)}
+        />
+        <TouchableOpacity
+          style={styles.eyeIcon}
+          onPress={() => setShowPassword(!showPassword)} // Toggle password visibility
+        >
+          <Icon
+            name={showPassword ? 'eye' : 'eye-slash'}
+            size={20}
+            color={passwordFocused ? 'gray' : 'white'} // Change color based on focus
+          />
+        </TouchableOpacity>
+      </View>
       <TouchableOpacity
         onPress={onLoginPress}
         style={styles.touchableOpacity}
@@ -107,10 +121,10 @@ const LoginScreen = ({ onLoginSuccess }) => {
         </Text>
       </TouchableOpacity>
       {nonExistEmail &&
-        <View><Text style={{color: 'red'}}>Por favor, insira um email válido.</Text></View>}
-      <View style={{top: 100, alignItems: 'center'}}>
+        <View><Text style={{ color: 'red' }}>Por favor, insira um email válido.</Text></View>}
+      <View style={{ top: 100, alignItems: 'center' }}>
         <TouchableOpacity onPress={handleInterativaPress}>
-          <Text style={{color: 'white'}}>by Interativa Saúde</Text>
+          <Text style={{ color: 'white' }}>by Interativa Saúde</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -157,6 +171,16 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     letterSpacing: 0.25,
     color: '#ffa500',
+  },
+  passwordContainer: {
+    flexDirection: 'row',
+    width: '100%',
+    alignItems: 'center',
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 15,
+    top: 16,
   },
 });
 

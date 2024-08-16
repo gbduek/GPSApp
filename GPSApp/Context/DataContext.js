@@ -86,9 +86,9 @@ export const DataProvider = ({ children }) => {
         corpo: 12,
       };
       const calculatedPercentages = {
-        mente: Math.round((preenchidos[0] / maxValues.mente) * 100),
-        lifestyle: Math.round((preenchidos[1] / maxValues.lifestyle) * 100),
-        corpo: Math.round((preenchidos[2] / maxValues.corpo) * 100),
+        mente: Math.min(Math.round((preenchidos[0] / maxValues.mente) * 100), 100),
+        lifestyle: Math.min(Math.round((preenchidos[1] / maxValues.lifestyle) * 100), 100),
+        corpo: Math.min(Math.round((preenchidos[2] / maxValues.corpo) * 100), 100),
       };
 
       setPercentages(calculatedPercentages);

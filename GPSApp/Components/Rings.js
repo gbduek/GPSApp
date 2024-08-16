@@ -111,9 +111,9 @@ const Rings = ({ iconName, dimen }) => {
     });
 
     if (totalCount > 0) {
-      setRedPercentage((redCount / totalCount) * 100);
-      setYellowPercentage((yellowCount / totalCount) * 100);
-      setGreenPercentage((greenCount / totalCount) * 100);
+      setRedPercentage(Math.min((redCount / totalCount) * 100), 100);
+      setYellowPercentage(Math.min((yellowCount / totalCount) * 100), 100);
+      setGreenPercentage(Math.min((greenCount / totalCount) * 100), 100);
     }
   };
 

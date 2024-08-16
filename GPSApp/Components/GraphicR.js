@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext, useCallback } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, ScrollView,
-         TouchableOpacity, Modal, TouchableWithoutFeedback } from 'react-native';
+         TouchableOpacity, Modal, TouchableWithoutFeedback, Platform } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import DataContext from '../Context/DataContext';
@@ -12,6 +12,7 @@ const GraphicR = ({ id, refreshing }) => {
   const [tooltipIndex, setTooltipIndex] = useState(null); // State to manage which tooltip is visible
   const { token, userLogged } = useContext(DataContext);
   const [modalVisible, setModalVisible] = useState(false); // State to manage modal visibility
+  let [addAndroid, setAddAndroid] = useState(0);
 
   const fetchData = async () => {
     try {
@@ -56,6 +57,12 @@ const GraphicR = ({ id, refreshing }) => {
 
   useEffect(() => {
     setLoading(true);
+
+    if (Platform.OS === 'android') {
+      setAddAndroid(35);
+    } else if (Platform.OS === 'ios') {
+      setAddAndroid(0);
+    }
     
     if(refreshing){
       fetchData();
@@ -83,15 +90,15 @@ const GraphicR = ({ id, refreshing }) => {
   return (
     <View style={styles.container}>
       {/* These are the vertical numbers on the left of the graphic */}
-      <View style={[styles.yAxis, {height: 200}]}>
+      <View style={[styles.yAxis, {height: 200, marginBottom: 20 + addAndroid}]}>
         {[100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].map((value) => (
           <Text key={value} style={styles.yAxisText}>{value}</Text>
         ))}
       </View>
       {/* If there are more than 7 bars, render within a ScrollView */}
       {data.length > 7 ? (
-        <ScrollView horizontal contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator='false'>
-          <View style={[styles.graph, {height: 200}]}>
+        <ScrollView horizontal contentContainerStyle={styles.scrollViewContent} showsHorizontalScrollIndicator={false}>
+          <View style={[styles.graph, {height: 200 + addAndroid}]}>
             {data.map((dataItem, index) => (
               <View key={index} style={[styles.barContainer, {marginRight: 5, marginBottom: 20}]}>
                 <TouchableOpacity

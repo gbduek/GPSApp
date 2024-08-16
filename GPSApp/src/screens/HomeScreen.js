@@ -49,7 +49,7 @@ const HomeScreen = () => {
       additionalStyle = { left: 37.5, top: 320 };
       return <Ionicons style={[styles.iconContainer, additionalStyle]} name="body" size={45} color="orange" />;
     } else {
-      return null; // Handle other cases if necessary
+      return null;
     }
   };
 
@@ -62,7 +62,7 @@ const HomeScreen = () => {
   useEffect(() => {
     // Fetch percentages on component mount or whenever necessary
     fetchPercentages();
-  }, [fetchPercentages]); // Dependency array ensures it runs only when fetchPercentages changes
+  }, [fetchPercentages]);
 
   return (
     <View style={styles.container}>

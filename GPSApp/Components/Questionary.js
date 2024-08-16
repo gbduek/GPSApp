@@ -92,8 +92,6 @@ const Questionary = ({ route, navigation }) => {
       PessoaFisica: userLogged,
     };
 
-    console.log(body);
-
     try {
       const response = await axios.post('https://api3.gps.med.br/API/Medicao/SaveMedicao/', body, {
         headers: {

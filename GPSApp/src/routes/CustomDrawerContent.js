@@ -1,5 +1,5 @@
 import React, {useContext} from 'react';
-import { View, StyleSheet, Image, Linking, Alert } from 'react-native';
+import { View, StyleSheet, Image, Linking, Alert, ScrollView } from 'react-native';
 import { DrawerItemList, DrawerItem } from '@react-navigation/drawer';
 import { Ionicons } from "@expo/vector-icons";
 import axios from 'axios';
@@ -14,9 +14,7 @@ const CustomDrawerContent = (props) => {
 
   const handleLogout = async () => {
     try {
-      // Make the Axios request to log out
       await axios.get(`https://api3.gps.med.br/API/Acesso/Logout/${userLogged}`);
-      // Reset authentication state to log out the user
       props.setIsAuthenticated(false);
     } catch (error) {
       Alert.alert('Error', 'Failed to log out. Please try again.');
@@ -31,7 +29,7 @@ const CustomDrawerContent = (props) => {
           style={styles.headerImage}
         />
       </View>
-      <View style={styles.drawerItems}>
+      <ScrollView style={styles.drawerItems}>
         <DrawerItemList {...props} />
         <DrawerItem
           label="Ajuda"
@@ -51,7 +49,7 @@ const CustomDrawerContent = (props) => {
           onPress={handleLogout}
           style={styles.drawerItem}
         />
-      </View>
+      </ScrollView>
     </View>
   );
 };
@@ -70,9 +68,9 @@ const styles = StyleSheet.create({
     resizeMode: 'stretch',
   },
   drawerItems: {
-    top: 20,
     flex: 1,
     backgroundColor: 'orange',
+    marginTop: 20,
   },
   drawerLabel: {
     fontSize: 20,
