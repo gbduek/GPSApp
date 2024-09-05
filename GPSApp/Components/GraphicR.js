@@ -90,7 +90,7 @@ const GraphicR = ({ id, refreshing }) => {
   return (
     <View style={styles.container}>
       {/* These are the vertical numbers on the left of the graphic */}
-      <View style={[styles.yAxis, {height: 200, marginBottom: 20 + addAndroid}]}>
+      <View style={[styles.yAxis, {height: 200, marginBottom: 0 + addAndroid}]}>
         {[100, 90, 80, 70, 60, 50, 40, 30, 20, 10, 0].map((value) => (
           <Text key={value} style={styles.yAxisText}>{value}</Text>
         ))}

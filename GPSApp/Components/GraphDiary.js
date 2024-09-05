@@ -88,33 +88,50 @@ const GraphDiary = ({ DiaryId, refreshing }) => {
     };
 
     const processData = (data) => {
+        const length = data.length;
+    
         switch (DiaryId) {
             case 'a8772285-cc12-47c0-b947-eeac0a790b7a':
-                return data.map((entry, index) => ({
-                    x: (index + 1) * 80,
-                    y: 300 - (entry.intensidade * 25),
-                    tooltip: entry.emocao.tooltip || '',
-                    image: emotionImages[entry.emocao.nome] || null,
-                    date: new Date(entry.inicio).toLocaleDateString() || null
-                }));
+                return data.map((_, index) => {
+                    const entry = data[length - 1 - index];
+                    return {
+                        x: (index + 1) * 80,
+                        y: 300 - (entry.intensidade * 25),
+                        tooltip: entry.emocao.tooltip || '',
+                        image: emotionImages[entry.emocao.nome] || null,
+                        date: new Date(entry.inicio).toLocaleDateString() || null,
+                    };
+                });
+    
             case 'ee8cf8bb-36ff-4838-883b-75179867d095':
-                return data.map((entry, index) => ({
-                    x: (index + 1) * 80,
-                    y: 300 - ((entry.intensidade/10) * 25),
-                    tooltip: entry.atividades.length > 0 ? entry.atividades[0]?.nome : 'No Activity',
-                    image: null,
-                    date: new Date(entry.inicio).toLocaleDateString() || null
-                }));
+                return data.map((_, index) => {
+                    const entry = data[length - 1 - index];
+                    return {
+                        x: (index + 1) * 80,
+                        y: 300 - ((entry.intensidade / 10) * 25),
+                        tooltip: entry.atividades.length > 0 ? entry.atividades[0]?.nome : 'No Activity',
+                        image: null,
+                        date: new Date(entry.inicio).toLocaleDateString() || null,
+                    };
+                });
+    
             case 'a0a1d9b5-2268-4aed-9040-44fb3d88975e':
-                return data.map((entry, index) => ({
-                    x: (index + 1) * 80,
-                    y: 300 - ((entry.intensidade/10) * 25),
-                    tooltip: entry.sintomas.length > 0 ? entry.sintomas[0]?.nome : 'No symptoms',
-                    image: null,
-                    date: new Date(entry.inicio).toLocaleDateString() || null
-                }));
+                return data.map((_, index) => {
+                    const entry = data[length - 1 - index];
+                    return {
+                        x: (index + 1) * 80,
+                        y: 300 - ((entry.intensidade / 10) * 25),
+                        tooltip: entry.sintomas.length > 0 ? entry.sintomas[0]?.nome : 'No symptoms',
+                        image: null,
+                        date: new Date(entry.inicio).toLocaleDateString() || null,
+                    };
+                });
+    
+            default:
+                return [];
         }
     };
+    
 
     const renderPoints = () => {
         if (apiData.length === 0) return null;

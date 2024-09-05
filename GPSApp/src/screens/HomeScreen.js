@@ -1,5 +1,5 @@
 import React, { useEffect, useContext } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -9,6 +9,7 @@ import Rings from '../../Components/Rings'
 import SliderGeo from '../../Components/SliderGeo';
 import Header from '../../Components/Header';
 import DataContext from '../../Context/DataContext';
+import NotebookIcon from '../../assets/Icons/NotebookIcon';
 
 const HomeScreen = () => {
   const { firstName, percentages, fetchPercentages, temDiario, userCompany } = useContext(DataContext);
@@ -26,16 +27,9 @@ const HomeScreen = () => {
         require('../../assets/Banners/cedae/banner_cedae_equilibrio.png'),
       ]
     : [
-        require('../../assets/Banners/generic/banner_generic.png')
-      ];
-
-  const links = cedaeIds.includes(userCompany)
-    ? [
-        'https://cedaesaude.org.br/index.php/cedae-saude/',
-        'https://cedaesaude.org.br/index.php/programa-equilibrio-emocional/',
-      ]
-    : [
-        'https://gps.med.br/autoavaliacao-em-saude/' // Single link for the generic banner
+        require('../../assets/Banners/generic/banner_generic.png'),
+        require('../../assets/Banners/generic/banner_generic2.png'),
+        require('../../assets/Banners/generic/banner_generic3.png')
       ];
 
   const renderLogo = (logoUrl) => {
@@ -72,11 +66,11 @@ const HomeScreen = () => {
           <Text style={styles.greetingText}>Olá, {firstName}</Text>
 
           <View style={{paddingHorizontal: 15}}>
-            <Banner images={bannerImages} links={links} />
+            <Banner images={bannerImages} />
           </View>
 
           <Text style={styles.heading}>
-            Como está sua saúde e sua qualidade de vida?
+            Como está sua saúde e qualidade de vida?
           </Text>
           <Text style={styles.paragraph}>
             Veja os percentuais de preenchimento da sua GPS MED!
@@ -108,7 +102,7 @@ const HomeScreen = () => {
 
           {temDiario ? 
             <View>
-              <Image style={{width: 150, height: 150, marginTop: 20}} source={require('../../assets/temDiary.png')}/>
+              <NotebookIcon/>
             </View>
             :(
             <View style={styles.ribbonContainer}>

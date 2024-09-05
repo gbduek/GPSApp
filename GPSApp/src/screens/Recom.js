@@ -189,7 +189,7 @@ const Recom = () => {
                     style={styles.button}
                     onPress={() => showPopup(rec)}
                   >
-                    <Text style={styles.buttonText}>Detalhes</Text>
+                    <Ionicons name="arrow-forward" size={24} color="white" />
                   </TouchableOpacity>
                 </View>
               ))}

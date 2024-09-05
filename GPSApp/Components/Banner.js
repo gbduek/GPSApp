@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, Image, FlatList, Dimensions, TouchableOpacity, Text, Linking } from 'react-native';
+import { View, StyleSheet, Image, FlatList, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 
-const Banner = ({ images, links }) => {
+const Banner = ({ images }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
@@ -17,9 +17,6 @@ const Banner = ({ images, links }) => {
         renderItem={({ item, index }) => (
           <View style={styles.imageContainer}>
             <Image source={item} style={styles.bannerImage} resizeMode="stretch" />
-            <TouchableOpacity style={styles.button} onPress={() => Linking.openURL(links[index])}>
-              <Text style={styles.buttonText}>Saiba mais</Text>
-            </TouchableOpacity>
           </View>
         )}
         onScrollToIndexFailed={() => {}}
