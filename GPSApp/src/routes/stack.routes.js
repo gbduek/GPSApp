@@ -1,9 +1,7 @@
 import React from 'react';
 import { createStackNavigator } from '@react-navigation/stack';
 
-import Mente from "../screens/Mente";
-import Corpo from "../screens/Corpo";
-import LifeStyle from "../screens/LifeStyle";
+import Dimension from '../screens/Dimension/Dimension';
 import Registry from "../../Registries/Registry";
 import Questionary from "../../Components/Questionary";
 import PermissionProfile from '../screens/Permissions/PermissionProfile';
@@ -17,30 +15,34 @@ export const MenteStack = () => {
         <Stack.Navigator>
             <Stack.Screen
                 name="Mente"
-                component={Mente}
                 options={{
                     headerShown: false,
                     headerTitle: 'Mente',
                 }}
-            />
+            >
+                {props => <Dimension {...props} id="40c6eaad-8815-4cbc-9caf-78f081f03674" />}
+            </Stack.Screen>
             <Stack.Screen
                 name="Registry"
-                component={Registry}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Registry {...props} />}
+            </Stack.Screen>
+
             <Stack.Screen
                 name="Questionary"
-                component={Questionary}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Questionary {...props} />}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
@@ -51,30 +53,34 @@ export const CorpoStack = () => {
         <Stack.Navigator>
             <Stack.Screen
                 name="Corpo"
-                component={Corpo}
                 options={{
                     headerShown: false,
                     headerTitle: 'Corpo',
                 }}
-            />
+            >
+                {props => <Dimension {...props} id="20118275-8791-469e-b9f5-3210f990dd01" />}
+            </Stack.Screen>
             <Stack.Screen
                 name="Registry"
-                component={Registry}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Registry {...props} />}
+            </Stack.Screen>
+
             <Stack.Screen
                 name="Questionary"
-                component={Questionary}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Questionary {...props} />}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };
@@ -85,30 +91,35 @@ export const LifeStyleStack = () => {
         <Stack.Navigator>
             <Stack.Screen
                 name="LifeStyle"
-                component={LifeStyle}
                 options={{
                     headerShown: false,
                     headerTitle: 'Estilo de Vida',
                 }}
-            />
+            >
+                {props => <Dimension {...props} id="7ed63315-ff7b-4658-b488-7655487e2845" />}
+            </Stack.Screen>
+
             <Stack.Screen
                 name="Registry"
-                component={Registry}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Registry {...props} />}
+            </Stack.Screen>
+
             <Stack.Screen
                 name="Questionary"
-                component={Questionary}
                 options={{
                     headerShown: true,
                     headerTintColor: 'orange',
                     headerTitle: '',
                 }}
-            />
+            >
+                {props => <Questionary {...props} />}
+            </Stack.Screen>
         </Stack.Navigator>
     );
 };

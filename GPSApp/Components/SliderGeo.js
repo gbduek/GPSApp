@@ -1,8 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Ionicons, MaterialCommunityIcons, FontAwesome5 } from '@expo/vector-icons';
+import InitEvalIcon from '../assets/Icons/InitEvalIcon';
 
-const SliderGeo = ({ iconName, percentage, title }) => {
+const SliderGeo = ({ iconName, percentage, title, id }) => {
   // Percentage value for the slider bar
   const barPercentage = percentage;
   const windowWidth = Dimensions.get('window').width;
@@ -12,10 +13,12 @@ const SliderGeo = ({ iconName, percentage, title }) => {
       <View style={[styles.rect, {width: windowWidth - 45}]}>
         {title === 'Mente' ? (
             <MaterialCommunityIcons name={iconName} size={32} color="#ffa500" style={styles.icon} />
-          ) : title === 'Estilo de Vida' ? (
+          ) : title === 'Estilo de vida' ? (
             <FontAwesome5 name={iconName} size={32} color="#ffa500" style={styles.icon} />
           ) : title === 'Corpo' ? (
             <Ionicons name={iconName} size={32} color="#ffa500" style={styles.icon} />
+          ) : title === 'Avaliação inicial' ? (
+            <InitEvalIcon color='#ffa500' style={styles.icon} />
           ) : (
             <Ionicons name={'flame-outline'} size={32} color="#ffa500" style={styles.icon} />
         )}
