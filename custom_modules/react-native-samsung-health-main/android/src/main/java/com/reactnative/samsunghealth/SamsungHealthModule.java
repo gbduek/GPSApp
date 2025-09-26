@@ -45,9 +45,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * Created by firodj on 5/2/17.
- */
 
 @ReactModule(name = "RNSamsungHealth")
 public class SamsungHealthModule extends ReactContextBaseJavaModule implements
