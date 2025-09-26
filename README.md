@@ -41,19 +41,33 @@ The custom bridge exposes Samsung Health SDK functionality to JavaScript:
 ## Events
 - Emits events back to JavaScript using React Native’s DeviceEventManagerModule.
 
-# 🛠️ Building with Gradle
+# 🛠️ Requirements and Steps to install repo
+## Prerequisites
+  - Node.js (version 16 or higher)
+  - npm or yarn
+  - Java Development Kit (JDK) (version 11 or 17 recommended)
+  - Android Studio with Android SDK installed
+  - Expo CLI (optional, for Expo commands)
+  - A physical Samsung device with Samsung Health app installed (emulators may not work)
+
+## Installation Steps
+ 1- npm install
+ 
+ 2- npm install ./custom_modules
+
+## Building with Gradle
 
 From the android/ directory, you can build using Gradle. Example:
 
 cd android
 
-## Clean project
+### Clean project:
 ./gradlew clean
 
-## Assemble debug build
+### Assemble debug build:
 ./gradlew assembleDebug
 
-## Or install directly to a connected device
+### Or install directly to a connected device:
 ./gradlew installDebug
 
 You can also run through Expo’s build command:
