@@ -1,0 +1,27 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.11.0' // Updated from 7.4.2
+        classpath 'com.facebook.react:react-native-gradle-plugin:0.71.0'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20' // Updated from 1.8.22
+    }
+}
+
+allprojects {
+        repositories {
+          maven {
+            url 'https://developer.samsung.com/health/android/repository'
+          }
+          
+        google()
+        mavenCentral()
+        maven { url 'https://www.jitpack.io' }
+        maven { url 'https://developer.samsung.com/health/android/repository' }
+    }
+}
+
+apply plugin: "expo-root-project"
+apply plugin: "com.facebook.react.rootproject"

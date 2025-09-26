@@ -1,0 +1,19 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.reactnative.samsunghealth">
+
+  <uses-permission android:name="android.permission.INTERNET" />
+  
+  <!-- Samsung Health permissions -->
+  <uses-permission android:name="com.samsung.android.health.permission.read" />
+  <uses-permission android:name="com.samsung.android.health.permission.write" />
+  
+  <application>
+    <meta-data
+      android:name="com.samsung.android.health.permission.read"
+      android:value="com.samsung.health.step_count;com.samsung.health.weight;com.samsung.health.heart_rate;com.samsung.health.exercise" />
+      
+    <meta-data
+      android:name="com.samsung.android.health.permission.write" 
+      android:value="com.samsung.health.step_count;com.samsung.health.weight;com.samsung.health.heart_rate;com.samsung.health.exercise" />
+  </application>
+</manifest>

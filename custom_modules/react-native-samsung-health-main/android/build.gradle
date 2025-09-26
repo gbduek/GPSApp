@@ -1,0 +1,81 @@
+plugins {
+    id 'com.android.library'
+}
+
+android {
+    namespace "com.reactnative.samsunghealth"
+    compileSdk 36
+
+    defaultConfig {
+        minSdk 24
+        targetSdk 36
+        versionCode 1
+        versionName "0.1.3"
+        
+        buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
+        consumerProguardFiles "proguard-rules.pro"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    
+    buildFeatures {
+        buildConfig true
+    }
+    
+    // Explicitly declare build types
+    buildTypes {
+        debug {
+            matchingFallbacks = ['debug']
+        }
+        release {
+            matchingFallbacks = ['release']
+            minifyEnabled false
+        }
+    }
+    
+    // Configure variants for Gradle compatibility
+    flavorDimensions = ["mode"]
+    productFlavors {
+        create("default") {
+            dimension "mode"
+            buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", "false"
+        }
+    }
+    
+    // Explicit variant configuration
+    variantFilter { variant ->
+        if (variant.buildType.name == "debug" && variant.flavors*.name.contains("default")) {
+            setIgnore(false)
+        } else if (variant.buildType.name == "release" && variant.flavors*.name.contains("default")) {
+            setIgnore(false)
+        } else {
+            setIgnore(true)
+        }
+    }
+    
+    // Publishing configuration for library variants
+    publishing {
+        singleVariant("defaultDebug") {
+            withSourcesJar()
+        }
+        singleVariant("defaultRelease") {
+            withSourcesJar()
+        }
+    }
+}
+
+repositories {
+    google()
+    mavenCentral()
+    maven {
+        url 'https://developer.samsung.com/health/android/repository'
+    }
+}
+
+dependencies {
+    implementation "com.facebook.react:react-native:+"
+    implementation "com.samsung.android.sdk.health:health:1.5.0"
+}

@@ -1,0 +1,53 @@
+{
+	"expo": {
+		"name": "GPS MED",
+		"slug": "GPSApp",
+		"version": "2.1.4",
+		"orientation": "portrait",
+		"icon": "./assets/icon.png",
+		"userInterfaceStyle": "light",
+		"splash": {
+			"image": "./assets/splash.png",
+			"resizeMode": "contain",
+			"backgroundColor": "#ffffff"
+		},
+		"assetBundlePatterns": ["**/*"],
+		"ios": {
+			"supportsTablet": true,
+			"bundleIdentifier": "com.gbduek.GPSMed"
+		},
+		"android": {
+			"adaptiveIcon": {
+				"foregroundImage": "./assets/icon.png",
+				"backgroundColor": "#ffffff"
+			},
+			"package": "com.gbduek.GPSMed",
+			"versionCode": 214
+		},
+		"web": {
+			"favicon": "./assets/favicon.png"
+		},
+		"extra": {
+			"eas": {
+				"projectId": "4ccd039c-eafa-43c5-9cd6-764d5ebb0509"
+			}
+		},
+		"plugins": [
+			"./plugins/samsung-health-plugin.js",
+			[
+				"expo-build-properties",
+				{
+					"android": {
+						"extraMavenRepos": [
+							"https://developer.samsung.com/health/android/repository"
+						]
+					},
+					"ios": {
+						"deploymentTarget": "15.1"
+					}
+				}
+			]
+		],
+		"owner": "gbduek"
+	}
+}
