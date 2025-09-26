@@ -53,7 +53,7 @@ The custom bridge exposes Samsung Health SDK functionality to JavaScript:
 ## Installation Steps
  1- npm install
  
- 2- npm install ./custom_modules
+ 2- npm install ./custom_modules/react-native-samsung-health-main
 
 ## Building with Gradle
 
